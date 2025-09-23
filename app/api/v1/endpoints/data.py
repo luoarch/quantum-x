@@ -8,7 +8,7 @@ from typing import List, Optional
 from datetime import datetime, timedelta
 
 from app.core.database import get_db
-from app.services.data_collector import DataCollector
+from app.services.robust_data_collector import RobustDataCollector
 from app.models.time_series import EconomicSeries, DataCollectionLog
 from app.schemas.data import DataCollectionResponse, SeriesDataResponse
 
@@ -22,10 +22,10 @@ async def collect_data(
 ):
     """Inicia coleta de dados das APIs externas"""
     try:
-        collector = DataCollector()
+        collector = RobustDataCollector(db)
         
         # Executar coleta em background
-        result = await collector.collect_all_data(db)
+        result = await collector.collect_all_series()
         
         return DataCollectionResponse(
             status="success",

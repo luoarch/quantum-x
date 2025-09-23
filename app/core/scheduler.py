@@ -10,7 +10,7 @@ import logging
 
 from app.core.config import settings
 from app.core.database import SessionLocal
-from app.services.data_collector import DataCollector
+from app.services.robust_data_collector import RobustDataCollector
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +24,8 @@ async def collect_data_job():
     
     db = SessionLocal()
     try:
-        collector = DataCollector()
-        result = await collector.collect_all_data(db)
+        collector = RobustDataCollector(db)
+        result = await collector.collect_all_series()
         
         if result.get('status') == 'completed':
             logger.info(f"✅ Coleta automática concluída: {result.get('total_records')} registros")
