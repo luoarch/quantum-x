@@ -11,6 +11,9 @@ Sistema de geração de sinais de trading baseado em **metodologias científicas
 - **Yield Curve Indicators** (spread 10Y-2Y)
 - **Backtesting** com ativos reais (Tesouro IPCA+, BOVA11)
 - **Logs detalhados** para debug profundo
+- **Sistema de Fallbacks Robusto** (FRED → OECD → World Bank → IPEA → GitHub)
+- **Rate Limiting Inteligente** (OECD: 5s, FRED: 2s, BCB: 2s)
+- **URLs Corretas** baseadas na documentação oficial da OECD
 
 ### 🔄 **EM DESENVOLVIMENTO**
 - Dashboard Next.js/React

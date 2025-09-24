@@ -4,7 +4,7 @@
 
 'use client';
 
-import { AssetData, HRPAllocation } from '@/types/trading';
+import { AssetData } from '@/types/trading';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
 interface AssetAllocationProps {
@@ -38,7 +38,7 @@ export function AssetAllocation({ assets, hrpMetrics }: AssetAllocationProps) {
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ name, value }) => `${name}: ${value.toFixed(1)}%`}
+              label={(props: any) => `${props.name}: ${props.value.toFixed(1)}%`}
               outerRadius={80}
               fill="#8884d8"
               dataKey="value"

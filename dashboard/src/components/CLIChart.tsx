@@ -4,7 +4,7 @@
 
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -53,7 +53,7 @@ export function CLIChart({ data }: CLIChartProps) {
       },
       {
         label: 'Confidence',
-        data: data.map(point => point.confidence * 100),
+        data: data.map(point => point.confidence),
         borderColor: 'rgb(34, 197, 94)',
         backgroundColor: 'rgba(34, 197, 94, 0.1)',
         fill: false,
@@ -86,12 +86,12 @@ export function CLIChart({ data }: CLIChartProps) {
       },
       tooltip: {
         callbacks: {
-          afterLabel: (context: any) => {
+          afterLabel: (context: { dataIndex: number }) => {
             const dataIndex = context.dataIndex;
             const point = data[dataIndex];
             return [
               `Regime: ${point.regime}`,
-              `Confiança: ${((point.confidence || 0) * 100).toFixed(1)}%`
+              `Confiança: ${(point.confidence || 0).toFixed(1)}%`
             ];
           }
         }

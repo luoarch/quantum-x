@@ -63,7 +63,7 @@ export function SignalPanel({ currentSignal, recentSignals }: SignalPanelProps) 
           <div>
             <span className="text-gray-500">Confiança:</span>
             <span className={`ml-2 font-medium ${getConfidenceColor(currentSignal.confidence)}`}>
-              {((currentSignal.confidence || 0) * 100).toFixed(1)}%
+              {(currentSignal.confidence || 0).toFixed(1)}%
             </span>
           </div>
           <div>
@@ -85,14 +85,14 @@ export function SignalPanel({ currentSignal, recentSignals }: SignalPanelProps) 
               <TrendingUp className="w-4 h-4 text-green-600 mr-1" />
               <span className="text-gray-500">Compra:</span>
               <span className="ml-1 font-medium text-green-600">
-                {((currentSignal.buyProbability || 0) * 100).toFixed(1)}%
+                {(currentSignal.buyProbability || 0).toFixed(1)}%
               </span>
             </div>
             <div className="flex items-center">
               <TrendingDown className="w-4 h-4 text-red-600 mr-1" />
               <span className="text-gray-500">Venda:</span>
               <span className="ml-1 font-medium text-red-600">
-                {((currentSignal.sellProbability || 0) * 100).toFixed(1)}%
+                {(currentSignal.sellProbability || 0).toFixed(1)}%
               </span>
             </div>
           </div>
@@ -124,7 +124,7 @@ export function SignalPanel({ currentSignal, recentSignals }: SignalPanelProps) 
                   {signal.regime}
                 </div>
                 <div className="text-xs text-gray-500">
-                  {((signal.confidence || 0) * 100).toFixed(0)}%
+                  {(signal.confidence || 0).toFixed(0)}%
                 </div>
               </div>
             </div>

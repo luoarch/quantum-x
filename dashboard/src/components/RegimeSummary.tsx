@@ -13,6 +13,7 @@ interface RegimeSummaryProps {
 
 export function RegimeSummary({ regimes }: RegimeSummaryProps) {
   const getRegimeIcon = (name: string) => {
+    if (!name) return <Minus className="w-4 h-4 text-gray-600" />;
     switch (name.toUpperCase()) {
       case 'EXPANSION':
         return <TrendingUp className="w-4 h-4 text-green-600" />;
@@ -28,6 +29,7 @@ export function RegimeSummary({ regimes }: RegimeSummaryProps) {
   };
 
   const getRegimeColor = (name: string) => {
+    if (!name) return 'bg-gray-50 border-gray-200 text-gray-800';
     switch (name.toUpperCase()) {
       case 'EXPANSION':
         return 'bg-green-50 border-green-200 text-green-800';
@@ -53,14 +55,14 @@ export function RegimeSummary({ regimes }: RegimeSummaryProps) {
   return (
     <div className="space-y-3">
       {regimes.map((regime, index) => (
-        <div key={index} className={`rounded-lg border p-4 ${getRegimeColor(regime.name)}`}>
+        <div key={index} className={`rounded-lg border p-4 ${getRegimeColor(regime?.name || 'UNKNOWN')}`}>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              {getRegimeIcon(regime.name)}
-              <span className="font-medium">{regime.name}</span>
+              {getRegimeIcon(regime?.name || 'UNKNOWN')}
+              <span className="font-medium">{regime?.name || 'UNKNOWN'}</span>
             </div>
             <span className="text-sm font-bold">
-              {((regime.frequency || 0) * 100).toFixed(1)}%
+              {(regime.frequency || 0).toFixed(1)}%
             </span>
           </div>
 
@@ -68,13 +70,13 @@ export function RegimeSummary({ regimes }: RegimeSummaryProps) {
             <div>
               <span className="text-gray-600">Prob. Média:</span>
               <span className="ml-1 font-medium">
-                {((regime.avgProbability || 0) * 100).toFixed(1)}%
+                {(regime.avgProbability || 0).toFixed(1)}%
               </span>
             </div>
             <div>
               <span className="text-gray-600">Prob. Máxima:</span>
               <span className="ml-1 font-medium">
-                {((regime.maxProbability || 0) * 100).toFixed(1)}%
+                {(regime.maxProbability || 0).toFixed(1)}%
               </span>
             </div>
           </div>
@@ -84,7 +86,7 @@ export function RegimeSummary({ regimes }: RegimeSummaryProps) {
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="h-2 rounded-full bg-current opacity-60"
-                style={{ width: `${regime.frequency * 100}%` }}
+                style={{ width: `${regime.frequency}%` }}
               />
             </div>
           </div>

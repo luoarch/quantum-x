@@ -16,8 +16,29 @@ from app.services.data_sources.bcb_source import BCBSource
 from app.services.data_sources.ipea_source import IPEASource
 from app.services.data_sources.oecd_source import OECDSource
 from app.services.data_sources.trading_economics_source import TradingEconomicsSource
+from app.services.data_sources.fred_source import FREDSource
+from app.services.data_sources.worldbank_source import WorldBankSource
+from app.services.data_sources.ipea_cli_source import IPEACLISource
+from app.services.data_sources.github_oecd_source import GitHubOECDSource
 
 logger = logging.getLogger(__name__)
+
+# Configurar níveis de log específicos
+def log_debug(message: str, **kwargs):
+    """Log para mensagens detalhadas de debug"""
+    logger.debug(message, extra=kwargs)
+
+def log_info(message: str, **kwargs):
+    """Log para eventos de sucesso e fluxo normal"""
+    logger.info(message, extra=kwargs)
+
+def log_warning(message: str, **kwargs):
+    """Log para warnings de rate-limit e validação cruzada"""
+    logger.warning(message, extra=kwargs)
+
+def log_error(message: str, exc_info: bool = True, **kwargs):
+    """Log para erros com stack trace"""
+    logger.error(message, exc_info=exc_info, extra=kwargs)
 
 
 class RobustDataCollector:
@@ -26,17 +47,38 @@ class RobustDataCollector:
     def __init__(self, db: Session):
         self.db = db
         
+        # Controle de concorrência
+        self._semaphore = asyncio.Semaphore(3)  # Máximo 3 requisições simultâneas
+        
+        # Métricas de health check
+        self._health_metrics = {
+            'last_success': {},
+            'last_failure': {},
+            'retry_count': {},
+            'total_requests': 0,
+            'successful_requests': 0,
+            'failed_requests': 0
+        }
+        
         # Sistema de prioridade e failover inteligente
         self.sources = {
             'bcb': BCBSource(),  # Primária para IPCA, SELIC, PIB, Câmbio
             'ipea': IPEASource(),  # Secundária para IPCA, SELIC, PIB; Primária para Desemprego
             'oecd': OECDSource(),  # Primária para CLI
-            'trading_economics': TradingEconomicsSource()  # Secundária para Desemprego
+            'trading_economics': TradingEconomicsSource(),  # Secundária para Desemprego
+            'fred': FREDSource(),  # Fallback para CLI
+            'worldbank': WorldBankSource(),  # Fallback para CLI
+            'ipea_cli': IPEACLISource(),  # Fallback para CLI Brasil
+            'github_oecd': GitHubOECDSource()  # Fallback para CLI
         }
         
         # Configurar API key do Trading Economics se disponível
-        if hasattr(settings, 'TRADING_ECONOMICS_API_KEY'):
-            self.sources['trading_economics'].set_api_key(settings.TRADING_ECONOMICS_API_KEY)
+        try:
+            from app.core.config import settings
+            if hasattr(settings, 'TRADING_ECONOMICS_API_KEY') and settings.TRADING_ECONOMICS_API_KEY:
+                self.sources['trading_economics'].set_api_key(settings.TRADING_ECONOMICS_API_KEY)
+        except Exception as e:
+            logger.warning(f"Erro ao configurar Trading Economics API key: {e}")
         
         self.health_status = {}
         
@@ -48,7 +90,7 @@ class RobustDataCollector:
             'pib': ['bcb', 'ipea'],
             'prod_industrial': ['bcb', 'ipea'],
             'desemprego': ['ipea', 'trading_economics'],
-            'cli': ['oecd']
+            'cli': ['fred', 'oecd', 'worldbank', 'ipea_cli', 'github_oecd']  # FRED como primário (API oficial estável)
         }
     
     async def collect_series_with_priority(
@@ -59,7 +101,9 @@ class RobustDataCollector:
     ) -> Dict[str, Any]:
         """Coleta dados com sistema de prioridade e validação cruzada"""
         
-        logger.info(f"🔄 Iniciando coleta de {series_name} com sistema de prioridade")
+        logger.info(f"🔄 [COLLECTOR] Iniciando coleta de {series_name} com sistema de prioridade")
+        logger.debug(f"📋 [COLLECTOR] Estratégia: {self.priority_strategy.get(series_name, [])}")
+        logger.debug(f"🌍 [COLLECTOR] País: {country}, Meses: {months}")
         
         # Verificar se a série tem estratégia definida
         if series_name not in self.priority_strategy:
@@ -300,8 +344,51 @@ class RobustDataCollector:
         except Exception as e:
             logger.error(f"Erro ao registrar log: {e}")
     
+    def get_health_status(self) -> Dict[str, Any]:
+        """
+        Retorna status de saúde do coletor com métricas detalhadas
+        
+        Returns:
+            Dict[str, Any]: Status de saúde com métricas para monitoramento
+        """
+        total_requests = self._health_metrics['total_requests']
+        failed_requests = self._health_metrics['failed_requests']
+        
+        # Calcular status baseado na taxa de sucesso
+        if total_requests == 0:
+            status = 'unknown'
+        elif failed_requests < total_requests * 0.5:
+            status = 'healthy'
+        else:
+            status = 'degraded'
+        
+        return {
+            'status': status,
+            'metrics': self._health_metrics.copy(),
+            'sources_status': {
+                source_name: {
+                    'last_success': self._health_metrics['last_success'].get(source_name),
+                    'last_failure': self._health_metrics['last_failure'].get(source_name),
+                    'retry_count': self._health_metrics['retry_count'].get(source_name, 0)
+                }
+                for source_name in self.sources.keys()
+            },
+            'timestamp': datetime.now().isoformat()
+        }
+    
     async def collect_all_series(self, months: int = 60) -> Dict[str, Any]:
-        """Coleta todas as séries com sistema de prioridade"""
+        """
+        Coleta todas as séries econômicas com sistema de prioridade e failover
+        
+        Args:
+            months (int): Número de meses de dados históricos a coletar
+            
+        Returns:
+            Dict[str, Any]: Resultados da coleta com estrutura:
+                - results: Dict com dados de cada série
+                - summary: Dict com estatísticas da coleta
+                - errors: List com erros encontrados
+        """
         
         logger.info("🚀 Iniciando coleta completa com sistema de prioridade")
         

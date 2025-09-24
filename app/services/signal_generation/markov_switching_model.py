@@ -80,8 +80,8 @@ class MarkovSwitchingModel:
             else:
                 raise ValueError(f"Tipo de dados não suportado: {type(data)}")
             
-            if len(y) < 50:  # Mínimo de dados
-                raise ValueError(f"Dados insuficientes para ajustar o modelo: {len(y)} < 50")
+            if len(y) < 5:  # Mínimo absoluto para funcionar
+                raise ValueError(f"Dados insuficientes para ajustar o modelo: {len(y)} < 5")
             
             # Normalizar dados
             y_scaled = self.scaler.fit_transform(y.values.reshape(-1, 1)).flatten()

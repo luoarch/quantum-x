@@ -36,7 +36,8 @@ class BCBSource(DataSource):
             'selic': 432,
             'cambio': 1,  # Câmbio comercial - compra
             'prod_industrial': 21859,
-            'pib_mensal': 4380,
+            'pib': 4380,  # PIB mensal - corrigido para 'pib'
+            'pib_mensal': 4380,  # Mantido para compatibilidade
             'desemprego': 24369  # Taxa de desemprego (IBGE via BCB)
         }
     

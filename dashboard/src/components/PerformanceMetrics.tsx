@@ -105,21 +105,21 @@ export function PerformanceMetrics({ metrics }: PerformanceMetricsProps) {
         <div className="bg-white border rounded-lg p-4">
           <div className="text-sm text-gray-500 mb-1">Confiança Média</div>
           <div className="text-2xl font-bold text-gray-900">
-            {((metrics.avgConfidence || 0) * 100).toFixed(1)}%
+            {(metrics.avgConfidence || 0).toFixed(1)}%
           </div>
         </div>
 
         <div className="bg-white border rounded-lg p-4">
           <div className="text-sm text-gray-500 mb-1">Prob. Compra Média</div>
           <div className="text-2xl font-bold text-green-600">
-            {((metrics.avgBuyProbability || 0) * 100).toFixed(1)}%
+            {(metrics.avgBuyProbability || 0).toFixed(1)}%
           </div>
         </div>
 
         <div className="bg-white border rounded-lg p-4">
           <div className="text-sm text-gray-500 mb-1">Prob. Venda Média</div>
           <div className="text-2xl font-bold text-red-600">
-            {((metrics.avgSellProbability || 0) * 100).toFixed(1)}%
+            {(metrics.avgSellProbability || 0).toFixed(1)}%
           </div>
         </div>
       </div>
