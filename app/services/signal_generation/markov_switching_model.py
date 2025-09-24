@@ -95,7 +95,20 @@ class MarkovSwitchingModel:
                 fitted_model = self._simple_markov_switching(y_scaled)
             
             # Calcular probabilidades de regime
-            regime_probs = fitted_model.smoothed_marginal_probabilities
+            try:
+                if hasattr(fitted_model, 'smoothed_marginal_probabilities'):
+                    regime_probs = fitted_model.smoothed_marginal_probabilities
+                elif hasattr(fitted_model, 'filtered_marginal_probabilities'):
+                    regime_probs = fitted_model.filtered_marginal_probabilities
+                else:
+                    # Criar probabilidades padrão se não disponível
+                    n_points = len(y_scaled)
+                    regime_probs = np.array([[0.25, 0.25, 0.25, 0.25]] * n_points)
+                    logger.warning("⚠️ Probabilidades de regime não disponíveis, usando valores padrão")
+            except Exception as e:
+                logger.warning(f"⚠️ Erro ao obter probabilidades: {e}")
+                n_points = len(y_scaled)
+                regime_probs = np.array([[0.25, 0.25, 0.25, 0.25]] * n_points)
             
             # Identificar regime mais provável
             most_likely_regime = np.argmax(regime_probs, axis=1)

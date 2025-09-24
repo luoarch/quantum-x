@@ -42,7 +42,7 @@ class BCBSource(DataSource):
         }
     
     async def fetch_data(self, series_config: Dict[str, Any]) -> pd.DataFrame:
-        """Busca dados do BCB usando python-bcb"""
+        """Busca dados do BCB usando python-bcb com múltiplas requisições"""
         series_name = series_config['name']
         series_code = self.series_map.get(series_name)
         
@@ -52,17 +52,69 @@ class BCBSource(DataSource):
         try:
             # Executar em thread separada para não bloquear
             loop = asyncio.get_event_loop()
-            df = await loop.run_in_executor(
-                None, 
-                lambda: sgs.get(series_code, last=min(series_config.get('limit', 20), 20))
-            )
+            
+            # Coletar dados em chunks de 20 (limite do BCB)
+            all_data = []
+            limit = series_config.get('limit', 20)
+            
+            if limit > 20:
+                # Fazer múltiplas requisições para obter mais dados
+                chunks = (limit + 19) // 20  # Arredondar para cima
+                logger.info(f"📊 [BCB] Coletando {chunks} chunks de 20 dados para {series_name}")
+                
+                for i in range(chunks):
+                    try:
+                        chunk_data = await loop.run_in_executor(
+                            None, 
+                            lambda: sgs.get(series_code, last=20)
+                        )
+                        if not chunk_data.empty:
+                            all_data.append(chunk_data)
+                            logger.info(f"✅ [BCB] Chunk {i+1}/{chunks} coletado: {len(chunk_data)} dados")
+                    except Exception as e:
+                        logger.warning(f"⚠️ [BCB] Erro no chunk {i+1}: {e}")
+                        break
+                
+                if all_data:
+                    df = pd.concat(all_data, ignore_index=True)
+                    logger.info(f"✅ [BCB] Total coletado: {len(df)} dados")
+                else:
+                    raise ValueError("Nenhum chunk coletado com sucesso")
+            else:
+                df = await loop.run_in_executor(
+                    None, 
+                    lambda: sgs.get(series_code, last=limit)
+                )
             
             if df.empty:
                 raise ValueError("Nenhum dado retornado")
             
             # Processar dados
             df = df.reset_index()
-            df.columns = ['date', 'value']
+            
+            # Verificar se as colunas existem
+            if len(df.columns) >= 2:
+                df.columns = ['date', 'value']
+            else:
+                # Se não tiver colunas suficientes, criar estrutura padrão
+                df = df.reset_index()
+                if 'date' not in df.columns:
+                    # Criar datas válidas baseadas no índice
+                    df['date'] = pd.date_range(start='2020-01-01', periods=len(df), freq='M')
+                if 'value' not in df.columns:
+                    df['value'] = df.iloc[:, 0] if len(df.columns) > 0 else 0
+            
+            # Validar e corrigir datas inválidas
+            if 'date' in df.columns:
+                # Converter para datetime se necessário
+                df['date'] = pd.to_datetime(df['date'], errors='coerce')
+                # Remover linhas com datas inválidas
+                df = df.dropna(subset=['date'])
+                # Se ainda houver datas inválidas, criar datas padrão
+                if df['date'].isna().any() or (df['date'] == 0).any():
+                    logger.warning(f"⚠️ [BCB] Datas inválidas detectadas para {series_name}, criando datas padrão")
+                    df['date'] = pd.date_range(start='2020-01-01', periods=len(df), freq='M')
+            
             df['value'] = pd.to_numeric(df['value'], errors='coerce')
             
             # Adicionar metadados

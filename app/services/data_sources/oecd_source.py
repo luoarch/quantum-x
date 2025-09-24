@@ -59,7 +59,7 @@ class OECDSource(DataSource):
 
     async def _fetch_data_with_chunking(self, country: str) -> pd.DataFrame:
         """Busca dados com chunking de períodos (OECD limitou a 20 downloads/hora)"""
-        start_year = 2023  # Período menor para evitar rate limit
+        start_year = 2015  # Período expandido para mais dados
         end_year = 2025
         chunk_size = 1  # 1 ano por chunk (mais conservador)
         

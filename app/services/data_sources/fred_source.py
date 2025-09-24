@@ -88,9 +88,9 @@ class FREDSource(DataSource):
             
             params = {
                 'series_id': series_id,
-                'api_key': 'DEMO_KEY',  # Chave demo do FRED
+                'api_key': self.api_key or 'DEMO_KEY',  # Usar chave real se disponível
                 'file_type': 'json',
-                'observation_start': '2020-01-01',
+                'observation_start': '2015-01-01',
                 'observation_end': '2025-12-31',
                 'sort_order': 'asc',
                 'limit': 1000  # Limite para demo

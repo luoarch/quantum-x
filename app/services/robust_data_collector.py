@@ -97,7 +97,7 @@ class RobustDataCollector:
         self, 
         series_name: str, 
         country: str = 'BRA',
-        months: int = 60
+        months: int = 120
     ) -> Dict[str, Any]:
         """Coleta dados com sistema de prioridade e validação cruzada"""
         
@@ -258,18 +258,36 @@ class RobustDataCollector:
     async def _save_to_database(self, data: pd.DataFrame, series_name: str, source: str):
         """Salva dados no banco de dados"""
         try:
-            for _, row in data.iterrows():
+            for idx, row in data.iterrows():
+                # Validar data antes de salvar
+                if 'date' not in row or pd.isna(row['date']) or row['date'] == 0:
+                    logger.warning(f"⚠️ Data inválida para {series_name} (linha {idx}): {row.get('date', 'N/A')}")
+                    logger.debug(f"📊 Row completo: {row.to_dict()}")
+                    continue
+                
+                # Converter data para datetime se necessário
+                try:
+                    if isinstance(row['date'], str):
+                        date_val = pd.to_datetime(row['date'])
+                    elif hasattr(row['date'], 'to_pydatetime'):
+                        date_val = row['date'].to_pydatetime()
+                    else:
+                        date_val = pd.to_datetime(row['date'])
+                except Exception as e:
+                    logger.warning(f"⚠️ Erro ao converter data para {series_name}: {e}")
+                    continue
+                
                 # Verificar se já existe registro
                 existing = self.db.query(EconomicSeries).filter(
                     EconomicSeries.series_name == series_name.upper(),
-                    EconomicSeries.date == row['date']
+                    EconomicSeries.date == date_val
                 ).first()
                 
                 if not existing:
                     series_record = EconomicSeries(
                         series_code=row.get('series_code', series_name.upper()),
                         series_name=series_name.upper(),
-                        date=row['date'],
+                        date=date_val,
                         value=row['value'],
                         source=source,
                         country=row.get('country', 'BRA'),
@@ -376,7 +394,7 @@ class RobustDataCollector:
             'timestamp': datetime.now().isoformat()
         }
     
-    async def collect_all_series(self, months: int = 60) -> Dict[str, Any]:
+    async def collect_all_series(self, months: int = 120) -> Dict[str, Any]:
         """
         Coleta todas as séries econômicas com sistema de prioridade e failover
         
@@ -404,34 +422,44 @@ class RobustDataCollector:
         # Executar em paralelo
         collection_results = await asyncio.gather(*tasks, return_exceptions=True)
         
+        # Log dos resultados
+        logger.info(f"📊 Resultados da coleta: {len(collection_results)} séries")
+        for i, result in enumerate(collection_results):
+            if isinstance(result, Exception):
+                logger.error(f"❌ Série {i}: {result}")
+            else:
+                logger.info(f"✅ Série {i}: {type(result)}")
+                if isinstance(result, dict):
+                    logger.debug(f"📊 Dict keys: {list(result.keys())}")
+                    if 'data' in result:
+                        logger.debug(f"📊 Data type: {type(result['data'])}")
+                        if hasattr(result['data'], 'shape'):
+                            logger.debug(f"📊 Data shape: {result['data'].shape}")
+        
         # Processar resultados
         for i, result in enumerate(collection_results):
             series_name = all_series[i]
             
             if isinstance(result, Exception):
-                results[series_name] = {
-                    'status': 'error',
-                    'error': str(result),
-                    'records': 0
-                }
+                results[series_name] = pd.DataFrame()
+                logger.error(f"❌ Erro na coleta de {series_name}: {result}")
             else:
-                results[series_name] = result
+                # Extrair DataFrame do resultado
+                if isinstance(result, dict) and 'data' in result:
+                    results[series_name] = result['data']
+                    logger.info(f"✅ {series_name}: {len(result['data'])} registros")
+                else:
+                    results[series_name] = pd.DataFrame()
+                    logger.warning(f"⚠️ {series_name}: Formato inesperado")
         
         # Estatísticas finais
-        successful = sum(1 for r in results.values() if r['status'] in ['success', 'partial'])
-        total_records = sum(r.get('records', 0) for r in results.values())
+        successful = sum(1 for r in results.values() if not r.empty)
+        total_records = sum(len(r) for r in results.values())
         
         logger.info(f"✅ Coleta completa: {successful}/{len(all_series)} séries, {total_records} registros")
         
-        return {
-            'summary': {
-                'total_series': len(all_series),
-                'successful_series': successful,
-                'total_records': total_records,
-                'timestamp': datetime.now().isoformat()
-            },
-            'results': results
-        }
+        # Retornar apenas os DataFrames, não o dict completo
+        return results
     
     async def get_health_status(self) -> Dict[str, Any]:
         """Verifica status de saúde de todas as fontes"""

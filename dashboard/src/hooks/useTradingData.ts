@@ -17,10 +17,10 @@ export function useTradingData() {
       setLoading(true);
       setError(null);
 
-      console.log('🔍 [Dashboard] Buscando dados da API:', `${API_BASE_URL}/api/v1/test/dashboard-data`);
+      console.log('🔍 [Dashboard] Buscando dados da API:', `${API_BASE_URL}/api/v1/dashboard/dashboard-data`);
 
-      // Buscar dados do dashboard usando o endpoint de teste
-      const response = await fetch(`${API_BASE_URL}/api/v1/test/dashboard-data`);
+      // Buscar dados do dashboard usando o endpoint real
+      const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/dashboard-data`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

@@ -136,12 +136,23 @@ async def generate_signals(db: Session = Depends(get_db)):
                     if obj is None:
                         return None
                     elif isinstance(obj, (np.integer, np.floating, np.bool_)):
-                        return obj.item()
+                        item = obj.item()
+                        # Verificar se é NaN ou infinito
+                        if isinstance(item, float) and (np.isnan(item) or np.isinf(item)):
+                            return 0.0
+                        return item
                     elif isinstance(obj, np.ndarray):
                         if obj.size == 1:
-                            return obj.item()
+                            item = obj.item()
+                            if isinstance(item, float) and (np.isnan(item) or np.isinf(item)):
+                                return 0.0
+                            return item
                         else:
-                            return obj.tolist()
+                            result = obj.tolist()
+                            # Tratar NaN/inf em arrays
+                            if isinstance(result, list):
+                                return [0.0 if (isinstance(x, float) and (np.isnan(x) or np.isinf(x))) else x for x in result]
+                            return result
                     elif hasattr(obj, 'item'):  # numpy scalar
                         try:
                             return obj.item()
