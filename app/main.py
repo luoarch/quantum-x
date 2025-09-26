@@ -12,6 +12,7 @@ import time
 from contextlib import asynccontextmanager
 
 from app.core.config import settings
+from app.core.scheduler import DataScheduler
 from app.api.v1.router import api_router
 
 # Configurar logging
@@ -29,6 +30,14 @@ async def lifespan(app: FastAPI):
     logger.info(f"Versão: {settings.VERSION}")
     logger.info(f"Modo Debug: {settings.DEBUG}")
     
+    # Inicializar agendador de dados
+    scheduler = DataScheduler()
+    try:
+        await scheduler.start()
+        logger.info("Agendador de dados iniciado")
+    except Exception as e:
+        logger.error(f"Erro ao iniciar agendador: {e}")
+    
     # Verificar conectividade com bancos de dados
     try:
         # TODO: Implementar verificação de conectividade
@@ -40,6 +49,11 @@ async def lifespan(app: FastAPI):
     
     # Shutdown
     logger.info("Encerrando aplicação")
+    try:
+        await scheduler.stop()
+        logger.info("Agendador de dados parado")
+    except Exception as e:
+        logger.error(f"Erro ao parar agendador: {e}")
 
 # Criar aplicação FastAPI
 app = FastAPI(

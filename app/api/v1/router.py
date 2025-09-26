@@ -8,6 +8,7 @@ from app.api.v1.endpoints import (
     global_regimes,
     brazil_spillovers, 
     brazil_indicators,
+    data_pipeline,
     dashboard, dashboard_simple, dashboard_advanced, 
     macro_analysis, regime_analysis, scientific_validation
 )
@@ -24,6 +25,9 @@ api_router.include_router(brazil_spillovers.router, prefix="/brazil-spillovers",
 
 # RF041-RF050: Indicadores Brasil
 api_router.include_router(brazil_indicators.router, prefix="/brazil-indicators", tags=["brazil-indicators"])
+
+# RF051-RF070: API e Integração
+api_router.include_router(data_pipeline.router, prefix="/data-pipeline", tags=["data-pipeline"])
 
 # === ENDPOINTS LEGACY (A SEREM REMOVIDOS) ===
 api_router.include_router(dashboard.router, prefix="/dashboard", tags=["dashboard"])
