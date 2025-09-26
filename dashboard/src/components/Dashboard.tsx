@@ -103,7 +103,7 @@ export default function Dashboard() {
             {/* Alocação de Ativos */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Alocação HRP
+                Sugestão de Alocação HRP
               </h2>
               <AssetAllocation 
                 assets={data.assets}

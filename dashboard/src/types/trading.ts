@@ -60,6 +60,9 @@ export interface AssetData {
   change: number;
   changePercent: number;
   allocation: number;
+  suggestedAllocation?: number;
+  currentPrice?: number;
+  recommendedAction?: string;
 }
 
 export interface DashboardData {

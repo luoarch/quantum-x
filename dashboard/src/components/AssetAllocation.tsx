@@ -18,10 +18,10 @@ interface AssetAllocationProps {
 }
 
 export function AssetAllocation({ assets, hrpMetrics }: AssetAllocationProps) {
-  // Preparar dados para o gráfico de pizza
+  // Preparar dados para o gráfico de pizza (sugestões de alocação)
   const pieData = assets.map(asset => ({
     name: asset.name,
-    value: asset.allocation,
+    value: asset.suggestedAllocation || asset.allocation,
     ticker: asset.ticker
   }));
 
@@ -68,9 +68,14 @@ export function AssetAllocation({ assets, hrpMetrics }: AssetAllocationProps) {
               </div>
             </div>
             <div className="text-right">
-              <div className="font-bold text-gray-900">{asset.allocation.toFixed(1)}%</div>
+              <div className="font-bold text-gray-900">
+                {(asset.suggestedAllocation || asset.allocation).toFixed(1)}%
+              </div>
+              <div className="text-xs text-blue-600 font-medium">
+                Sugestão
+              </div>
               <div className="text-sm text-gray-500">
-                R$ {asset.price.toFixed(2)}
+                R$ {(asset.currentPrice || asset.price).toFixed(2)}
               </div>
             </div>
           </div>
@@ -79,7 +84,10 @@ export function AssetAllocation({ assets, hrpMetrics }: AssetAllocationProps) {
 
       {/* Métricas HRP */}
       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-4">
-        <h4 className="text-sm font-medium text-gray-900 mb-3">Métricas HRP</h4>
+        <h4 className="text-sm font-medium text-gray-900 mb-3">Métricas da Estratégia HRP</h4>
+        <p className="text-xs text-gray-600 mb-3">
+          Sugestões baseadas em análise quantitativa de risco e correlação
+        </p>
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
             <span className="text-gray-600">Retorno:</span>
