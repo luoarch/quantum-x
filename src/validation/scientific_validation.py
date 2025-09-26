@@ -385,17 +385,17 @@ class ScientificValidator:
 ## Resultados de Validação
 
 ### 1. Validação Cruzada Temporal
-- **RMSE Médio**: {results.get('cv_rmse', 'N/A'):.4f}
-- **Desvio Padrão**: {results.get('cv_std', 'N/A'):.4f}
+- **RMSE Médio**: {results.get('cv_rmse', np.nan):.4f}
+- **Desvio Padrão**: {results.get('cv_std', np.nan):.4f}
 - **Status**: {'✅ Aprovado' if results.get('cv_rmse', np.inf) < 0.5 else '❌ Reprovado'}
 
 ### 2. Teste Diebold-Mariano
-- **Estatística DM**: {results.get('dm_statistic', 'N/A'):.4f}
-- **P-valor**: {results.get('dm_pvalue', 'N/A'):.4f}
+- **Estatística DM**: {results.get('dm_statistic', np.nan):.4f}
+- **P-valor**: {results.get('dm_pvalue', np.nan):.4f}
 - **Melhoria Significativa**: {'✅ Sim' if results.get('significant_improvement', False) else '❌ Não'}
 
 ### 3. Robustez a Outliers
-- **RMSE (dados limpos)**: {results.get('robustness_rmse', 'N/A'):.4f}
+- **RMSE (dados limpos)**: {results.get('robustness_rmse', np.nan):.4f}
 - **Robusto a Outliers**: {'✅ Sim' if results.get('outlier_robust', False) else '❌ Não'}
 
 ### 4. Sanidade Econômica
@@ -403,7 +403,7 @@ class ScientificValidator:
 - **Economicamente Plausível**: {'✅ Sim' if results.get('economic_plausible', False) else '❌ Não'}
 
 ### 5. Estabilidade do Modelo
-- **Estabilidade das Predições**: {results.get('prediction_stability', 'N/A'):.4f}
+- **Estabilidade das Predições**: {results.get('prediction_stability', np.nan):.4f}
 - **Modelo Estável**: {'✅ Sim' if results.get('model_stable', False) else '❌ Não'}
 
 ## Conclusão
