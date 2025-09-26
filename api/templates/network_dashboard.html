@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏰 Network Effects Dashboard - Enterprise</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 2.5em;
+      font-weight: 300;
+    }
+
+    .header p {
+      margin: 10px 0 0 0;
+      opacity: 0.8;
+      font-size: 1.2em;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .stat-card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 25px;
+      text-align: center;
+      border-left: 5px solid #3498db;
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-value {
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #2c3e50;
+      margin: 10px 0;
+    }
+
+    .stat-label {
+      color: #7f8c8d;
+      font-size: 1.1em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .chart-container {
+      padding: 30px;
+      background: #f8f9fa;
+    }
+
+    .chart-title {
+      font-size: 1.5em;
+      color: #2c3e50;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .chart-wrapper {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .loading {
+      text-align: center;
+      padding: 50px;
+      color: #7f8c8d;
+    }
+
+    .error {
+      background: #e74c3c;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px;
+      text-align: center;
+    }
+
+    .success {
+      background: #27ae60;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 20px;
+      text-align: center;
+    }
+
+    .refresh-btn {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1em;
+      margin: 20px;
+      transition: background 0.3s ease;
+    }
+
+    .refresh-btn:hover {
+      background: #2980b9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🏰 Network Effects Dashboard</h1>
+      <p>Sistema Enterprise - Spillover AI</p>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="refresh-btn" onclick="loadData()">🔄 Atualizar Dados</button>
+    </div>
+
+    <div id="loading" class="loading">
+      <h3>🔄 Carregando dados...</h3>
+    </div>
+
+    <div id="error" class="error" style="display: none;">
+      <h3>❌ Erro ao carregar dados</h3>
+      <p id="error-message"></p>
+    </div>
+
+    <div id="content" style="display: none;">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Clientes Ativos</div>
+          <div class="stat-value" id="total-clients">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Predições Totais</div>
+          <div class="stat-value" id="total-predictions">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Health Score</div>
+          <div class="stat-value" id="health-score">-</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Network Strength</div>
+          <div class="stat-value" id="network-strength">-</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">📊 Network Health Trends</div>
+        <div class="chart-wrapper">
+          <canvas id="healthChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <div class="chart-title">📈 Prediction Volume</div>
+        <div class="chart-wrapper">
+          <canvas id="volumeChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let healthChart, volumeChart;
+
+    async function loadData() {
+      try {
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('content').style.display = 'none';
+
+        const response = await fetch('/api/enterprise/analytics');
+        const data = await response.json();
+
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        updateStats(data);
+        updateCharts(data);
+
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+
+      } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('error-message').textContent = error.message;
+      }
+    }
+
+    function updateStats(data) {
+      document.getElementById('total-clients').textContent = data.network_health.total_clients;
+      document.getElementById('total-predictions').textContent = data.network_health.total_predictions;
+      document.getElementById('health-score').textContent = data.network_health.health_score.toFixed(1);
+      document.getElementById('network-strength').textContent = data.network_strength.strength.toFixed(3);
+    }
+
+    function updateCharts(data) {
+      // Health Chart
+      const healthCtx = document.getElementById('healthChart').getContext('2d');
+      if (healthChart) healthChart.destroy();
+
+      healthChart = new Chart(healthCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Health Score', 'Remaining'],
+          datasets: [{
+            data: [data.network_health.health_score, 100 - data.network_health.health_score],
+            backgroundColor: ['#27ae60', '#ecf0f1'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Volume Chart
+      const volumeCtx = document.getElementById('volumeChart').getContext('2d');
+      if (volumeChart) volumeChart.destroy();
+
+      volumeChart = new Chart(volumeCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Predições', 'Clientes'],
+          datasets: [{
+            label: 'Volume',
+            data: [data.network_health.total_predictions, data.network_health.total_clients],
+            backgroundColor: ['#3498db', '#e74c3c'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadData, 30000);
+
+    // Load data on page load
+    loadData();
+  </script>
+</body>
+
+</html>
