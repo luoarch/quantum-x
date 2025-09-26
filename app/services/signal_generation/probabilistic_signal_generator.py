@@ -80,8 +80,6 @@ class ProbabilisticSignalGenerator:
             # Verificar se asset_returns é None e criar dados básicos
             if asset_returns is None:
                 logger.warning("⚠️ asset_returns é None, criando dados básicos")
-                import pandas as pd
-                import numpy as np
                 # Criar dados básicos baseados nos dados econômicos disponíveis
                 if economic_data:
                     # Usar o tamanho dos dados econômicos disponíveis
@@ -101,8 +99,6 @@ class ProbabilisticSignalGenerator:
             # Verificar se temos dados econômicos suficientes
             if not economic_data or len(economic_data) < 2:
                 logger.warning("⚠️ Dados econômicos insuficientes, criando dados simulados")
-                import pandas as pd
-                import numpy as np
                 dates = pd.date_range(start='2015-01-01', end='2024-12-31', freq='M')
                 economic_data = {
                     'ipca': pd.DataFrame({
@@ -135,6 +131,18 @@ class ProbabilisticSignalGenerator:
                 markov_results, yield_signals, asset_returns
             )
             logger.info(f"✅ Sinais probabilísticos gerados: {len(probabilistic_signals)} pontos")
+            # Salvaguarda: garantir DataFrame não vazio
+            if isinstance(probabilistic_signals, pd.DataFrame) and probabilistic_signals.empty:
+                logger.warning("⚠️ Sinais vazios após cálculo. Construindo base neutra.")
+                base_index = asset_returns.index if hasattr(asset_returns, 'index') else pd.date_range(start='2020-01-01', periods=12, freq='M')
+                probabilistic_signals = pd.DataFrame(index=base_index)
+                probabilistic_signals['buy_probability'] = 0.0
+                probabilistic_signals['sell_probability'] = 0.0
+                probabilistic_signals['net_signal'] = 0.0
+                probabilistic_signals['buy_signal'] = 0
+                probabilistic_signals['sell_signal'] = 0
+                probabilistic_signals['hold_signal'] = 1
+                probabilistic_signals['final_signal'] = 0
             
             # 4. Aplicar confirmação de regime
             logger.info("🔒 ETAPA 4: Aplicando confirmação de regime...")
@@ -181,6 +189,14 @@ class ProbabilisticSignalGenerator:
             cli_data = self._create_simple_cli(economic_data)
             if cli_data.empty:
                 logger.error("❌ CLI vazio, não é possível ajustar o modelo.")
+                logger.debug(f"📊 economic_data keys: {list(economic_data.keys())}")
+                for k, v in economic_data.items():
+                    try:
+                        idx = getattr(v, 'index', None)
+                        tz = idx.tz if idx is not None else None
+                        logger.debug(f"🔎 série={k} shape={getattr(v, 'shape', None)} tz={tz}")
+                    except Exception as _e:
+                        logger.debug(f"🔎 série={k} info indisponível: {_e}")
                 return {'error': 'CLI data is empty'}
 
             cli_series = cli_data['value']
@@ -226,8 +242,15 @@ class ProbabilisticSignalGenerator:
                 logger.warning("⚠️ Dados econômicos insuficientes ou em formato incorreto para criar CLI.")
                 return pd.DataFrame()
 
-            # Usar o índice da primeira série como referência
-            reference_index = next((df.index for df in economic_data.values() if isinstance(df, pd.DataFrame)), None)
+            # Usar o índice da primeira série como referência (normalizando timezone)
+            reference_index = None
+            for df in economic_data.values():
+                if isinstance(df, pd.DataFrame):
+                    idx = df.index
+                    if getattr(idx, 'tz', None) is not None:
+                        idx = idx.tz_localize(None)
+                    reference_index = idx
+                    break
             if reference_index is None:
                 logger.error("❌ Não foi possível encontrar um índice de referência.")
                 return pd.DataFrame()
@@ -236,8 +259,12 @@ class ProbabilisticSignalGenerator:
             
             for series_name, df in economic_data.items():
                 if isinstance(df, pd.DataFrame) and 'value' in df.columns:
-                    # Renomear a coluna 'value' para o nome da série e garantir que seja numérica
-                    series = pd.to_numeric(df['value'], errors='coerce').rename(series_name)
+                    # Normalizar índice para tz-naive e garantir dtype numérico
+                    s_df = df.copy()
+                    if getattr(s_df.index, 'tz', None) is not None:
+                        s_df.index = s_df.index.tz_localize(None)
+                    series = pd.to_numeric(s_df['value'], errors='coerce').rename(series_name)
+                    logger.debug(f"🔧 Join série={series_name} len={len(series)} ref_len={len(combined_data)}")
                     combined_data = combined_data.join(series, how='outer')
 
             # Tratar NaNs e normalizar
@@ -298,11 +325,21 @@ class ProbabilisticSignalGenerator:
             logger.info("🎯 DEBUG: Iniciando geração de sinais probabilísticos")
             
             # 1. Iniciar DataFrame de sinais com o índice de asset_returns
-            signals_df = pd.DataFrame(index=asset_returns.index)
+            base_index = getattr(asset_returns, 'index', None)
+            if base_index is None or len(base_index) == 0:
+                logger.warning("⚠️ asset_returns sem índice. Criando índice mensal padrão de 12 meses.")
+                base_index = pd.date_range(start='2020-01-01', periods=12, freq='M')
+            signals_df = pd.DataFrame(index=base_index)
 
             # 2. Obter e mesclar resultados do Markov
             if 'results_df' in markov_results:
                 markov_df = markov_results['results_df']
+                
+                # Normalizar timezones antes do merge para evitar conflitos
+                if hasattr(signals_df.index, 'tz') and signals_df.index.tz is not None:
+                    signals_df.index = signals_df.index.tz_localize(None)
+                if hasattr(markov_df.index, 'tz') and markov_df.index.tz is not None:
+                    markov_df.index = markov_df.index.tz_localize(None)
                 
                 # Merge em vez de reindex para maior robustez
                 signals_df = pd.merge(signals_df, markov_df, left_index=True, right_index=True, how='left')
@@ -311,6 +348,8 @@ class ProbabilisticSignalGenerator:
 
                 # Garantir que o índice seja do tipo datetime
                 signals_df.index = pd.to_datetime(signals_df.index)
+                if getattr(signals_df.index, 'tz', None) is not None:
+                    signals_df.index = signals_df.index.tz_localize(None)
 
                 # 3. Forçar a tipagem correta das colunas
                 regime_names = markov_results.get('regime_names', [])
@@ -335,6 +374,11 @@ class ProbabilisticSignalGenerator:
             
             if 'signals' in yield_signals and not yield_signals['signals'].empty:
                  yield_df = yield_signals['signals']
+                 
+                 # Normalizar timezone do yield_df antes do merge
+                 if hasattr(yield_df.index, 'tz') and yield_df.index.tz is not None:
+                     yield_df.index = yield_df.index.tz_localize(None)
+                 
                  signals_df = signals_df.merge(
                     yield_df[['combined_signal']].rename(columns={'combined_signal': 'yield_combined_signal'}),
                     left_index=True,
@@ -344,7 +388,9 @@ class ProbabilisticSignalGenerator:
                  signals_df['yield_combined_signal'] = signals_df['yield_combined_signal'].fillna(0)
 
 
+            logger.debug(f"🔎 signals_df pre-calc shape={signals_df.shape} cols={list(signals_df.columns)}")
             signals_df = self._calculate_probabilistic_signals(signals_df)
+            logger.debug(f"🔎 signals_df post-calc shape={signals_df.shape} cols={list(signals_df.columns)}")
             
             return signals_df
             
@@ -365,7 +411,12 @@ class ProbabilisticSignalGenerator:
             logger.info(f"📊 Weights: {self.weights}")
             
             # Sinal de compra probabilístico
-            buy_probability = np.zeros(len(signals_df))
+            n = len(signals_df)
+            logger.info(f"📊 Tamanho signals_df: {n}")
+            if n == 0:
+                logger.warning("⚠️ signals_df está vazio antes do cálculo. Retornando vazio.")
+                return signals_df
+            buy_probability = np.zeros(n)
             logger.info("📊 Iniciando cálculo de buy_probability")
             
             # Contribuição do regime
@@ -435,7 +486,7 @@ class ProbabilisticSignalGenerator:
                 logger.warning("⚠️ Coluna 'regime_confidence' não encontrada")
             
             # Sinal de venda probabilístico
-            sell_probability = np.zeros(len(signals_df))
+            sell_probability = np.zeros(n)
             
             # Contribuição do regime
             if 'prob_RECESSION' in signals_df.columns:

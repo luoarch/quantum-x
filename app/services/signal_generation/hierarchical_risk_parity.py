@@ -54,8 +54,12 @@ class HierarchicalRiskParity:
         try:
             # Preparar dados
             returns_clean = returns.dropna()
-            if len(returns_clean) < 30:  # Mínimo de dados
-                raise ValueError("Dados insuficientes para HRP")
+            
+            # Verificar dados mínimos (reduzido para ser mais flexível)
+            min_observations = max(10, len(returns_clean.columns) * 2)  # Pelo menos 2x o número de ativos
+            if len(returns_clean) < min_observations:
+                logger.warning(f"Dados insuficientes para HRP ({len(returns_clean)} < {min_observations}). Usando alocação igual.")
+                return self._equal_weight_allocation(returns_clean)
             
             # Calcular matriz de correlação
             corr_matrix = returns_clean.corr()
@@ -64,7 +68,14 @@ class HierarchicalRiskParity:
             distance_matrix = self._correlation_to_distance(corr_matrix)
             
             # Aplicar clustering hierárquico
-            linkage_matrix = linkage(squareform(distance_matrix), method=self.linkage_method)
+            # Converter matriz de distância para formato condensado
+            from scipy.spatial.distance import squareform
+            try:
+                condensed_distances = squareform(distance_matrix, checks=False)
+                linkage_matrix = linkage(condensed_distances, method=self.linkage_method)
+            except ValueError as ve:
+                logger.warning(f"Erro na matriz de distância: {ve}. Usando alocação igual.")
+                return self._equal_weight_allocation(returns_clean)
             
             # Determinar número de clusters
             n_clusters = min(4, len(returns_clean.columns))  # Máximo 4 clusters
@@ -274,3 +285,49 @@ class HierarchicalRiskParity:
         except Exception as e:
             logger.error(f"Erro ao gerar resumo da alocação: {e}")
             return {'error': str(e)}
+    
+    def _equal_weight_allocation(self, returns: pd.DataFrame) -> Dict:
+        """
+        Alocação igual quando dados são insuficientes para HRP
+        """
+        try:
+            assets = returns.columns.tolist()
+            n_assets = len(assets)
+            equal_weight = 1.0 / n_assets
+            
+            # Alocação igual
+            allocation = {asset: equal_weight for asset in assets}
+            
+            # Calcular métricas básicas
+            portfolio_returns = returns.mean()
+            expected_return = portfolio_returns.mean()
+            portfolio_volatility = returns.std().mean()
+            
+            # Métricas simples
+            metrics = {
+                'expected_return': expected_return,
+                'volatility': portfolio_volatility,
+                'sharpe_ratio': expected_return / portfolio_volatility if portfolio_volatility > 0 else 0,
+                'effective_diversification': 1.0 / n_assets,  # Diversificação máxima
+                'concentration': 1.0 / n_assets,  # Concentração mínima
+                'max_allocation': equal_weight,
+                'min_allocation': equal_weight,
+                'allocation_std': 0.0  # Sem variação
+            }
+            
+            logger.info(f"Alocação igual aplicada: {n_assets} ativos com peso {equal_weight:.2%} cada")
+            
+            return {
+                'allocation': allocation,
+                'metrics': metrics,
+                'method': 'equal_weight',
+                'reason': 'insufficient_data_for_hrp'
+            }
+            
+        except Exception as e:
+            logger.error(f"Erro na alocação igual: {e}")
+            return {
+                'allocation': {},
+                'metrics': {},
+                'error': str(e)
+            }

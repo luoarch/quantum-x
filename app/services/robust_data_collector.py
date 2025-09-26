@@ -13,6 +13,8 @@ from app.core.config import settings
 from app.models.time_series import EconomicSeries, DataCollectionLog
 from app.services.data_sources.base_source import DataSource
 from app.services.data_sources.bcb_source import BCBSource
+from app.services.data_sources.bacen_sgs_source import BacenSGSSource
+from app.services.data_sources.yahoo_source import YahooSource
 from app.services.data_sources.ipea_source import IPEASource
 from app.services.data_sources.oecd_source import OECDSource
 from app.services.data_sources.trading_economics_source import TradingEconomicsSource
@@ -61,16 +63,51 @@ class RobustDataCollector:
         }
         
         # Sistema de prioridade e failover inteligente
-        self.sources = {
-            'bcb': BCBSource(),  # Primária para IPCA, SELIC, PIB, Câmbio
-            'ipea': IPEASource(),  # Secundária para IPCA, SELIC, PIB; Primária para Desemprego
-            'oecd': OECDSource(),  # Primária para CLI
-            'trading_economics': TradingEconomicsSource(),  # Secundária para Desemprego
-            'fred': FREDSource(),  # Fallback para CLI
-            'worldbank': WorldBankSource(),  # Fallback para CLI
-            'ipea_cli': IPEACLISource(),  # Fallback para CLI Brasil
-            'github_oecd': GitHubOECDSource()  # Fallback para CLI
-        }
+        self.sources = {}
+        
+        # Inicializar fontes com tratamento de dependências opcionais
+        try:
+            self.sources['bcb'] = BCBSource()  # Primária via python-bcb
+            logger.info("✅ BCBSource inicializado (python-bcb disponível)")
+        except Exception as e:
+            logger.warning(f"⚠️ BCBSource não disponível: {e}")
+        
+        self.sources['bacen_sgs'] = BacenSGSSource()  # Primária alternativa via API oficial SGS
+        self.sources['yahoo'] = YahooSource()  # Preços de mercado (ETFs, índices, ações)
+        
+        try:
+            self.sources['ipea'] = IPEASource()  # Secundária para IPCA, SELIC, PIB; Primária para Desemprego
+        except Exception as e:
+            logger.warning(f"⚠️ IPEASource não disponível: {e}")
+        
+        try:
+            self.sources['oecd'] = OECDSource()  # Primária para CLI
+        except Exception as e:
+            logger.warning(f"⚠️ OECDSource não disponível: {e}")
+        
+        try:
+            self.sources['trading_economics'] = TradingEconomicsSource()  # Secundária para Desemprego
+        except Exception as e:
+            logger.warning(f"⚠️ TradingEconomicsSource não disponível: {e}")
+        
+        self.sources['fred'] = FREDSource()  # Fallback para CLI
+        
+        try:
+            self.sources['worldbank'] = WorldBankSource()  # Fallback para CLI
+        except Exception as e:
+            logger.warning(f"⚠️ WorldBankSource não disponível: {e}")
+        
+        try:
+            self.sources['ipea_cli'] = IPEACLISource()  # Fallback para CLI Brasil
+        except Exception as e:
+            logger.warning(f"⚠️ IPEACLISource não disponível: {e}")
+        
+        try:
+            self.sources['github_oecd'] = GitHubOECDSource()  # Fallback para CLI
+        except Exception as e:
+            logger.warning(f"⚠️ GitHubOECDSource não disponível: {e}")
+        
+        logger.info(f"✅ {len(self.sources)} fontes de dados inicializadas")
         
         # Configurar API key do Trading Economics se disponível
         try:
@@ -82,15 +119,64 @@ class RobustDataCollector:
         
         self.health_status = {}
         
-        # Estratégia de prioridade por série
-        self.priority_strategy = {
-            'ipca': ['bcb', 'ipea'],
-            'selic': ['bcb', 'ipea'],
-            'cambio': ['bcb', 'ipea'],
-            'pib': ['bcb', 'ipea'],
-            'prod_industrial': ['bcb', 'ipea'],
-            'desemprego': ['ipea', 'trading_economics'],
-            'cli': ['fred', 'oecd', 'worldbank', 'ipea_cli', 'github_oecd']  # FRED como primário (API oficial estável)
+        # Estratégia de prioridade por série (apenas fontes disponíveis)
+        self.priority_strategy = {}
+        
+        # IPCA: priorizar fontes disponíveis
+        ipca_sources = []
+        if 'bcb' in self.sources: ipca_sources.append('bcb')
+        ipca_sources.append('bacen_sgs')  # Sempre disponível
+        if 'ipea' in self.sources: ipca_sources.append('ipea')
+        self.priority_strategy['ipca'] = ipca_sources
+        
+        # SELIC: priorizar fontes disponíveis
+        selic_sources = []
+        if 'bcb' in self.sources: selic_sources.append('bcb')
+        selic_sources.append('bacen_sgs')  # Sempre disponível
+        if 'ipea' in self.sources: selic_sources.append('ipea')
+        self.priority_strategy['selic'] = selic_sources
+        
+        # Câmbio: priorizar fontes disponíveis
+        cambio_sources = []
+        if 'bcb' in self.sources: cambio_sources.append('bcb')
+        cambio_sources.append('bacen_sgs')  # Sempre disponível
+        if 'ipea' in self.sources: cambio_sources.append('ipea')
+        self.priority_strategy['cambio'] = cambio_sources
+        
+        # PIB: priorizar fontes disponíveis
+        pib_sources = []
+        if 'bcb' in self.sources: pib_sources.append('bcb')
+        pib_sources.append('bacen_sgs')  # Sempre disponível
+        if 'ipea' in self.sources: pib_sources.append('ipea')
+        self.priority_strategy['pib'] = pib_sources
+        
+        # Produção Industrial
+        prod_sources = []
+        if 'bcb' in self.sources: prod_sources.append('bcb')
+        if 'ipea' in self.sources: prod_sources.append('ipea')
+        self.priority_strategy['prod_industrial'] = prod_sources
+        
+        # Desemprego
+        desemprego_sources = ['bacen_sgs']  # Sempre disponível
+        if 'ipea' in self.sources: desemprego_sources.append('ipea')
+        if 'trading_economics' in self.sources: desemprego_sources.append('trading_economics')
+        self.priority_strategy['desemprego'] = desemprego_sources
+        
+        # CLI: priorizar fontes disponíveis
+        cli_sources = ['fred']  # Sempre disponível
+        if 'oecd' in self.sources: cli_sources.append('oecd')
+        if 'worldbank' in self.sources: cli_sources.append('worldbank')
+        if 'ipea_cli' in self.sources: cli_sources.append('ipea_cli')
+        if 'github_oecd' in self.sources: cli_sources.append('github_oecd')
+        self.priority_strategy['cli'] = cli_sources
+
+        # Estratégia de ativos de mercado (nova categoria)
+        self.market_priority = {
+            'BOVA11': ['yahoo'],
+            'IBOVESPA': ['yahoo'],
+            'VALE': ['yahoo'],
+            'PETR': ['yahoo'],
+            'BRL_USD': ['yahoo']
         }
     
     async def collect_series_with_priority(

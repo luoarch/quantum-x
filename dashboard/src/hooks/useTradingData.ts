@@ -17,10 +17,10 @@ export function useTradingData() {
       setLoading(true);
       setError(null);
 
-      console.log('🔍 [Dashboard] Buscando dados da API:', `${API_BASE_URL}/api/v1/dashboard/dashboard-data`);
+      console.log('🔍 [Dashboard] Buscando dados da API:', `${API_BASE_URL}/api/v1/dashboard/dashboard-data-simple`);
 
-      // Buscar dados do dashboard usando o endpoint real
-      const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/dashboard-data`);
+      // Buscar dados do dashboard usando o endpoint simplificado
+      const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/dashboard-data-simple`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -31,16 +31,24 @@ export function useTradingData() {
 
       // Converter dados da API para o formato do dashboard
       const dashboardData: DashboardData = {
-        currentSignal: signalsData.currentSignal || {
-          date: new Date().toISOString(),
-          signal: 'HOLD',
-          strength: 0,
-          confidence: 0,
-          regime: 'NEUTRAL',
-          buyProbability: 0,
-          sellProbability: 0
+        currentSignal: {
+          date: signalsData.currentSignal?.date || new Date().toISOString(),
+          signal: signalsData.currentSignal?.signal || 'HOLD',
+          strength: signalsData.currentSignal?.strength || 0,
+          confidence: signalsData.currentSignal?.confidence || 0,
+          regime: signalsData.currentSignal?.regime || 'NEUTRAL',
+          buyProbability: signalsData.currentSignal?.buyProbability || 0,
+          sellProbability: signalsData.currentSignal?.sellProbability || 0
         },
-        recentSignals: signalsData.recentSignals || [],
+        recentSignals: (signalsData.recentSignals || []).map((signal: any) => ({
+          date: signal.date,
+          signal: signal.signal || 'HOLD',
+          strength: signal.strength || 0,
+          confidence: signal.confidence || 0,
+          regime: signal.regime || 'NEUTRAL',
+          buyProbability: signal.buyProbability || 0,
+          sellProbability: signal.sellProbability || 0
+        })),
         cliData: (signalsData.cliData || []).map((point: any) => ({
           date: point.date,
           value: point.value,
@@ -52,9 +60,9 @@ export function useTradingData() {
           buySignals: signalsData.performance?.buySignals || 0,
           sellSignals: signalsData.performance?.sellSignals || 0,
           holdSignals: signalsData.performance?.holdSignals || 0,
-          avgConfidence: signalsData.performance?.avgConfidence || 0,
-          avgBuyProbability: signalsData.performance?.avgBuyProbability || 0,
-          avgSellProbability: signalsData.performance?.avgSellProbability || 0,
+          avgConfidence: signalsData.currentSignal?.confidence || 0, // Usar confiança do sinal atual
+          avgBuyProbability: signalsData.currentSignal?.buyProbability || 0,
+          avgSellProbability: signalsData.currentSignal?.sellProbability || 0,
           regimeSummary: (signalsData.performance?.regimeSummary || []).map((regime: any) => ({
             name: regime.regime || 'UNKNOWN',
             probability: regime.probability || 0,
