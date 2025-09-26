@@ -170,6 +170,10 @@ class RobustDataCollector:
         if 'github_oecd' in self.sources: cli_sources.append('github_oecd')
         self.priority_strategy['cli'] = cli_sources
 
+        # Adicionar séries faltantes
+        self.priority_strategy['yield_curve'] = ['fred']
+        # Removido ibc_br - série não suportada pelas fontes atuais
+
         # Estratégia de ativos de mercado (nova categoria)
         self.market_priority = {
             'BOVA11': ['yahoo'],

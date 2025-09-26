@@ -1,0 +1,197 @@
+{
+  "currentSignal": {
+    "date": "2020-12-31T00:00:00Z",
+    "signal": "HOLD",
+    "strength": 75,
+    "confidence": 85.0,
+    "regime": "EXPANSION",
+    "buyProbability": 0.0,
+    "sellProbability": 0.0
+  },
+  "recentSignals": [
+    {
+      "date": "2020-11-30T00:00:00Z",
+      "signal": "HOLD",
+      "confidence": 85.0
+    },
+    {
+      "date": "2020-12-31T00:00:00Z",
+      "signal": "HOLD",
+      "confidence": 85.0
+    }
+  ],
+  "cliData": [
+    {
+      "date": "2022-02-01",
+      "value": 100.9985,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-03-01",
+      "value": 100.8305,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-04-01",
+      "value": 100.7093,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-05-01",
+      "value": 100.5955,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-06-01",
+      "value": 100.4764,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-07-01",
+      "value": 100.3567,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-08-01",
+      "value": 100.2479,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-09-01",
+      "value": 100.1301,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-10-01",
+      "value": 99.99515,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-11-01",
+      "value": 99.84814,
+      "confidence": 85.0
+    },
+    {
+      "date": "2022-12-01",
+      "value": 99.72157,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-01-01",
+      "value": 99.63644,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-02-01",
+      "value": 99.60754,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-03-01",
+      "value": 99.63988,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-04-01",
+      "value": 99.72904,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-05-01",
+      "value": 99.85667,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-06-01",
+      "value": 100.0041,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-07-01",
+      "value": 100.1329,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-08-01",
+      "value": 100.232,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-09-01",
+      "value": 100.3132,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-10-01",
+      "value": 100.3992,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-11-01",
+      "value": 100.5031,
+      "confidence": 85.0
+    },
+    {
+      "date": "2023-12-01",
+      "value": 100.6181,
+      "confidence": 85.0
+    },
+    {
+      "date": "2024-01-01",
+      "value": 100.7327,
+      "confidence": 85.0
+    }
+  ],
+  "performance": {
+    "totalSignals": 12,
+    "buySignals": 0,
+    "sellSignals": 0,
+    "holdSignals": 12,
+    "avgConfidence": 0.0,
+    "avgBuyProbability": 0.0,
+    "avgSellProbability": 0.0,
+    "regimeSummary": [
+      {
+        "regime": "RECESSION",
+        "probability": 0.0,
+        "frequency": 0.0
+      },
+      {
+        "regime": "RECOVERY",
+        "probability": 0.0,
+        "frequency": 0.0
+      },
+      {
+        "regime": "EXPANSION",
+        "probability": 0.0,
+        "frequency": 0.0
+      },
+      {
+        "regime": "CONTRACTION",
+        "probability": 0.0,
+        "frequency": 0.0
+      }
+    ],
+    "hrpAllocation": [],
+    "hrpMetrics": {}
+  },
+  "assets": [
+    {
+      "ticker": "TESOURO_IPCA",
+      "name": "Tesouro IPCA+ 2045",
+      "price": 100.0,
+      "change": 0.5,
+      "changePercent": 0.5,
+      "allocation": 50.0
+    },
+    {
+      "ticker": "BOVA11",
+      "name": "BOVA11",
+      "price": 100.0,
+      "change": -0.2,
+      "changePercent": -0.2,
+      "allocation": 50.0
+    }
+  ],
+  "lastUpdate": "2025-09-25T23:02:39.395223Z"
+}

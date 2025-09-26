@@ -1,54 +1,134 @@
+# Docker Compose para Global Economic Regime Analysis & Brazil Spillover Prediction System
+# Conforme especificação do DRS seção 10.1
+
 version: '3.8'
 
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: quantum_x_db
-      POSTGRES_USER: quantum_user
-      POSTGRES_PASSWORD: quantum_pass
+  # === API BACKEND ===
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: global-regime-analysis-api:latest
+    container_name: regime-analysis-api
     ports:
-      - "5432:5432"
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/global_regime_analysis
+      - REDIS_URL=redis://redis:6379/0
+      - FRED_API_KEY=${FRED_API_KEY}
+      - OECD_API_KEY=${OECD_API_KEY}
+      - WORLD_BANK_API_KEY=${WORLD_BANK_API_KEY}
+      - DEBUG=False
+      - LOG_LEVEL=INFO
+    depends_on:
+      - postgres
+      - redis
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./app:/app
+      - ./cache:/app/cache
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U quantum_user -d quantum_x_db"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  # Redis Cache
+  # === FRONTEND ===
+  frontend:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    image: global-regime-analysis-frontend:latest
+    container_name: regime-analysis-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_WS_URL=ws://localhost:8000/ws
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  # === POSTGRESQL + TIMESCALEDB ===
+  postgres:
+    image: timescale/timescaledb:latest-pg15
+    container_name: regime-analysis-postgres
+    environment:
+      - POSTGRES_DB=global_regime_analysis
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # === REDIS ===
   redis:
     image: redis:7-alpine
+    container_name: regime-analysis-redis
+    command: redis-server --appendonly yes
     ports:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  # Quantum X Application
-  app:
-    build: .
+  # === MONITORING ===
+  prometheus:
+    image: prom/prometheus
+    container_name: regime-analysis-prometheus
     ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://quantum_user:quantum_pass@postgres:5432/quantum_x_db
-      - REDIS_URL=redis://redis:6379/0
-      - DEBUG=True
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - "9090:9090"
     volumes:
-      - .:/app
-    command: python run.py
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana
+    container_name: regime-analysis-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    restart: unless-stopped
 
 volumes:
   postgres_data:
+    driver: local
   redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+
+networks:
+  default:
+    name: regime-analysis-network

@@ -8,8 +8,9 @@ import { useTradingData } from '@/hooks/useTradingData';
 import { CLIChart } from './CLIChart';
 import { SignalPanel } from './SignalPanel';
 import { PerformanceMetrics } from './PerformanceMetrics';
-import { RegimeSummary } from './RegimeSummary';
 import { AssetAllocation } from './AssetAllocation';
+import { MacroAnalysisCard } from './MacroAnalysisCard';
+import { RegimeProbabilities } from './RegimeProbabilities';
 import { LoadingSpinner } from './LoadingSpinner';
 import { ErrorMessage } from './ErrorMessage';
 
@@ -59,9 +60,15 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Coluna Principal - Gráficos */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-3 space-y-6">
+            {/* Análise Macroeconômica Avançada */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <MacroAnalysisCard macroAnalysis={data.macroAnalysis} />
+              <RegimeProbabilities regimeSummary={data.performance.regimeSummary || []} />
+            </div>
+
             {/* CLI Chart */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -86,26 +93,19 @@ export default function Dashboard() {
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Sinal Atual
               </h2>
-              <SignalPanel 
+              <SignalPanel
                 currentSignal={data.currentSignal}
                 recentSignals={data.recentSignals}
               />
             </div>
 
-            {/* Resumo dos Regimes */}
-            <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                Regimes Econômicos
-              </h2>
-              <RegimeSummary regimes={data.performance.regimeSummary || []} />
-            </div>
 
             {/* Alocação de Ativos */}
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">
                 Sugestão de Alocação HRP
               </h2>
-              <AssetAllocation 
+              <AssetAllocation
                 assets={data.assets}
                 hrpMetrics={data.performance.hrpMetrics}
               />

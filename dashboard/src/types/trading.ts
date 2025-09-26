@@ -65,11 +65,19 @@ export interface AssetData {
   recommendedAction?: string;
 }
 
+export interface MacroAnalysis {
+  currentRegime: string;
+  regimeConfidence: number;
+  dataQuality: number;
+  analysisTimestamp: string;
+}
+
 export interface DashboardData {
   currentSignal: CLISignal;
   recentSignals: CLISignal[];
   cliData: CLIDataPoint[];
   performance: PerformanceMetrics;
   assets: AssetData[];
+  macroAnalysis: MacroAnalysis;
   lastUpdate: string;
 }

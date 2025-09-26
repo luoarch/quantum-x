@@ -1,230 +1,173 @@
-# Quantum X - Sistema Avançado de Trading Signals
+# Global Economic Regime Analysis & Brazil Spillover Prediction System
 
-Sistema de geração de sinais de trading baseado em **metodologias científicas avançadas**, combinando Markov-Switching models, Hierarchical Risk Parity e sinais probabilísticos para otimização de portfólio.
+## 📋 Visão Geral
 
-## 🚀 **Status do Projeto**
+Sistema científico para **análise de regimes econômicos globais** e **previsão de spillovers para o Brasil** baseado em metodologias econométricas avançadas.
 
-### ✅ **IMPLEMENTADO (Sistema Avançado)**
-- **Markov-Switching Model** com statsmodels (regimes econômicos)
-- **Hierarchical Risk Parity (HRP)** para alocação de portfólio
-- **Sinais Probabilísticos** baseados em regimes
-- **Yield Curve Indicators** (spread 10Y-2Y)
-- **Backtesting** com ativos reais (Tesouro IPCA+, BOVA11)
-- **Logs detalhados** para debug profundo
-- **Sistema de Fallbacks Robusto** (FRED → OECD → World Bank → IPEA → GitHub)
-- **Rate Limiting Inteligente** (OECD: 5s, FRED: 2s, BCB: 2s)
-- **URLs Corretas** baseadas na documentação oficial da OECD
+**Versão:** 1.0.0  
+**Baseado em:** Documento de Requisitos do Sistema (DRS) v1.0
 
-### 🔄 **EM DESENVOLVIMENTO**
-- Dashboard Next.js/React
-- Integração em tempo real
-- Deploy em produção
+## 🎯 Objetivos
 
-## 📊 **Resultados da Estratégia Avançada**
+### Objetivos Primários
+- ✅ Identificar regimes econômicos globais em tempo real usando RS-GVAR
+- ✅ Quantificar spillovers econômicos para o Brasil via 4 canais de transmissão
+- ✅ Prover previsões regime-condicionais para indicadores macroeconômicos brasileiros
+- ✅ Oferecer interface intuitiva para análise e visualização de resultados
 
-```
-📈 PERFORMANCE ATUAL:
-- Sharpe Ratio: 3.50-5.15
-- Retorno Esperado: 160-220%
-- Diversificação Efetiva: 2.00
-- Confiança Média: 81.3%
-- Regimes Identificados: RECESSION, RECOVERY, EXPANSION, CONTRACTION
-```
+### Objetivos Secundários
+- ✅ Estabelecer framework de validação contínua dos modelos
+- ✅ Implementar sistema de alertas para mudanças de regime
+- ✅ Criar repositório de cenários históricos para backtesting
+- ✅ Desenvolver API robusta para integração com sistemas externos
 
-## 🏗️ **Arquitetura do Sistema**
+## 🏗️ Arquitetura
 
-### **Backend (Python)**
+### Stack Tecnológico
+
+**Backend (Python):**
+- **Framework:** FastAPI 0.104+
+- **ML/Estatística:** statsmodels, scikit-learn, numpy, pandas
+- **Async:** asyncio, aiohttp
+- **Database:** PostgreSQL + TimescaleDB, Redis
+- **Testing:** pytest, pytest-asyncio
+
+**Frontend (Next.js 15):**
+- **Framework:** Next.js 15 (App Router)
+- **UI Library:** shadcn/ui + Tailwind CSS
+- **Charts:** Recharts + D3.js
+- **State Management:** Zustand
+
+### Estrutura do Projeto
+
 ```
 app/
-├── core/                    # Configurações e database
-├── models/                  # Modelos SQLAlchemy
-├── services/
-│   ├── data_sources/        # APIs (BCB, OECD, IPEA)
-│   ├── signal_generation/    # Core engine
-│   │   ├── markov_switching_model.py      # Regimes econômicos
-│   │   ├── hierarchical_risk_parity.py    # Alocação HRP
-│   │   ├── probabilistic_signal_generator.py # Sinais probabilísticos
-│   │   ├── yield_curve_indicators.py      # Curva de juros
-│   │   └── cli_calculator.py              # CLI tradicional
-│   ├── backtesting/         # Simulação histórica
-│   └── ml/                   # Machine Learning
-├── api/v1/                  # Endpoints REST
-└── schemas/                 # Validação Pydantic
+├── core/                    # Configurações centralizadas
+│   └── config.py           # Configurações conforme DRS
+├── api/v1/endpoints/       # Endpoints da API
+│   ├── global_regimes.py   # RF001-RF020: Regimes globais
+│   ├── brazil_spillovers.py # RF021-RF040: Spillovers Brasil
+│   └── brazil_indicators.py # RF041-RF050: Indicadores Brasil
+├── services/               # Lógica de negócio
+│   ├── global_regime_analysis/  # Análise de regimes globais
+│   ├── brazil_spillovers/       # Análise de spillovers
+│   ├── brazil_forecasting/      # Previsões Brasil
+│   ├── data_sources/            # Coleta de dados
+│   └── regime_analysis/         # Análise científica de regimes
+├── types/                  # Tipos TypeScript/Python
+│   ├── global_regime.py    # Tipos para regimes globais
+│   ├── brazil_spillovers.py # Tipos para spillovers
+│   └── brazil_indicators.py # Tipos para indicadores
+└── models/                 # Modelos de dados
+    └── time_series.py      # Modelos de séries temporais
 ```
 
-### **Frontend (Next.js - Planejado)**
-```typescript
-// Dashboard em tempo real
-- CLI Charts (Chart.js/D3)
-- Signal Panel (React)
-- Position Management
-- SHAP Explanations
-```
+## 🔬 Módulos Científicos
 
-## 🛠️ **Instalação e Configuração**
+### 1. Análise de Regimes Globais (RF001-RF020)
+- **RS-GVAR:** Modelo Regime-Switching Global VAR
+- **Identificação:** Seleção endógena do número de regimes (2-6)
+- **Validação:** Testes estatísticos robustos
+- **Previsão:** Horizonte de 1-12 meses
 
-### **Pré-requisitos**
-- Python 3.9+
-- PostgreSQL 13+
-- Redis (opcional)
+### 2. Spillovers Brasil (RF021-RF040)
+- **Canal Comercial:** Trade Brasil-Mundo
+- **Canal Commodities:** 8+ commodities críticas
+- **Canal Financeiro:** Spreads soberanos e fluxos de capital
+- **Canal Cadeias Globais:** Participação em GVCs
 
-### **Setup Rápido**
+### 3. Previsões Brasil (RF041-RF050)
+- **Indicadores:** PIB, inflação, desemprego, câmbio
+- **Regime-Condicionais:** Baseadas em regimes globais
+- **Alertas:** Sistema de alertas automáticos
+
+## 📊 API Endpoints
+
+### Regimes Globais
+- `GET /global-regimes/current` - Regime atual
+- `GET /global-regimes/forecast` - Previsões de regimes
+- `GET /global-regimes/validation` - Validação do modelo
+
+### Spillovers Brasil
+- `GET /brazil-spillovers/current` - Spillovers atuais
+- `GET /brazil-spillovers/forecast` - Previsões de spillovers
+- `GET /brazil-spillovers/channels/{channel}` - Análise por canal
+
+### Indicadores Brasil
+- `GET /brazil-indicators/forecast` - Previsões de indicadores
+- `GET /brazil-indicators/gdp` - Previsão do PIB
+- `GET /brazil-indicators/inflation` - Previsão da inflação
+
+## 🚀 Instalação
+
+### Backend
 ```bash
-# 1. Clone e instale
-git clone <repository-url>
-cd quantum-x
+# Instalar dependências
 pip install -r requirements.txt
 
-# 2. Configure ambiente
-cp env.example .env
-# Edite .env com suas configurações
+# Configurar variáveis de ambiente
+cp .env.example .env
+# Editar .env com suas configurações
 
-# 3. Configure database
-createdb quantum_x_db
+# Executar migrações
+alembic upgrade head
 
-# 4. Execute
-python run.py
+# Executar aplicação
+uvicorn app.main:app --reload
 ```
 
-### **Variáveis de Ambiente**
+### Frontend
+```bash
+cd dashboard
+npm install
+npm run dev
+```
+
+## 🔧 Configuração
+
+### Variáveis de Ambiente
 ```env
 # Database
-DATABASE_URL=postgresql://luoarch:postgres@localhost:5432/quantum_x_db
+DATABASE_URL=postgresql://user:pass@localhost:5432/global_regime_analysis
 REDIS_URL=redis://localhost:6379/0
 
-# APIs
-BCB_API_KEY=
-OECD_API_KEY=
-TRADING_ECONOMICS_API_KEY=
+# APIs Externas
+FRED_API_KEY=your_fred_key
+OECD_API_KEY=your_oecd_key
+WORLD_BANK_API_KEY=your_worldbank_key
 
-# Aplicação
-DEBUG=True
+# Configurações
+DEBUG=False
 LOG_LEVEL=INFO
-HOST=0.0.0.0
-PORT=8000
 ```
 
-## 📈 **APIs e Endpoints**
+## 📈 Validação Científica
 
-### **Dados Econômicos**
-- `POST /api/v1/data/collect` - Coleta de dados
-- `GET /api/v1/data/series` - Lista séries
-- `GET /api/v1/data/series/{code}` - Dados específicos
-- `GET /api/v1/data/stats` - Estatísticas
+### Critérios de Aceitação
+- ✅ Modelos passam em todos os testes de validação estatística
+- ✅ Acurácia fora da amostra > 75% para identificação de regimes
+- ✅ Intervalos de confiança calibrados corretamente
+- ✅ Backtesting histórico com performance satisfatória
 
-### **Sinais de Trading**
-- `GET /api/v1/signals/` - Sinais atuais
-- `GET /api/v1/signals/backtest` - Backtesting
-- `GET /api/v1/signals/health` - Health check
-
-## 🧠 **Metodologias Científicas**
-
-### **1. Markov-Switching Model**
-```python
-# Identifica regimes econômicos automaticamente
-from statsmodels.tsa.regime_switching.markov_autoregression import MarkovAutoregression
-
-model = MarkovAutoregression(
-    data, k_regimes=4, order=1,
-    switching_ar=True, switching_variance=True
-)
-```
-
-### **2. Hierarchical Risk Parity (HRP)**
-```python
-# Alocação robusta baseada em clustering
-- Clustering hierárquico de ativos
-- Alocação baseada em risco, não retorno
-- Diversificação efetiva > 2.0
-```
-
-### **3. Sinais Probabilísticos**
-```python
-# Sinais baseados em probabilidades de regime
-if Pr(Regime="EXPANSION") > 80% and yield_spread < 0:
-    signal = "BUY"
-elif Pr(Regime="RECESSION") > 60%:
-    signal = "SELL"
-```
-
-## 📊 **Fontes de Dados**
-
-### **Banco Central do Brasil (BCB)**
-- IPCA (433) - Inflação
-- SELIC (432) - Taxa de juros
-- PIB (4380) - Produto Interno Bruto
-- Câmbio (1) - USD/BRL
-- Produção Industrial (21859)
-
-### **OECD**
-- CLI Brasil, EUA, China, Global
-- Metodologia científica comprovada
-
-### **IPEA**
-- Dados econômicos brasileiros
-- Séries históricas longas
-
-## 🧪 **Testes e Validação**
-
-### **Testes Essenciais**
+### Testes
 ```bash
-# Teste da estratégia avançada
-python test_advanced_strategy.py
+# Executar todos os testes
+pytest
 
-# Backtesting com ativos reais
-python test_real_assets_backtest.py
+# Executar com cobertura
+pytest --cov=app --cov-report=html
 
-# Sistema de robustez
-python test_robustness_system.py
+# Executar testes específicos
+pytest tests/test_global_regimes.py
 ```
 
-### **Métricas de Validação**
-- **Sharpe Ratio**: > 3.0 (atual: 3.50-5.15)
-- **Hit Rate**: > 65% para sinais de virada
-- **Maximum Drawdown**: < 20%
-- **Alpha anual**: > 2% para títulos públicos
+## 📚 Documentação
 
-## 🎯 **Próximos Passos**
+- **DRS:** Documento de Requisitos do Sistema (fonte da verdade)
+- **API:** Documentação automática em `/docs`
+- **Tipos:** Definições em `app/types/`
 
-### **Fase 1: Dashboard (Semana 1-2)**
-- [ ] Interface Next.js/React
-- [ ] Gráficos CLI em tempo real
-- [ ] Painel de sinais
-- [ ] Sistema de alertas
-
-### **Fase 2: Produção (Semana 3-4)**
-- [ ] Deploy em cloud (AWS/GCP)
-- [ ] Monitoramento em tempo real
-- [ ] Integração com corretoras
-- [ ] Documentação para clientes
-
-## 📝 **Exemplos de Uso**
-
-### **Coleta de Dados**
-```python
-from app.services.robust_data_collector import RobustDataCollector
-
-collector = RobustDataCollector(db_session)
-data = collector.collect_all_series()
-```
-
-### **Geração de Sinais**
-```python
-from app.services.signal_generation.probabilistic_signal_generator import ProbabilisticSignalGenerator
-
-generator = ProbabilisticSignalGenerator()
-signals = generator.generate_signals(economic_data, asset_returns)
-```
-
-### **Backtesting**
-```python
-from app.services.backtesting.historical_backtester import HistoricalBacktester
-
-backtester = HistoricalBacktester()
-results = backtester.run_backtest(start_date, end_date)
-```
-
-## 🤝 **Contribuição**
+## 🤝 Contribuição
 
 1. Fork o projeto
 2. Crie uma branch para sua feature
@@ -232,10 +175,14 @@ results = backtester.run_backtest(start_date, end_date)
 4. Push para a branch
 5. Abra um Pull Request
 
-## 📄 **Licença**
+## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para detalhes.
+
+## 📞 Suporte
+
+Para suporte, abra uma issue no GitHub ou entre em contato com a equipe de desenvolvimento.
 
 ---
 
-**Quantum X** - Sistema de Trading Signals baseado em ciência, não em especulação.
+**Desenvolvido com ❤️ pela equipe Quantum-X**

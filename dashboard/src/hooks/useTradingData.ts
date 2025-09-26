@@ -17,10 +17,10 @@ export function useTradingData() {
       setLoading(true);
       setError(null);
 
-      console.log('🔍 [Dashboard] Buscando dados da API:', `${API_BASE_URL}/api/v1/dashboard/dashboard-data-simple`);
+      console.log('🔍 [Dashboard] Buscando dados da API:', `${API_BASE_URL}/api/v1/dashboard/dashboard-data-advanced`);
 
-      // Buscar dados do dashboard usando o endpoint simplificado
-      const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/dashboard-data-simple`);
+      // Buscar dados do dashboard usando o endpoint avançado
+      const response = await fetch(`${API_BASE_URL}/api/v1/dashboard/dashboard-data-advanced`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -89,6 +89,12 @@ export function useTradingData() {
           currentPrice: asset.currentPrice || asset.price || 0,
           recommendedAction: asset.recommendedAction || 'MANTER'
         })),
+        macroAnalysis: signalsData.macroAnalysis || {
+          currentRegime: 'UNKNOWN',
+          regimeConfidence: 0,
+          dataQuality: 0,
+          analysisTimestamp: new Date().toISOString()
+        },
         lastUpdate: signalsData.lastUpdate || new Date().toISOString()
       };
 
