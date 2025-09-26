@@ -1,16 +1,14 @@
 <img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" style="height:64px;margin-right:32px"/>
 
 # Documento de Requisitos do Sistema (DRS)
-
-## Global Economic Regime Analysis \& Brazil Spillover Prediction System
-
+## Sistema de Análise de Spillovers Econômicos Brasil-Mundo
 
 ***
 
-**Versão:** 1.0
-**Data:** 26 de Setembro de 2025
-**Autor:** Sistema de Análise Econômica
-**Status:** Aprovado
+**Versão:** 2.0  
+**Data:** 26 de Setembro de 2025  
+**Autor:** Sistema de Análise Econômica  
+**Status:** Aprovado pelo Orientador  
 
 ***
 
@@ -18,38 +16,67 @@
 
 ### 1.1 Descrição Executiva
 
-O **Global Economic Regime Analysis \& Brazil Spillover Prediction System** é uma plataforma científica avançada para identificação de regimes econômicos globais e previsão de seus efeitos spillover na economia brasileira. O sistema utiliza modelos Regime-Switching Global VAR (RS-GVAR) e análise multicanal de transmissão para fornecer insights preditivos robustos sobre impactos macroeconômicos.
+O **Sistema de Análise de Spillovers Econômicos Brasil-Mundo** é uma plataforma científica desenvolvida através de uma abordagem evolutiva e rigorosa. O sistema implementa uma progressão gradual de modelos econométricos, começando com VAR bivariado simples e evoluindo para sistemas Regime-Switching Global VAR (RS-GVAR), garantindo validação científica robusta em cada etapa.
 
 ### 1.2 Objetivos do Sistema
 
-**Objetivos Primários:**
+**Objetivos Primários (Evolutivos):**
 
-- Identificar regimes econômicos globais em tempo real usando metodologias cientificamente validadas
-- Quantificar spillovers econômicos para o Brasil através de múltiplos canais de transmissão
-- Prover previsões regime-condicionais para indicadores macroeconômicos brasileiros
-- Oferecer interface intuitiva para análise e visualização de resultados
+**Fase 1 - Fundação Empírica:**
+- Quantificar spillovers de choques monetários EUA-Brasil usando VAR bivariado
+- Validar metodologia através de replicação de papers estabelecidos
+- Estabelecer base científica sólida para desenvolvimento futuro
+
+**Fase 2 - Expansão Controlada:**
+- Identificar choques estruturais e canais de transmissão via SVAR
+- Implementar análise multicanal (Trade, Financial, Commodity)
+- Validar robustez através de múltiplos esquemas de identificação
+
+**Fase 3 - Regime-Switching:**
+- Detectar mudanças em spillovers durante crises econômicas
+- Implementar modelos Markov-Switching VAR
+- Validar identificação de regimes através de crises históricas
+
+**Fase 4 - Sistema Integrado:**
+- Desenvolver plataforma completa de análise de spillovers
+- Implementar RS-GVAR para análise global
+- Oferecer interface intuitiva para análise e visualização
 
 **Objetivos Secundários:**
 
 - Estabelecer framework de validação contínua dos modelos
-- Implementar sistema de alertas para mudanças de regime
+- Garantir replicabilidade científica em cada fase
 - Criar repositório de cenários históricos para backtesting
 - Desenvolver API robusta para integração com sistemas externos
 
 
-### 1.3 Escopo do Projeto
+### 1.3 Escopo do Projeto (Evolutivo)
 
-**Dentro do Escopo:**
+**Fase 1 - Fundação Empírica (6-9 meses):**
+- Análise bivariada Brasil-EUA (Taxa Fed + Selic)
+- Modelo VAR(p) simples com validação out-of-sample
+- Dashboard básico com função impulso-resposta
+- Artigo acadêmico submetível
 
-- Análise de regimes para G7 + China + Brasil
-- 4 canais de transmissão: Trade, Commodity, Financial, Supply Chain
-- Previsões até 12 meses à frente
-- Interface web responsiva com dashboards interativos
-- API RESTful para acesso programático
-- Sistema de validação automatizada
+**Fase 2 - Expansão Controlada (6-12 meses):**
+- Sistema SVAR Brasil-G3 (Fed, BCE, BOJ + PIB, inflação, câmbio)
+- 3 esquemas de identificação diferentes
+- Análise multicanal básica
+- Validação robusta com bootstrap
 
-**Fora do Escopo (Fase 1):**
+**Fase 3 - Regime-Switching (9-15 meses):**
+- MS-VAR com 2 regimes (Crise vs Normal)
+- Identificação de regimes através de crises históricas
+- Análise de spillovers por regime
+- Validação temporal cruzada
 
+**Fase 4 - Sistema Integrado (12-18 meses):**
+- RS-GVAR para G7 + China + Brasil
+- 4 canais de transmissão completos
+- Interface web responsiva
+- API RESTful completa
+
+**Fora do Escopo (Todas as Fases):**
 - Análise intraday ou alta frequência
 - Modelos de otimização de portfólio
 - Integração com sistemas de trading
@@ -58,7 +85,49 @@ O **Global Economic Regime Analysis \& Brazil Spillover Prediction System** é u
 
 ***
 
-## 2. Arquitetura do Sistema
+## 2. Princípios Científicos Fundamentais
+
+### 2.1 Metodologia Evolutiva
+
+O desenvolvimento do sistema segue uma abordagem evolutiva baseada em evidências, onde cada fase é construída sobre a anterior com validação científica rigorosa.
+
+**Princípios Fundamentais:**
+
+1. **Replicabilidade Primeiro**: Sempre replicar papers existentes antes de inovar
+2. **Validação Out-of-Sample Obrigatória**: Nunca reportar apenas in-sample fit
+3. **Testes de Robustez Múltiplos**: Pelo menos 3 especificações diferentes por fase
+4. **Progressão Baseada em Evidência**: Só avançar se a fase anterior for cientificamente válida
+5. **Métricas de Sucesso Científicas**: Critérios objetivos e mensuráveis
+
+### 2.2 Critérios de Validação por Fase
+
+**Fase 1 - Fundação Empírica:**
+- Superar random walk em 15% (RMSE)
+- Passar teste Diebold-Mariano (p < 0.05)
+- Intervalos de confiança bootstrap válidos
+- Código replicável por terceiros
+
+**Fase 2 - Expansão Controlada:**
+- Replicar spillovers da literatura (±10%)
+- Adicionar insight novo sobre transmissão
+- Passar todos os testes de robustez
+- Superar benchmark em pelo menos 2 métricas
+
+**Fase 3 - Regime-Switching:**
+- Identificar corretamente 80% das crises históricas
+- Diferenças entre regimes economicamente significativas
+- Superar VAR linear em previsão durante crises
+- Regimes persistentes (prob. transição < 0.3)
+
+**Fase 4 - Sistema Integrado:**
+- Superar benchmark em pelo menos 2 das 3 métricas principais
+- Sistema estável em produção
+- Documentação completa
+- Aceitação para publicação
+
+***
+
+## 3. Arquitetura do Sistema
 
 ### 2.1 Visão Geral da Arquitetura
 
@@ -121,54 +190,54 @@ O **Global Economic Regime Analysis \& Brazil Spillover Prediction System** é u
 
 ***
 
-## 3. Requisitos Funcionais
+## 4. Requisitos Funcionais (Evolutivos)
 
-### 3.1 Módulo de Análise Global (RF001-RF020)
+### 4.1 Fase 1 - Fundação Empírica (RF001-RF010)
 
-#### RF001: Coleta de Dados Globais
+#### RF001: Coleta de Dados Bivariados
 
-**Descrição:** O sistema deve coletar automaticamente dados econômicos de fontes oficiais para países G7 + China.
+**Descrição:** O sistema deve coletar dados básicos para análise bivariada Brasil-EUA.
 
 **Critérios de Aceitação:**
 
-- Integração com APIs: FRED, OECD, Yahoo Finance, World Bank
-- Coleta automática a cada 6 horas
+- Integração com APIs: FRED (Taxa Fed), BCB (Selic)
+- Coleta automática diária
 - Validação de integridade dos dados coletados
 - Tratamento de dados faltantes e outliers
-- Histórico mínimo de 20 anos para cada série
+- Histórico mínimo de 25 anos (2000-2025)
 
 **Prioridade:** Crítica
-**Complexidade:** Alta
+**Complexidade:** Média
 
-#### RF002: Identificação de Regimes Globais
+#### RF002: Implementação VAR Bivariado
 
-**Descrição:** Implementar modelo Regime-Switching Global VAR para identificação automática de regimes econômicos.
+**Descrição:** Implementar modelo VAR(p) bivariado para análise de spillovers Brasil-EUA.
 
 **Critérios de Aceitação:**
 
-- Implementação de RS-GVAR usando statsmodels
-- Seleção endógena do número de regimes (2-6)
-- Critérios BIC/AIC para seleção de modelo
-- Identificação de regimes atuais com probabilidades
-- Matriz de transição entre regimes
+- Implementação de VAR(p) usando statsmodels
+- Seleção automática de lag (critérios AIC/BIC)
+- Testes de cointegração (Johansen)
+- Testes de causalidade de Granger
+- Análise de impulso-resposta com bootstrap
 
 **Prioridade:** Crítica
-**Complexidade:** Muito Alta
+**Complexidade:** Média
 
-#### RF003: Validação de Modelos Globais
+#### RF003: Validação Out-of-Sample
 
-**Descrição:** Sistema automatizado de validação e diagnóstico dos modelos RS-GVAR.
+**Descrição:** Sistema de validação out-of-sample para o modelo VAR bivariado.
 
 **Critérios de Aceitação:**
 
-- Testes de linearidade vs. não-linearidade
-- Diagnósticos de resíduos
-- Validação fora da amostra (rolling window)
-- Testes de estabilidade paramétrica
-- Métricas de performance do modelo
+- Validação cruzada temporal (rolling window)
+- Comparação com random walk (teste Diebold-Mariano)
+- Testes de estabilidade (CUSUM)
+- Métricas de performance (RMSE, MAE)
+- Intervalos de confiança bootstrap
 
-**Prioridade:** Alta
-**Complexidade:** Alta
+**Prioridade:** Crítica
+**Complexidade:** Média
 
 #### RF004: Previsão de Regimes Globais
 
@@ -1055,111 +1124,162 @@ class DataValidator:
 
 ***
 
-## 8. Cronograma de Desenvolvimento
+## 8. Cronograma de Desenvolvimento (Evolutivo)
 
-### 8.1 Fases do Projeto
+### 8.1 Fase 1: Fundação Empírica (Meses 1-9)
 
-#### **Fase 1: Fundação (Semanas 1-4)**
+#### **Meses 1-2: Setup e Replicação**
+- Configuração do ambiente de desenvolvimento
+- Replicação de paper base (Cushman & Zha, 1997)
+- Implementação de VAR bivariado básico
+- Testes de cointegração e causalidade
 
-- **Semana 1-2:** Configuração da infraestrutura básica
-    - Setup do repositório e CI/CD
-    - Containerização com Docker
-    - Configuração de bancos de dados
-    - Framework básico da API (FastAPI)
-    - Setup inicial do frontend (Next.js 15)
-- **Semana 3-4:** Pipeline de dados básico
-    - Implementação dos coletores de dados
-    - Validação e limpeza de dados
-    - Armazenamento em TimescaleDB
-    - Testes unitários dos coletores
+#### **Meses 3-4: Validação e Robustez**
+- Implementação de validação out-of-sample
+- Testes de estabilidade (CUSUM)
+- Análise de impulso-resposta com bootstrap
+- Comparação com random walk
 
+#### **Meses 5-6: Dashboard e Documentação**
+- Desenvolvimento do dashboard básico
+- Documentação científica completa
+- Preparação do artigo acadêmico
+- Testes de replicabilidade
 
-#### **Fase 2: Core Analytics (Semanas 5-10)**
-
-- **Semana 5-6:** Implementação RS-GVAR
-    - Modelo Markov-Switching básico
-    - Seleção de número de regimes
-    - Validação estatística inicial
-- **Semana 7-8:** Análise de spillovers
-    - Implementação dos 4 canais de transmissão
-    - Cálculos de elasticidades
-    - Agregação de efeitos
-- **Semana 9-10:** Sistema de previsões
-    - Previsões regime-condicionais
-    - Intervalos de confiança
-    - Validação fora da amostra
+#### **Meses 7-9: Validação Final e Publicação**
+- Validação cruzada temporal completa
+- Revisão por pares informal
+- Submissão do artigo
+- Preparação para Fase 2
 
 
-#### **Fase 3: API e Backend (Semanas 11-14)**
+### 8.2 Fase 2: Expansão Controlada (Meses 10-21)
 
-- **Semana 11-12:** API completa
-    - Todos os endpoints funcionais
-    - Autenticação e autorização
-    - Rate limiting e segurança
-    - Documentação OpenAPI
-- **Semana 13-14:** Otimização e caching
-    - Redis para cache
-    - Otimização de queries
-    - Monitoramento de performance
+#### **Meses 10-12: Implementação SVAR**
+- Implementação de SVAR com 6 variáveis
+- Três esquemas de identificação diferentes
+- Testes de robustez básicos
+- Comparação com literatura
+
+#### **Meses 13-15: Validação Avançada**
+- Bootstraps com 1000 repetições
+- Análise de sensibilidade
+- Testes de estabilidade avançados
+- Validação cruzada temporal
+
+#### **Meses 16-18: Dashboard e Análise**
+- Dashboard com decomposição de variância
+- Análise comparativa dos esquemas
+- Preparação do paper comparativo
+- Testes de replicabilidade
+
+#### **Meses 19-21: Validação Final**
+- Validação final dos resultados
+- Submissão do paper comparativo
+- Preparação para Fase 3
+- Documentação completa
+
+### 8.3 Fase 3: Regime-Switching (Meses 22-36)
+
+#### **Meses 22-24: Implementação MS-VAR**
+- Implementação de MS-VAR com 2 regimes
+- Identificação de regimes ex-ante
+- Testes básicos de regime-switching
+- Comparação com VAR linear
+
+#### **Meses 25-27: Validação de Regimes**
+- Validação cruzada temporal (2019/2020)
+- Análise de crises históricas
+- Testes de significância econômica
+- Análise de transição de regimes
+
+#### **Meses 28-30: Dashboard e Análise**
+- Dashboard de probabilidades de regime
+- Análise de spillovers por regime
+- Preparação do paper sobre regimes
+- Testes de robustez
+
+#### **Meses 31-33: Validação Final**
+- Validação final dos regimes
+- Submissão do paper sobre regimes
+- Preparação para Fase 4
+- Documentação completa
+
+#### **Meses 34-36: Transição**
+- Análise de viabilidade da Fase 4
+- Planejamento detalhado
+- Preparação da infraestrutura
+- Validação dos pré-requisitos
+
+### 8.4 Fase 4: Sistema Integrado (Meses 37-54)
+
+#### **Meses 37-42: Implementação Core**
+- Implementação do RS-GVAR
+- Sistema de coleta de dados
+- API básica
+- Validação dos modelos
+
+#### **Meses 43-48: Desenvolvimento Frontend**
+- Dashboard principal
+- Visualizações interativas
+- Sistema de alertas
+- Testes de usabilidade
+
+#### **Meses 49-54: Validação e Deploy**
+- Validação final completa
+- Deploy em produção
+- Monitoramento e alertas
+- Documentação final
 
 
-#### **Fase 4: Frontend (Semanas 15-20)**
+### 8.5 Marcos Importantes (Evolutivos)
 
-- **Semana 15-16:** Dashboards básicos
-    - Layout principal
-    - Componentes de visualização
-    - Integração com API
-- **Semana 17-18:** Visualizações avançadas
-    - Gráficos interativos
-    - Mapas e sankey diagrams
-    - Relatórios automatizados
-- **Semana 19-20:** UX e responsividade
-    - Mobile-first design
-    - Testes de usabilidade
-    - Otimização de performance
+| Marco | Mês | Entregável | Critério de Sucesso |
+| :-- | :-- | :-- | :-- |
+| M1 | 6 | VAR bivariado funcional | Superar random walk em 15% |
+| M2 | 9 | Artigo Fase 1 submetido | Aceito para publicação |
+| M3 | 15 | SVAR multicanal funcional | Replicar literatura ±10% |
+| M4 | 21 | Artigo Fase 2 submetido | Aceito para publicação |
+| M5 | 27 | MS-VAR funcional | Identificar 80% das crises |
+| M6 | 33 | Artigo Fase 3 submetido | Aceito para publicação |
+| M7 | 42 | Sistema integrado funcional | Superar benchmark 2 métricas |
+| M8 | 54 | Sistema em produção | Estável e documentado |
 
+### 8.6 Recursos de Aprendizado por Fase
 
-#### **Fase 5: Validação e Deploy (Semanas 21-24)**
+#### **Fase 1: Econometria Essencial**
+- **Livro**: "Introduction to Econometrics" (Stock & Watson)
+- **Curso**: Análise Macro (VAR e SVAR)
+- **Papers**: Cushman & Zha (1997), Canova (2005)
+- **Software**: R (vars, urca), Python (statsmodels, arch)
 
-- **Semana 21-22:** Testes extensivos
-    - Testes de integração
-    - Testes de carga
-    - Validação científica
-- **Semana 23-24:** Deploy e monitoramento
-    - Deploy em produção
-    - Monitoramento e alertas
-    - Documentação final
+#### **Fase 2: VAR Estrutural**
+- **Livro**: "Structural Vector Autoregressive Analysis" (Lütkepohl)
+- **Papers**: Sims (1980), Blanchard & Quah (1989)
+- **Software**: Python (bvartools), R (vars)
 
+#### **Fase 3: Regime-Switching**
+- **Livro**: "Regime-Switching Models" (Hamilton)
+- **Papers**: Hamilton (1989), Krolzig (1997)
+- **Software**: Python (statsmodels), R (MSBVAR)
 
-### 8.2 Marcos Importantes
+#### **Fase 4: Sistemas Integrados**
+- **Livro**: "Global Vector Autoregressive Models" (Pesaran)
+- **Papers**: Pesaran et al. (2004), Chudik & Pesaran (2016)
+- **Software**: Python (gvar), R (GVAR)
 
-| Marco | Semana | Entregável |
-| :-- | :-- | :-- |
-| M1 | 4 | Pipeline de dados funcional |
-| M2 | 8 | Modelos RS-GVAR implementados |
-| M3 | 10 | Sistema de spillovers completo |
-| M4 | 14 | API completa e documentada |
-| M5 | 18 | Frontend com dashboards principais |
-| M6 | 22 | Sistema completo testado |
-| M7 | 24 | Sistema em produção |
+### 8.7 Recursos Necessários (Evolutivos)
 
-### 8.3 Recursos Necessários
+#### **Equipe Mínima:**
+- **1 Pesquisador Principal** (você): Desenvolvimento e análise
+- **1 Orientador**: Supervisão científica e validação
+- **1 Revisor Externo**: Validação independente (Fases 2-4)
 
-#### **Equipe Sugerida:**
-
-- **1 Senior Full-Stack Developer** (Python + TypeScript)
-- **1 Data Scientist** (especialista em econometria)
-- **1 Frontend Developer** (Next.js/React expert)
-- **1 DevOps Engineer** (infraestrutura e deployment)
-
-
-#### **Infraestrutura:**
-
-- **Servidor Principal:** 16 CPU cores, 64GB RAM, 1TB SSD
-- **Database Server:** PostgreSQL + TimescaleDB
-- **Cache Server:** Redis Cluster
-- **CDN:** Para assets estáticos
-- **Monitoring:** Prometheus + Grafana stack
+#### **Infraestrutura por Fase:**
+- **Fase 1**: Laptop com 16GB RAM, Python/R
+- **Fase 2**: Google Colab Pro, APIs gratuitas
+- **Fase 3**: AWS básico, validação externa
+- **Fase 4**: Infraestrutura completa (PostgreSQL, Redis, etc.)
 
 ***
 
@@ -1509,26 +1629,48 @@ find backups/ -name "*.gz" -mtime +30 -delete
 
 ***
 
-## 12. Conclusão
+## 12. Próximos Passos Imediatos
 
-Este documento especifica um sistema robusto e cientificamente válido para análise de regimes econômicos globais e previsão de spillovers para o Brasil. A arquitetura proposta combina:
+### Semana 1-2: Setup Inicial
+1. [ ] Configurar ambiente de desenvolvimento
+2. [ ] Instalar dependências (Python, R, Git)
+3. [ ] Configurar repositório GitHub
+4. [ ] Replicar paper base (Cushman & Zha, 1997)
 
-- **Rigor Científico:** Modelos RS-GVAR validados
-- **Robustez Técnica:** API escalável e frontend moderno
-- **Praticidade:** Interface intuitiva e insights acionáveis
-- **Escalabilidade:** Arquitetura preparada para crescimento
+### Semana 3-4: Primeira Implementação
+1. [ ] Implementar VAR bivariado básico
+2. [ ] Testes de cointegração
+3. [ ] Testes de causalidade de Granger
+4. [ ] Primeira análise de impulso-resposta
 
-O projeto representa uma oportunidade significativa de criar valor tanto acadêmico quanto comercial, estabelecendo nova referência em análise macroeconômica preditiva para economias emergentes.
+### Mês 2: Validação Inicial
+1. [ ] Implementar validação out-of-sample
+2. [ ] Testes de estabilidade
+3. [ ] Comparação com random walk
+4. [ ] Primeira documentação
 
-**Próximos Passos:**
+## 13. Conclusão
 
-1. Aprovação dos stakeholders
-2. Definição da equipe de desenvolvimento
-3. Setup inicial da infraestrutura
-4. Início da Fase 1 (Semanas 1-4)
+Este documento especifica um sistema evolutivo e cientificamente rigoroso para análise de spillovers econômicos Brasil-Mundo. A abordagem proposta combina:
+
+- **Rigor Científico:** Validação out-of-sample obrigatória em cada fase
+- **Progressão Baseada em Evidência:** Só avançar se a fase anterior for válida
+- **Replicabilidade:** Código 100% reproduzível desde o início
+- **Publicação Intermediária:** Resultados publicáveis em cada fase
+
+O projeto representa uma oportunidade única de construir conhecimento científico sólido através de uma metodologia evolutiva, garantindo validação rigorosa e progressão baseada em evidências.
+
+**Vantagens da Abordagem Evolutiva:**
+
+1. **Aprendizado Gradual**: Cada fase constrói sobre a anterior
+2. **Validação Contínua**: Critérios objetivos em cada etapa
+3. **Publicação Intermediária**: Resultados publicáveis em cada fase
+4. **Base Sólida**: Fundação robusta para desenvolvimento futuro
+
+O sucesso depende da aderência rigorosa aos critérios científicos estabelecidos e da validação independente em cada fase.
 
 ***
 
-*Documento gerado em 26 de Setembro de 2025*
-*Versão 1.0 - Para aprovação*
+*Documento gerado em 26 de Setembro de 2025*  
+*Versão 2.0 - Aprovado pelo Orientador*
 
