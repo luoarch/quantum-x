@@ -20,7 +20,7 @@ sys.path.append(os.path.dirname(__file__))
 from src.data.data_loader import EconomicDataLoader
 from src.models.hybrid_model import BiasControlledHybridModel
 from src.models.baseline_model import BaselineVARModel
-from src.validation.scientific_validation import ScientificValidator
+from src.validation.comprehensive_validator import ComprehensiveValidator
 
 # Network Effects imports
 from src.network_effects.client_tracker import ClientTracker
@@ -66,7 +66,7 @@ try:
     baseline_model.fit(data)
     
     # Inicializar validador
-    validator = ScientificValidator()
+    validator = ComprehensiveValidator()
     
     # Inicializar Network Effects
     client_tracker = ClientTracker()
@@ -104,7 +104,7 @@ def initialize_models():
     baseline_model.fit(data)
     
     # Inicializar validador
-    validator = ScientificValidator()
+    validator = ComprehensiveValidator()
     
     # Inicializar Network Effects
     client_tracker = ClientTracker()

@@ -17,7 +17,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 from src.data.data_loader import load_data
 from src.models.hybrid_model import create_hybrid_model
 from src.models.baseline_model import BaselineVARModel
-from src.validation.scientific_validation import ScientificValidator
+from src.validation.comprehensive_validator import ComprehensiveValidator
 import pandas as pd
 import numpy as np
 
@@ -55,7 +55,7 @@ def main():
         
         # 4. Validação científica
         print("\n🔬 4. Executando validação científica...")
-        validator = ScientificValidator()
+        validator = ComprehensiveValidator()
         validation_results = validator.comprehensive_validation(model, data, baseline_model)
         
         # 5. Gerar relatório de validação

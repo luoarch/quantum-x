@@ -27,7 +27,7 @@ from src.enterprise.models import Client, Prediction, Feedback
 from src.data.data_loader import EconomicDataLoader
 from src.models.hybrid_model import BiasControlledHybridModel
 from src.models.baseline_model import BaselineVARModel
-from src.validation.scientific_validation import ScientificValidator
+from src.validation.comprehensive_validator import ComprehensiveValidator
 
 app = Flask(__name__, template_folder='api/templates')
 CORS(app)
@@ -67,7 +67,7 @@ try:
     baseline_model.fit(data)
     
     print("🔬 Inicializando validador...")
-    validator = ScientificValidator()
+    validator = ComprehensiveValidator()
     
     print("✅ Enterprise API inicializada com sucesso!")
     

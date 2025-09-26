@@ -18,7 +18,7 @@ from config import Config
 from src.data.data_loader import EconomicDataLoader
 from src.models.hybrid_model import BiasControlledHybridModel
 from src.models.baseline_model import BaselineVARModel
-from src.validation.scientific_validation import ScientificValidator
+from src.validation.comprehensive_validator import ComprehensiveValidator
 
 warnings.filterwarnings('ignore')
 
@@ -120,7 +120,7 @@ def validate_models(hybrid_model, data, baseline_model):
     print("\n🔬 5. Validação científica com dados reais...")
     
     try:
-        validator = ScientificValidator()
+        validator = ComprehensiveValidator()
         validation_results = validator.comprehensive_validation(hybrid_model, data, baseline_model)
         
         print("✅ Validação concluída")
