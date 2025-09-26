@@ -78,24 +78,17 @@ export function useTradingData() {
             effectiveDiversification: signalsData.performance?.hrpMetrics?.effectiveDiversification || 0
           }
         },
-        assets: signalsData.assets || [
-          {
-            ticker: 'TESOURO_IPCA',
-            name: 'Tesouro IPCA+ 2045',
-            price: 100.0,
-            change: 0.0,
-            changePercent: 0.0,
-            allocation: 50.0
-          },
-          {
-            ticker: 'BOVA11',
-            name: 'BOVA11',
-            price: 100.0,
-            change: 0.0,
-            changePercent: 0.0,
-            allocation: 50.0
-          }
-        ],
+        assets: (signalsData.assets || []).map((asset: any) => ({
+          ticker: asset.ticker || 'UNKNOWN',
+          name: asset.name || 'Ativo',
+          price: asset.price || 0,
+          change: asset.change || 0,
+          changePercent: asset.changePercent || 0,
+          allocation: asset.allocation || 0,
+          suggestedAllocation: asset.suggestedAllocation || asset.allocation || 0,
+          currentPrice: asset.currentPrice || asset.price || 0,
+          recommendedAction: asset.recommendedAction || 'MANTER'
+        })),
         lastUpdate: signalsData.lastUpdate || new Date().toISOString()
       };
 

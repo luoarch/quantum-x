@@ -21,7 +21,7 @@ export function AssetAllocation({ assets, hrpMetrics }: AssetAllocationProps) {
   // Preparar dados para o gráfico de pizza (sugestões de alocação)
   const pieData = assets.map(asset => ({
     name: asset.name,
-    value: asset.suggestedAllocation || asset.allocation,
+    value: asset.suggestedAllocation || asset.allocation || 0,
     ticker: asset.ticker
   }));
 
@@ -69,13 +69,13 @@ export function AssetAllocation({ assets, hrpMetrics }: AssetAllocationProps) {
             </div>
             <div className="text-right">
               <div className="font-bold text-gray-900">
-                {(asset.suggestedAllocation || asset.allocation).toFixed(1)}%
+                {(asset.suggestedAllocation || asset.allocation || 0).toFixed(1)}%
               </div>
               <div className="text-xs text-blue-600 font-medium">
                 Sugestão
               </div>
               <div className="text-sm text-gray-500">
-                R$ {(asset.currentPrice || asset.price).toFixed(2)}
+                R$ {(asset.currentPrice || asset.price || 0).toFixed(2)}
               </div>
             </div>
           </div>
