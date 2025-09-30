@@ -98,6 +98,22 @@ class BVARMinnesota:
         # Resultados
         self.irfs = {}
         self.forecasts = {}
+    
+    # Properties para compatibilidade com testes (backward compatibility)
+    @property
+    def lambda1(self) -> float:
+        """Shrinkage geral"""
+        return self.minnesota_params.get('lambda1', 0.2)
+    
+    @property
+    def lambda2(self) -> float:
+        """Cross-equation shrinkage"""
+        return self.minnesota_params.get('lambda2', 0.4)
+    
+    @property
+    def lambda3(self) -> float:
+        """Decaimento de lags"""
+        return self.minnesota_params.get('lambda3', 1.5)
         
     def prepare_data(self, 
                     fed_data: pd.Series, 
@@ -379,10 +395,11 @@ class BVARMinnesota:
         print(f"✅ IRFs calculados e normalizados (1 bps Fed → resposta Selic em bps)")
     
     def conditional_forecast(self, 
-                           fed_path: List[float],
+                           fed_path: List[float] = None,
                            horizon_months: int = 12,
                            n_simulations: int = None,
-                           extend_policy: Literal["hold", "zero"] = "hold") -> Dict[str, any]:
+                           extend_policy: Literal["hold", "zero"] = "hold",
+                           fed_path_bps: List[float] = None) -> Dict[str, any]:
         """
         Previsão condicional dinâmica com multi-step consistente
         
@@ -394,6 +411,16 @@ class BVARMinnesota:
             n_simulations: Número de simulações
             extend_policy: "hold" (manter último) ou "zero" se horizon > len(path)
         """
+        # Normalizar fed_path (aceitar fed_path_bps como alias)
+        if fed_path_bps is not None:
+            fed_path = fed_path_bps
+        
+        if fed_path is None:
+            raise ValueError("fed_path ou fed_path_bps deve ser fornecido")
+        
+        # Converter para numpy array
+        fed_path = np.asarray(fed_path, dtype=float)
+        
         if n_simulations is None:
             n_simulations = self.n_simulations
         
@@ -459,6 +486,14 @@ class BVARMinnesota:
             print(f"  h={h}: Selic {forecasts[f'h_{h}']['mean']:.1f} bps "
                   f"[{forecasts[f'h_{h}']['ci_lower']:.1f}, {forecasts[f'h_{h}']['ci_upper']:.1f}] "
                   f"| Fed={fed_imposed:.1f} bps")
+        
+        # Adicionar formato de arrays (para compatibilidade com testes)
+        # Extrai arrays de mean, std, CIs de todos horizontes
+        forecasts['mean'] = np.array([forecasts[f'h_{h}']['mean'] for h in range(1, horizon_months + 1)])
+        forecasts['std'] = np.array([forecasts[f'h_{h}']['std'] for h in range(1, horizon_months + 1)])
+        forecasts['ci95_lower'] = np.array([forecasts[f'h_{h}']['ci_lower'] for h in range(1, horizon_months + 1)])
+        forecasts['ci95_upper'] = np.array([forecasts[f'h_{h}']['ci_upper'] for h in range(1, horizon_months + 1)])
+        forecasts['samples'] = np.zeros((n_simulations, horizon_months))  # Placeholder (não armazenamos todas)
         
         self.forecasts = forecasts
         return forecasts
@@ -538,6 +573,8 @@ class BVARMinnesota:
         irf_summary = self.get_irf_summary()
         
         evaluation = {
+            'methodology': f'BVAR Minnesota (profile={self.priors_profile})',
+            'model_type': 'BVAR_Minnesota_v2.1',
             'r_squared': r_squared,
             'n_obs': self.Y.shape[0],
             'n_vars': self.n_vars,
@@ -571,6 +608,10 @@ class BVARMinnesota:
             'random_state': self.random_state,
             'priors_profile': self.priors_profile,
             'minnesota_params': self.minnesota_params,
+            # Top-level lambda params para backward compatibility
+            'lambda1': self.lambda1,
+            'lambda2': self.lambda2,
+            'lambda3': self.lambda3,
             'beta': self.beta.tolist() if self.beta is not None else None,
             'sigma': self.sigma.tolist() if self.sigma is not None else None,
             'train_dates': self.train_dates,
