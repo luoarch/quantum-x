@@ -1,0 +1,219 @@
+# Makefile.validation
+# Makefile para executar todos os testes de validação científica
+# Uso: make -f Makefile.validation all
+
+# Garantir bash para recursos avançados
+SHELL := /bin/bash
+
+.PHONY: all clean size-power small-samples heteroskedasticity structural-breaks lag-selection benchmarks-np validate-all print-dirs archive-latest
+
+# Configuração do interpretador Python
+PYTHON ?= python3
+
+# Diretório de saída para relatórios
+REPORTS_DIR := reports/validation
+TIMESTAMP := $(shell date +%Y-%m-%d_%H-%M-%S)
+VERSIONED_DIR := $(REPORTS_DIR)/$(TIMESTAMP)
+
+# Parâmetros padrão
+N_SIMS := 1000
+SEED := 42
+ALPHA := 0.05
+
+# Cores para output
+GREEN := \033[0;32m
+YELLOW := \033[0;33m
+RED := \033[0;31m
+NC := \033[0m # No Color
+
+all: validate-all
+
+clean:
+	@echo "$(YELLOW)[CLEAN]$(NC) Limpando relatórios antigos..."
+	rm -rf $(REPORTS_DIR)/*
+	@echo "$(GREEN)[CLEAN]$(NC) Relatórios limpos!"
+
+setup-dirs:
+	@echo "$(YELLOW)[SETUP]$(NC) Criando diretórios de relatórios..."
+	mkdir -p $(VERSIONED_DIR)/size_power
+	mkdir -p $(VERSIONED_DIR)/small_samples
+	mkdir -p $(VERSIONED_DIR)/heteroskedasticity
+	mkdir -p $(VERSIONED_DIR)/structural_breaks
+	mkdir -p $(VERSIONED_DIR)/lag_selection
+	mkdir -p $(VERSIONED_DIR)/benchmarks_np
+	@echo "$(GREEN)[SETUP]$(NC) Diretórios criados!"
+
+size-power: setup-dirs
+	@echo "$(YELLOW)[1/6]$(NC) Executando validação de size/power..."
+	$(PYTHON) -m tests_scientific.size_power.test_size_power \
+		--mode both \
+		--T 100 \
+		--n-sims $(N_SIMS) \
+		--alpha $(ALPHA) \
+		--seed $(SEED) \
+		--out-dir $(VERSIONED_DIR)/size_power
+	@echo "$(GREEN)[1/6]$(NC) Size/power concluído!"
+
+small-samples: setup-dirs
+	@echo "$(YELLOW)[2/6]$(NC) Executando validação de small samples..."
+	$(PYTHON) -m tests_scientific.small_samples.test_small_samples \
+		--mode both \
+		--Ts 25,50,75,100 \
+		--n-sims $(N_SIMS) \
+		--alpha $(ALPHA) \
+		--seed $(SEED) \
+		--out-dir $(VERSIONED_DIR)/small_samples
+	@echo "$(GREEN)[2/6]$(NC) Small samples concluído!"
+
+heteroskedasticity: setup-dirs
+	@echo "$(YELLOW)[3/6]$(NC) Executando validação de heteroskedasticity..."
+	$(PYTHON) -m tests_scientific.heteroskedasticity.test_heteroskedasticity \
+		--patterns increasing,decreasing,breaks,arch,garch \
+		--T 100 \
+		--n-sims $(N_SIMS) \
+		--alpha $(ALPHA) \
+		--seed $(SEED) \
+		--out-dir $(VERSIONED_DIR)/heteroskedasticity
+	@echo "$(GREEN)[3/6]$(NC) Heteroskedasticity concluído!"
+
+structural-breaks: setup-dirs
+	@echo "$(YELLOW)[4/6]$(NC) Executando validação de structural breaks..."
+	$(PYTHON) -m tests_scientific.structural_breaks.test_structural_breaks \
+		--cases single_level,trend_break,double_level,mixed_breaks \
+		--T 100 \
+		--mag 2.0 \
+		--n-sims 500 \
+		--tol 10 \
+		--seed $(SEED) \
+		--out-dir $(VERSIONED_DIR)/structural_breaks
+	@echo "$(GREEN)[4/6]$(NC) Structural breaks concluído!"
+
+lag-selection: setup-dirs
+	@echo "$(YELLOW)[5/6]$(NC) Executando validação de lag selection..."
+	$(PYTHON) -m tests_scientific.lag_selection.test_lag_selection \
+		--Ts 50,100,200 \
+		--ps 1,2,3,4 \
+		--n-sims $(N_SIMS) \
+		--seed $(SEED) \
+		--out-dir $(VERSIONED_DIR)/lag_selection
+	@echo "$(GREEN)[5/6]$(NC) Lag selection concluído!"
+
+benchmarks-np: setup-dirs
+	@echo "$(YELLOW)[6/6]$(NC) Executando validação de benchmarks NP..."
+	$(PYTHON) -m tests_scientific.benchmarks_np.test_benchmarks_np \
+		--T 100 \
+		--n-sims $(N_SIMS) \
+		--alpha $(ALPHA) \
+		--seed $(SEED) \
+		--out-dir $(VERSIONED_DIR)/benchmarks_np
+	@echo "$(GREEN)[6/6]$(NC) Benchmarks NP concluído!"
+
+print-dirs:
+	@echo "$(YELLOW)Configuração de Diretórios:$(NC)"
+	@echo "  REPORTS_DIR:    $(REPORTS_DIR)"
+	@echo "  VERSIONED_DIR:  $(VERSIONED_DIR)"
+	@echo "  TIMESTAMP:      $(TIMESTAMP)"
+	@echo ""
+	@echo "$(YELLOW)Parâmetros:$(NC)"
+	@echo "  PYTHON:         $(PYTHON)"
+	@echo "  N_SIMS:         $(N_SIMS)"
+	@echo "  SEED:           $(SEED)"
+	@echo "  ALPHA:          $(ALPHA)"
+	@echo ""
+
+validate-all: print-dirs size-power small-samples heteroskedasticity structural-breaks lag-selection benchmarks-np
+	@echo ""
+	@echo "$(GREEN)╔══════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(GREEN)║  ✅ VALIDAÇÃO CIENTÍFICA COMPLETA!                   ║$(NC)"
+	@echo "$(GREEN)╚══════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Relatórios salvos em:$(NC) $(VERSIONED_DIR)"
+	@echo ""
+	@echo "$(YELLOW)Arquivos gerados:$(NC)"
+	@find $(VERSIONED_DIR) -type f -name "*.json" -o -name "*.csv" | sort
+	@echo ""
+	@echo "$(YELLOW)Próximos passos:$(NC)"
+	@echo "  1. Revisar relatórios em $(VERSIONED_DIR)"
+	@echo "  2. Verificar métricas de concordância"
+	@echo "  3. Atualizar model card com resultados"
+	@echo "  4. Arquivar com: make -f Makefile.validation archive-latest"
+	@echo ""
+
+archive-latest:
+	@if [ -d "$(VERSIONED_DIR)" ]; then \
+		ARCHIVE_NAME="validation_$(TIMESTAMP).tar.gz"; \
+		echo "$(YELLOW)[ARCHIVE]$(NC) Compactando $(VERSIONED_DIR)..."; \
+		tar -czf $(REPORTS_DIR)/$$ARCHIVE_NAME -C $(REPORTS_DIR) $(TIMESTAMP); \
+		echo "$(GREEN)[ARCHIVE]$(NC) Arquivo criado: $(REPORTS_DIR)/$$ARCHIVE_NAME"; \
+		echo "$(YELLOW)[ARCHIVE]$(NC) Tamanho: $$(du -h $(REPORTS_DIR)/$$ARCHIVE_NAME | cut -f1)"; \
+	else \
+		echo "$(RED)[ERRO]$(NC) Diretório $(VERSIONED_DIR) não encontrado!"; \
+		exit 1; \
+	fi
+
+# Target rápido para testes (menos simulações)
+validate-quick:
+	@echo "$(YELLOW)[QUICK]$(NC) Executando validação rápida (N_SIMS=100)..."
+	@$(MAKE) -f Makefile.validation validate-all N_SIMS=100
+	@echo "$(GREEN)[QUICK]$(NC) Validação rápida concluída!"
+
+# Target para CI (sem cores, N_SIMS otimizado)
+validate-ci:
+	@$(MAKE) -f Makefile.validation validate-all GREEN="" YELLOW="" RED="" NC="" N_SIMS=500
+
+# Target para nightly (completo)
+validate-nightly:
+	@$(MAKE) -f Makefile.validation validate-all N_SIMS=2000
+
+# Help
+help:
+	@echo "$(GREEN)╔══════════════════════════════════════════════════════╗$(NC)"
+	@echo "$(GREEN)║       Makefile de Validação Científica               ║$(NC)"
+	@echo "$(GREEN)╚══════════════════════════════════════════════════════╝$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Targets Principais:$(NC)"
+	@echo "  all                    - Executa todas as validações (padrão)"
+	@echo "  validate-all           - Executa todas as validações em sequência"
+	@echo "  validate-quick         - Validação rápida (N_SIMS=100, desenvolvimento)"
+	@echo "  validate-ci            - Validação para CI (N_SIMS=500, sem cores)"
+	@echo "  validate-nightly       - Validação completa noturna (N_SIMS=2000)"
+	@echo ""
+	@echo "$(YELLOW)Targets Individuais:$(NC)"
+	@echo "  size-power             - Executa validação de size/power"
+	@echo "  small-samples          - Executa validação de small samples"
+	@echo "  heteroskedasticity     - Executa validação de heteroskedasticity"
+	@echo "  structural-breaks      - Executa validação de structural breaks"
+	@echo "  lag-selection          - Executa validação de lag selection"
+	@echo "  benchmarks-np          - Executa validação de benchmarks NP"
+	@echo ""
+	@echo "$(YELLOW)Utilitários:$(NC)"
+	@echo "  clean                  - Remove relatórios antigos"
+	@echo "  print-dirs             - Mostra configuração de diretórios e parâmetros"
+	@echo "  archive-latest         - Compacta último relatório em .tar.gz"
+	@echo "  help                   - Mostra esta mensagem"
+	@echo ""
+	@echo "$(YELLOW)Parâmetros Configuráveis:$(NC)"
+	@echo "  PYTHON                 - Interpretador Python (padrão: python3)"
+	@echo "  N_SIMS                 - Número de simulações (padrão: 1000)"
+	@echo "  SEED                   - Seed para reprodutibilidade (padrão: 42)"
+	@echo "  ALPHA                  - Nível de significância (padrão: 0.05)"
+	@echo ""
+	@echo "$(YELLOW)Exemplos de Uso:$(NC)"
+	@echo "  # Validação completa padrão"
+	@echo "  make -f Makefile.validation all"
+	@echo ""
+	@echo "  # Validação rápida para desenvolvimento"
+	@echo "  make -f Makefile.validation validate-quick"
+	@echo ""
+	@echo "  # Validação customizada"
+	@echo "  make -f Makefile.validation all N_SIMS=2000 SEED=12345"
+	@echo ""
+	@echo "  # CI/CD (GitHub Actions)"
+	@echo "  make -f Makefile.validation validate-ci PYTHON=\$$(which python3)"
+	@echo ""
+	@echo "  # Teste individual com parâmetros customizados"
+	@echo "  make -f Makefile.validation size-power N_SIMS=5000 ALPHA=0.01"
+	@echo ""
+	@echo "  # Arquivar resultados"
+	@echo "  make -f Makefile.validation all && make -f Makefile.validation archive-latest"
+	@echo ""

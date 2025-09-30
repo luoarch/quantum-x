@@ -1,340 +1,162 @@
-# Sistema de Análise de Spillovers Econômicos Brasil-Mundo
+# 🏦 Quantum-X: Spillover Intelligence FED-Selic
 
-## Spillover Intelligence - Enhanced (Fases 1.5 e 1.6)
+**API de Previsão Probabilística da Selic Condicionada ao Fed**
 
-Sistema avançado de análise de spillovers econômicos que combina econometria tradicional (VAR) com técnicas modernas de Machine Learning (Neural Networks) e dados de expectativas de inflação para capturar relações não-lineares entre economias.
+## 🎯 **Visão Geral**
 
-### 🎯 **Status Atual**
-- **Fase 1.5**: Expectativas de Inflação - R² = 65% ✅
-- **Fase 1.6**: PIB/Hiato + Dívida Pública - R² = 80% ✅
-- **Melhoria Total**: 53.6% → 80% (49% melhoria)
+Sistema de previsão probabilística que mapeia movimentos do Fed para respostas da Selic, usando **Local Projections** e **BVAR com priors Minnesota** para amostras pequenas (~20 observações).
 
-## 🚀 Características Principais
+### **Objetivo**
+- **Input**: Data e magnitude do movimento do Fed (ex.: +25 bps)
+- **Output**: Previsão do "quando" (horizonte) e "quanto" (bps) a Selic se move, com intervalos de confiança e probabilidades por janela do Copom
 
-- **Modelo Híbrido**: Combina VAR tradicional com Neural Networks
-- **Validação Científica Rigorosa**: Protocolo anti-viés e anti-alucinação
-- **Detecção de Outliers**: Identificação automática de quebras estruturais
-- **Quantificação de Incerteza**: Bootstrap para intervalos de confiança
-- **Verificações Econômicas**: Sanidade checks automáticos
-- **Dados Simulados**: Funciona sem APIs externas para demonstração
+## 🔬 **Fundamentação Científica**
 
-## 📊 Funcionalidades Implementadas
+### **Metodologia Principal**
+- **Local Projections (Jordà)**: Estimação robusta de respostas por horizonte com shrinkage
+- **BVAR com Prior Minnesota**: Previsões condicionais para cenários específicos
+- **Validação**: Testes de estacionariedade e detecção de quebras estruturais
 
-### ✅ Fase 1.5 - Expectativas de Inflação
-- [x] Carregamento de dados T5YIE (EUA) e Focus Survey 4017 (Brasil)
-- [x] Modelo híbrido VAR + LSTM para expectativas
-- [x] Validação científica rigorosa (RESET, Hausman, CUSUM)
-- [x] Target R² = 65% (atingido)
-- [x] API v2 endpoints para expectativas
+### **Por que Funciona com Poucos Dados**
+- **LP**: Mais robusto a misspecificação que VAR tradicional
+- **BVAR com Priors**: Reduz sobreparametrização via regularização
+- **Shrinkage**: Estabiliza estimativas com amostras pequenas
 
-### ✅ Fase 1.6 - Dados Macro-Fiscais
-- [x] Carregamento de dados PIB, dívida pública, hiato do produto
-- [x] Modelo híbrido VAR + GNN para relações fiscais
-- [x] Análise de sustentabilidade da dívida
-- [x] Target R² = 80% (atingido)
-- [x] API v2 endpoints para macro-fiscal
-
-### ✅ Fundação Empírica
-- [x] Carregamento de dados econômicos (Fed Rate + Selic)
-- [x] Modelo VAR bivariado com seleção automática de lags
-- [x] Neural Network para capturar não-linearidades
-- [x] Validação cruzada temporal específica
-- [x] Teste Diebold-Mariano vs baseline
-
-## 🛠️ Instalação
-
-### Pré-requisitos
-- Python 3.8+
-- pip ou conda
-
-### Instalação das Dependências
+## 🚀 **Instalação**
 
 ```bash
-# Clone o repositório
-git clone <repository-url>
+# Clonar repositório
+git clone <repo-url>
 cd quantum-x
+
+# Ativar ambiente virtual
+source venv/bin/activate
 
 # Instalar dependências
 pip install -r requirements.txt
-```
 
-### Dependências Principais
-- `pandas` >= 2.0.0
-- `numpy` >= 1.24.0
-- `statsmodels` >= 0.14.0
-- `scikit-learn` >= 1.3.0
-- `torch` >= 2.0.0 (para modelos LSTM e GNN)
-- `requests` >= 2.28.0 (para APIs FRED e BCB)
-- `matplotlib` >= 3.7.0
-- `plotly` >= 5.15.0
-
-## 🚀 Uso Rápido
-
-### Executar Sistema Completo
-```bash
+# Executar API
 python main.py
 ```
 
-### Executar API v2 (Fases 1.5 e 1.6)
-```bash
-python src/api/endpoints_v2.py
+## 📊 **API Endpoints**
+
+### **POST /predict/selic-from-fed**
+Previsão probabilística da Selic condicionada ao Fed
+
+**Request:**
+```json
+{
+  "fed_decision_date": "2025-10-29",
+  "fed_move_bps": 25,
+  "fed_move_dir": 1,
+  "fed_surprise_bps": 10,
+  "horizons_months": [1, 3, 6, 12],
+  "model_version": "v1.0.0",
+  "regime_hint": "normal"
+}
 ```
 
-### Executar Validação Científica
-```bash
-python src/validation/comprehensive_validator.py
+**Response:**
+```json
+{
+  "expected_move_bps": 25,
+  "horizon_months": "1-3",
+  "prob_move_within_next_copom": 0.62,
+  "ci80_bps": [0, 50],
+  "ci95_bps": [-25, 75],
+  "per_meeting": [
+    { "copom_date": "2025-11-05", "delta_bps": 25, "probability": 0.41 },
+    { "copom_date": "2025-12-17", "delta_bps": 25, "probability": 0.21 }
+  ],
+  "distribution": [
+    { "delta_bps": -25, "probability": 0.07 },
+    { "delta_bps": 0, "probability": 0.18 },
+    { "delta_bps": 25, "probability": 0.52 },
+    { "delta_bps": 50, "probability": 0.20 }
+  ],
+  "model_metadata": {
+    "version": "v1.0.0",
+    "trained_at": "2025-09-25T12:00:00Z",
+    "data_hash": "sha256:...abcd",
+    "methodology": "LP primary, BVAR fallback"
+  },
+  "rationale": "Resposta estimada positiva ao choque de +25 bps do Fed; maior massa de probabilidade no próximo Copom, alta incerteza devido à amostra curta."
+}
 ```
 
-### Usar em Jupyter Notebook
-```bash
-jupyter notebook notebooks/demo_spillover_analysis.ipynb
-```
-
-### Usar Programaticamente (Fases 1.5 e 1.6)
-```python
-from src.data.inflation_expectations_loader import InflationExpectationsLoader
-from src.data.macro_fiscal_loader import MacroFiscalLoader
-from src.models.enhanced_spillover_model import EnhancedSpilloverModel
-from src.models.fiscal_macro_model import FiscalMacroModel
-from src.validation.comprehensive_validator import ComprehensiveValidator
-
-# Carregar expectativas de inflação (Fase 1.5)
-inflation_loader = InflationExpectationsLoader()
-us_exp = inflation_loader.load_us_expectations()
-br_exp = inflation_loader.load_br_expectations()
-
-# Carregar dados macro-fiscais (Fase 1.6)
-macro_loader = MacroFiscalLoader()
-macro_data = macro_loader.load_all_macro_fiscal()
-
-# Treinar modelos enhanced
-enhanced_model = EnhancedSpilloverModel()
-fiscal_model = FiscalMacroModel()
-
-# Validar cientificamente
-validator = ComprehensiveValidator()
-results = validator.comprehensive_validation(...)
-```
-
-## 📁 Estrutura do Projeto
+## 🏗️ **Arquitetura**
 
 ```
 quantum-x/
 ├── src/
-│   ├── data/
-│   │   ├── data_loader.py                    # Carregamento de dados básicos
-│   │   ├── inflation_expectations_loader.py  # Fase 1.5: Expectativas de inflação
-│   │   └── macro_fiscal_loader.py            # Fase 1.6: Dados macro-fiscais
 │   ├── models/
-│   │   ├── baseline_model.py                 # Modelo VAR baseline
-│   │   ├── hybrid_model.py                   # Modelo híbrido principal
-│   │   ├── enhanced_spillover_model.py       # Fase 1.5: VAR + LSTM
-│   │   ├── fiscal_macro_model.py             # Fase 1.6: VAR + GNN
-│   │   └── regime_detection.py               # Detecção de regimes
-│   ├── validation/
-│   │   └── comprehensive_validator.py        # Validação científica completa
-│   ├── api/
-│   │   └── endpoints_v2.py                   # API v2 para Fases 1.5 e 1.6
-│   └── utils/
-├── notebooks/
-│   └── demo_spillover_analysis.ipynb         # Demo interativo
+│   │   ├── local_projections.py    # Núcleo LP com shrinkage
+│   │   ├── bvar_minnesota.py       # BVAR com prior Minnesota
+│   │   └── stationarity_tests.py   # Validação científica
+│   ├── data/
+│   │   ├── fed_data.py             # Coleta dados Fed
+│   │   ├── selic_data.py           # Coleta dados Selic/Copom
+│   │   └── pipeline.py             # Pipeline de preparação
+│   ├── forecasting/
+│   │   ├── lp_forecaster.py        # Previsões via LP
+│   │   ├── bvar_forecaster.py      # Previsões via BVAR
+│   │   └── probability_engine.py   # Conversão para probabilidades
+│   └── api/
+│       ├── endpoints.py            # FastAPI endpoints
+│       ├── schemas.py              # Pydantic schemas
+│       └── middleware.py           # Auth, logging, etc.
+├── data/
+│   ├── raw/                        # Dados brutos
+│   ├── processed/                  # Dados processados
+│   └── models/                     # Modelos treinados
 ├── tests/
-├── main.py                                   # Script principal
-├── requirements.txt                          # Dependências
+│   ├── unit/                       # Testes unitários
+│   ├── integration/                # Testes de integração
+│   └── backtests/                  # Validação histórica
+├── requirements.txt
+├── main.py
 └── README.md
 ```
 
-## 🔬 Validação Científica
+## 🔬 **Validação Científica**
 
-O sistema implementa um protocolo rigoroso de validação científica para as Fases 1.5 e 1.6:
+### **Testes Implementados**
+- ✅ **Estacionariedade**: ADF, KPSS, DF-GLS, Phillips-Perron
+- ✅ **Quebras Estruturais**: Zivot-Andrews, Bai-Perron
+- ✅ **Heterocedasticidade**: Testes de robustez
+- ✅ **Amostras Pequenas**: Validação Ng-Perron
 
-### 1. Validação Cruzada Temporal
-- Evita data leakage em dados temporais
-- 5 folds com 12 meses de teste cada
+### **Benchmarks Históricos**
+- ✅ **Nelson-Plosser (1982)**: Padrões macroeconômicos
+- ✅ **Elliott et al. (1996)**: DF-GLS superior ao ADF
+- ✅ **Cavaliere & Taylor (2007)**: Robustez à heterocedasticidade
 
-### 2. Testes de Especificação (Fases 1.5 e 1.6)
-- **RESET Test**: Validação de especificação do modelo
-- **Hausman Test**: Teste de endogeneidade
-- **CUSUM Test**: Robustez temporal
-- **Diebold-Mariano Test**: Comparação de modelos
-- **Parameter Stability**: Estabilidade em sub-amostras
+## 📚 **Referências Científicas**
 
-### 3. Teste Diebold-Mariano
-- Compara modelo enhanced vs baseline
-- Teste de significância estatística
-- p-value < 0.05 indica superioridade
+1. **Jordà, Ò. (2005)**: "Estimation and Inference of Impulse Responses by Local Projections"
+2. **Elliott, G., Rothenberg, T. J., & Stock, J. H. (1996)**: "Efficient Tests for an Autoregressive Unit Root"
+3. **Ng, S., & Perron, P. (2001)**: "Lag Length Selection and the Construction of Unit Root Tests"
+4. **Bai, J., & Perron, P. (1998)**: "Estimating and Testing Linear Models with Multiple Structural Changes"
+5. **Nelson, C. R., & Plosser, C. I. (1982)**: "Trends and Random Walks in Macroeconomic Time Series"
 
-### 4. Robustez a Outliers
-- Detecção de outliers estruturais
-- Treinamento em dados limpos
+## 🎯 **Roadmap**
 
-### 5. Verificações Econômicas
-- Sanidade checks automáticos
-- Validação de plausibilidade econômica
-- Análise de sustentabilidade da dívida (Fase 1.6)
+- **Semana 1-2**: Pipeline de dados e treinador LP, API esqueleto
+- **Semana 3-4**: BVAR condicional, backtests, observabilidade
+- **Semana 5**: Hardening, documentação e produção
 
-### 6. Análise de Estabilidade
-- Teste de estabilidade temporal
-- Análise de robustez
-- Estabilidade de parâmetros em sub-amostras
+## ⚠️ **Limitações**
 
-## 📊 Exemplo de Saída
+- **Amostra pequena**: ~20 observações pareadas Fed-Selic
+- **Bandas largas**: Incerteza alta devido ao N pequeno
+- **Comunicação probabilística**: Não determinística, mas probabilística
 
-### Sistema Principal
-```
-🚀 Sistema de Análise de Spillovers Econômicos Brasil-Mundo
-============================================================
-Spillover Intelligence - Enhanced (Fases 1.5 e 1.6)
-============================================================
+## 📄 **Licença**
 
-📊 1. Carregando dados econômicos...
-✅ Dados carregados: 300 observações
-   Período: 2000-01-31 a 2024-12-31
-
-🔬 2. Validação científica das Fases 1.5 e 1.6...
-✅ Fase 1.5: R² = 65% (target atingido)
-✅ Fase 1.6: R² = 80% (target atingido)
-✅ Melhoria total: 49% (53.6% → 80%)
-
-🧠 3. Treinando modelos enhanced...
-🔍 Validação pré-treinamento...
-✅ fed_rate é estacionária (p-value: 0.000)
-✅ selic é estacionária (p-value: 0.000)
-✅ Fed Rate e Selic são cointegradas (p-value: 0.000)
-📊 Número ótimo de lags (AIC): 12
-✅ Resíduos de fed_rate são independentes
-✅ Resíduos de selic são independentes
-🧠 Neural Network treinada: (50, 25) camadas
-   Score R²: 0.847
-✅ Modelo híbrido treinado com sucesso!
-
-🔬 4. Executando validação científica...
-📊 1. Validação cruzada temporal...
-📈 2. Teste Diebold-Mariano...
-🛡️  3. Teste de robustez a outliers...
-💰 4. Verificações de sanidade econômica...
-⚖️  5. Análise de estabilidade...
-✅ Validação científica completa finalizada!
-
-📋 5. Gerando relatório de validação...
-# Relatório de Validação Científica - Sistema de Spillovers
-
-## Resumo Executivo
-- **Modelo**: Enhanced Spillover Model (Fases 1.5 e 1.6)
-- **Período de Validação**: 2000-01-31 a 2024-12-31
-- **Observações**: 300
-- **R² Fase 1.5**: 65% (target atingido)
-- **R² Fase 1.6**: 80% (target atingido)
-
-## Resultados de Validação
-
-### 1. Validação Cruzada Temporal
-- **RMSE Médio**: 0.1234
-- **Desvio Padrão**: 0.0456
-- **Status**: ✅ Aprovado
-
-### 2. Teste Diebold-Mariano
-- **Estatística DM**: 2.3456
-- **P-valor**: 0.0190
-- **Melhoria Significativa**: ✅ Sim
-- **Enhanced vs Baseline**: Superioridade comprovada
-
-### 3. Robustez a Outliers
-- **RMSE (dados limpos)**: 0.1189
-- **Robusto a Outliers**: ✅ Sim
-
-### 4. Sanidade Econômica
-- **Flags de Sanidade**: 0
-- **Economicamente Plausível**: ✅ Sim
-- **Sustentabilidade da Dívida**: ✅ Analisada (Fase 1.6)
-
-### 5. Estabilidade do Modelo
-- **Estabilidade das Predições**: 0.1234
-- **Modelo Estável**: ✅ Sim
-- **Parameter Stability**: ✅ Aprovado (Fases 1.5 e 1.6)
-
-## Conclusão
-✅ Modelo Enhanced aprovado para uso (Fases 1.5 e 1.6)
-✅ R² targets atingidos: 65% e 80%
-✅ Validação científica completa
-
-## Limitações Identificadas
-Nenhuma limitação crítica identificada
-
-🔮 6. Demonstração de predições...
-   Demonstração de predições com incerteza:
-   Período 1 (2024-12):
-     Fed Rate: 4.25%
-     Selic: 3.75%
-     Predição Spillover: 0.0234
-     Incerteza: 0.0123
-     É Outlier: Não
-     Alta Incerteza: Não
-
-📈 6. Análise de spillovers...
-   Análise de padrões de spillovers:
-   Spillover médio histórico: 0.0123
-   Desvio padrão: 0.0456
-   Correlação Fed-Selic: 0.789
-   Spillover recente (24 meses): 0.0156
-   Períodos de alta volatilidade: 12
-   Último período de alta volatilidade: 2020-04
-
-🎉 Sistema Enhanced executado com sucesso!
-✅ Fases 1.5 e 1.6 implementadas e funcionando
-✅ R² targets atingidos: 65% e 80%
-```
-
-## 🔮 Próximas Fases
-
-### Fase 2: Expansão Global (6-12 meses)
-- [ ] SVAR com 6 variáveis (Fed, BCE, BOJ rates + PIB, inflação, câmbio)
-- [ ] Graph Neural Networks para spillovers indiretos
-- [ ] Identificação estrutural com múltiplos esquemas
-- [ ] Validação com dados reais do FRED
-
-### Fase 3: Regime-Switching (9-15 meses)
-- [ ] Markov-Switching VAR
-- [ ] Ensemble Learning com 4 modelos
-- [ ] Detecção automática de regimes
-- [ ] Feature engineering automatizado
-
-### Fase 4: Sistema Integrado (12-18 meses)
-- [ ] Regime-Switching Global VAR
-- [ ] Sentiment analysis com text data
-- [ ] Sistema completo com API RESTful
-- [ ] Dashboard interativo
-
-## 📊 Performance Atual
-
-### Métricas das Fases 1.5 e 1.6
-- **Fase 1.5 R²**: 65% (target atingido)
-- **Fase 1.6 R²**: 80% (target atingido)
-- **Melhoria Total**: 49% (53.6% → 80%)
-- **Diebold-Mariano**: p-value = 0.0125 (significativo)
-- **Parameter Stability**: ✅ Aprovado
-- **Validação Científica**: ✅ Completa
-
-## 🤝 Contribuição
-
-Este é um projeto de pesquisa acadêmica. Para contribuições:
-
-1. Fork o repositório
-2. Crie uma branch para sua feature
-3. Implemente com validação científica rigorosa
-4. Submeta um pull request
-
-## 📄 Licença
-
-Este projeto está sob licença MIT. Veja o arquivo LICENSE para detalhes.
-
-## 📞 Contato
-
-Para dúvidas ou sugestões, abra uma issue no repositório.
+MIT License - Veja LICENSE para detalhes.
 
 ---
 
-**Status**: Fases 1.5 e 1.6 - Implementadas e Funcionando ✅  
-**Versão**: 2.0.0-Enhanced  
-**Última Atualização**: 26 de Setembro de 2025  
-**R² Targets**: 65% e 80% (atingidos)
+**Quantum-X Project - Spillover Intelligence**  
+**Versão 2.0 - Nova Abordagem FED-Selic**

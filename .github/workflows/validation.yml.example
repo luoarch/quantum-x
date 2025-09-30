@@ -1,0 +1,204 @@
+name: Scientific Validation
+
+on:
+  # Pull requests para main
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tests_scientific/**'
+      - 'src/models/**'
+      - 'Makefile.validation'
+      - '.github/workflows/validation.yml'
+  
+  # Push para main
+  push:
+    branches: [main]
+    paths:
+      - 'tests_scientific/**'
+      - 'src/models/**'
+  
+  # Execução manual
+  workflow_dispatch:
+    inputs:
+      n_sims:
+        description: 'Número de simulações'
+        required: false
+        default: '500'
+      alpha:
+        description: 'Nível de significância'
+        required: false
+        default: '0.05'
+  
+  # Nightly às 2h da manhã (UTC)
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  validation:
+    name: Validação Científica
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        python-version: ['3.11']
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+      
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Verificar versões
+        run: |
+          python --version
+          pip list | grep -E "(numpy|pandas|statsmodels|arch)"
+      
+      - name: Executar validação científica (CI)
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        run: |
+          make -f Makefile.validation validate-ci PYTHON=$(which python3)
+      
+      - name: Executar validação científica (Nightly)
+        if: github.event_name == 'schedule'
+        run: |
+          make -f Makefile.validation validate-nightly PYTHON=$(which python3)
+      
+      - name: Executar validação científica (Manual)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          make -f Makefile.validation validate-all \
+            PYTHON=$(which python3) \
+            N_SIMS=${{ github.event.inputs.n_sims }} \
+            ALPHA=${{ github.event.inputs.alpha }}
+      
+      - name: Arquivar relatórios
+        if: always()
+        run: |
+          make -f Makefile.validation archive-latest || true
+      
+      - name: Upload relatórios como artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports-${{ github.run_id }}
+          path: reports/validation/*.tar.gz
+          retention-days: 30
+      
+      - name: Upload relatórios individuais (Nightly)
+        if: github.event_name == 'schedule'
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-reports-nightly-${{ github.run_id }}
+          path: reports/validation/*/
+          retention-days: 90
+      
+      - name: Verificar critérios de aceitação
+        if: github.event_name == 'pull_request'
+        run: |
+          # TODO: Implementar promotion gate
+          echo "Verificando critérios de aceitação..."
+          # python mlops/promotion_gate.py --reports-dir reports/validation/latest
+      
+      - name: Comentar PR com resumo
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            // Encontrar último diretório de relatórios
+            const reportsDir = 'reports/validation';
+            const dirs = fs.readdirSync(reportsDir)
+              .filter(f => fs.statSync(path.join(reportsDir, f)).isDirectory())
+              .sort()
+              .reverse();
+            
+            if (dirs.length === 0) {
+              console.log('Nenhum relatório encontrado');
+              return;
+            }
+            
+            const latestDir = path.join(reportsDir, dirs[0]);
+            
+            // Ler arquivo de benchmarks
+            const benchmarksPath = path.join(latestDir, 'benchmarks_np', 'benchmarks_results.json');
+            let summary = '## 📊 Resumo da Validação Científica\n\n';
+            
+            if (fs.existsSync(benchmarksPath)) {
+              const data = JSON.parse(fs.readFileSync(benchmarksPath, 'utf8'));
+              summary += '### Benchmarks Nelson-Plosser\n\n';
+              summary += '| Série | Esperado | Concordância |\n';
+              summary += '|-------|----------|-------------|\n';
+              
+              for (const [name, result] of Object.entries(data.results)) {
+                const expected = result.expected_unit_root ? 'Unit Root' : 'Stationary';
+                const rate = (result.agreement_rate * 100).toFixed(1);
+                const emoji = result.agreement_rate >= 0.7 ? '✅' : '⚠️';
+                summary += `| ${name} | ${expected} | ${rate}% ${emoji} |\n`;
+              }
+              
+              summary += '\n';
+              summary += `📁 Relatórios completos disponíveis nos artifacts\n`;
+            } else {
+              summary += '⚠️ Relatórios de validação não encontrados\n';
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+
+  notify:
+    name: Notificar resultados
+    runs-on: ubuntu-latest
+    needs: validation
+    if: github.event_name == 'schedule' && failure()
+    
+    steps:
+      - name: Notificar falha no Slack
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "⚠️ Validação científica noturna falhou!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Validação Científica Noturna - Falha*\n\nA validação científica noturna falhou. Verifique os logs para mais detalhes."
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repositório:*\n${{ github.repository }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:*\n${{ github.ref_name }}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Run ID:*\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|${{ github.run_id }}>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
