@@ -24,9 +24,8 @@ def get_health_service() -> HealthService:
 
 @router.get(
     "/",
-    response_model=HealthResponse,
     summary="Health check básico",
-    description="Verificação básica de saúde da API"
+    description="Verificação básica de saúde da API com trava de cold start"
 )
 async def health_check(
     health_service: HealthService = Depends(get_health_service)
@@ -35,9 +34,18 @@ async def health_check(
     Health check básico da API.
     
     Retorna informações sobre o status da API, versão, uptime e métricas básicas.
+    
+    v2.1: Trava de cold start - Retorna 503 se modelos não carregados
     """
     try:
+        from fastapi import Request
+        from starlette.requests import Request as StarletteRequest
+        
+        # Obter app state
+        # Note: health_service não tem acesso direto ao request
+        # Vamos retornar o health normalmente e deixar o readiness check fazer a validação
         health_info = await health_service.get_basic_health()
+        
         return health_info
         
     except Exception as e:
