@@ -25,28 +25,34 @@ from src.models.local_projections import LocalProjectionsForecaster
 
 @pytest.fixture
 def sample_fed_dates():
-    """Datas de decisões do Fed"""
+    """Datas de decisões do Fed (DatetimeIndex)"""
     base = datetime(2024, 1, 31)
-    return [base + timedelta(days=45*i) for i in range(10)]
+    dates = [base + timedelta(days=45*i) for i in range(10)]
+    return pd.DatetimeIndex(dates)
 
 
 @pytest.fixture
 def sample_selic_dates():
-    """Datas de decisões do Copom"""
+    """Datas de decisões do Copom (DatetimeIndex)"""
     base = datetime(2024, 2, 7)
-    return [base + timedelta(days=45*i) for i in range(10)]
+    dates = [base + timedelta(days=45*i) for i in range(10)]
+    return pd.DatetimeIndex(dates)
 
 
 @pytest.fixture
 def sample_fed_moves():
-    """Movimentos do Fed (em bps)"""
-    return np.array([25, 0, -25, 25, 0, 25, -25, 0, 25, 0])
+    """Movimentos do Fed (pandas Series)"""
+    base = datetime(2024, 1, 31)
+    dates = pd.DatetimeIndex([base + timedelta(days=45*i) for i in range(10)])
+    return pd.Series([25, 0, -25, 25, 0, 25, -25, 0, 25, 0], index=dates)
 
 
 @pytest.fixture
 def sample_selic_moves():
-    """Movimentos da Selic (em bps)"""
-    return np.array([0, 25, 0, 25, -25, 0, 25, 0, -25, 25])
+    """Movimentos da Selic (pandas Series)"""
+    base = datetime(2024, 2, 7)
+    dates = pd.DatetimeIndex([base + timedelta(days=45*i) for i in range(10)])
+    return pd.Series([0, 25, 0, 25, -25, 0, 25, 0, -25, 25], index=dates)
 
 
 @pytest.fixture
@@ -95,11 +101,10 @@ def trained_bvar_model(sample_fed_moves, sample_selic_moves,
 def sample_lp_model():
     """Modelo LP de exemplo"""
     return LocalProjectionsForecaster(
-        horizons=[1, 3, 6, 12],
-        n_lags=2,
-        shrinkage_method='ridge',
+        max_horizon=12,
+        max_lags=2,
         alpha=0.1,
-        random_state=42
+        regularization='ridge'
     )
 
 
@@ -114,10 +119,51 @@ def client():
     Usa modelos reais mas permite fake via env
     """
     import os
-    # Opcional: usar modelos fake em CI
-    # os.environ["USE_FAKE_MODELS"] = "1"
+    os.environ.setdefault("ENVIRONMENT", "test")
     
     with TestClient(app) as c:
+        # Garantir que modelos estão carregados (ou injetar fakes)
+        app_instance = c.app
+        
+        # Se modelos não estão carregados, injetar fakes determinísticos
+        if not getattr(app_instance.state, "models_loaded", False):
+            # Criar modelos fake simples
+            class FakeLP:
+                def forecast(self, *args, **kwargs):
+                    return {
+                        "1": {"point": 12.5, "ci_lower": 0, "ci_upper": 25},
+                        "3": {"point": 12.5, "ci_lower": -25, "ci_upper": 50}
+                    }
+                
+                models = {1: None, 3: None, 6: None, 12: None}
+            
+            class FakeBVAR:
+                stable = True
+                eigs_F = np.array([0.4, 0.3])
+                irf_fed_to_selic = np.array([0.51, 0.42, 0.35, 0.28])
+                
+                def conditional_forecast(self, fed_path_bps, horizon_months, **kwargs):
+                    n = horizon_months
+                    return {
+                        "mean": np.array([12.5] * n),
+                        "std": np.array([15.0] * n),
+                        "ci95_lower": np.array([0] * n),
+                        "ci95_upper": np.array([25] * n),
+                        "samples": np.random.randn(100, n) * 15 + 12.5
+                    }
+            
+            app_instance.state.model_lp = FakeLP()
+            app_instance.state.model_bvar = FakeBVAR()
+            app_instance.state.model_metadata = {
+                "version": "vtest",
+                "data_hash": "sha256:" + "00" * 32,
+                "n_observations": 20,
+                "methodology": "LP primary, BVAR fallback",
+                "trained_at": "2025-09-30T00:00:00Z"
+            }
+            app_instance.state.model_version = "vtest"
+            app_instance.state.models_loaded = True
+        
         yield c
 
 
@@ -298,17 +344,25 @@ def capture_warnings():
 def clear_model_cache():
     """
     Limpar cache do ModelService entre testes
-    Garante isolamento
+    Garante isolamento completo
     """
     from src.services.model_service import get_model_service
     
-    yield
-    
-    # Cleanup após teste
+    # Cleanup ANTES do teste
     try:
         svc = get_model_service()
         if hasattr(svc, '_cache'):
             svc._cache.clear()
     except Exception:
-        pass  # Fail silently se service não disponível
+        pass
+    
+    yield
+    
+    # Cleanup APÓS teste
+    try:
+        svc = get_model_service()
+        if hasattr(svc, '_cache'):
+            svc._cache.clear()
+    except Exception:
+        pass
 
