@@ -42,8 +42,8 @@ async def health_check(
     Retorna 503 se modelos não estiverem carregados no app.state
     """
     try:
-        # Método síncrono - SEM await
-        basic = health_service.get_basic_health()
+        # Chamada async
+        basic = await health_service.get_basic_health()
         
         # Cold start gate: verificar se modelos estão carregados
         model_lp = getattr(request.app.state, "model_lp", None)
@@ -111,12 +111,12 @@ async def health_check(
 )
 async def detailed_health_check(
     response: Response,
-    health_service: HealthService = Depends(get_health_service)
+    health_service = Depends(get_health_service)
 ):
     """Health check detalhado"""
     try:
-        # Método síncrono - SEM await
-        detailed_health = health_service.get_detailed_health()
+        # Chamada async
+        detailed_health = await health_service.get_detailed_health()
         
         # Headers
         if "model_version" in detailed_health:
@@ -153,7 +153,7 @@ async def detailed_health_check(
 )
 async def readiness_check(
     response: Response,
-    health_service: HealthService = Depends(get_health_service)
+    health_service = Depends(get_health_service)
 ):
     """
     Readiness probe (Kubernetes-compatible)
@@ -161,11 +161,11 @@ async def readiness_check(
     Retorna 503 até que modelos estejam carregados e dependências OK
     """
     try:
-        # Método síncrono - SEM await
-        readiness = health_service.get_readiness()
+        # Chamada async
+        readiness = await health_service.get_readiness()
         
         # Headers de governança (padronizados)
-        if "active_version" in readiness:
+        if "active_version" in readiness and readiness["active_version"] is not None:
             response.headers["X-Active-Model-Version"] = readiness["active_version"]
         if "uptime_seconds" in readiness:
             response.headers["X-Uptime-Seconds"] = str(round(readiness["uptime_seconds"], 2))
@@ -215,7 +215,7 @@ async def readiness_check(
     }
 )
 async def liveness_check(
-    health_service: HealthService = Depends(get_health_service)
+    health_service = Depends(get_health_service)
 ):
     """
     Liveness probe (Kubernetes-compatible)
@@ -224,8 +224,8 @@ async def liveness_check(
     NÃO consulta dependências externas.
     """
     try:
-        # Liveness minimalista - sem I/O externo (síncrono)
-        liveness = health_service.get_liveness()
+        # Liveness minimalista - sem I/O externo
+        liveness = await health_service.get_liveness()
         
         logger.debug(
             "Liveness check",
@@ -257,7 +257,7 @@ async def liveness_check(
 )
 async def get_metrics(
     response: Response,
-    health_service: HealthService = Depends(get_health_service)
+    health_service = Depends(get_health_service)
 ):
     """
     Métricas Prometheus-compatible
@@ -265,8 +265,8 @@ async def get_metrics(
     Inclui: latências, throughput, códigos de erro, CPU, memória
     """
     try:
-        # Método síncrono - SEM await
-        metrics = health_service.get_metrics()
+        # Chamada async
+        metrics = await health_service.get_metrics()
         
         # Headers
         if "model_version" in metrics:
@@ -306,7 +306,7 @@ async def get_metrics(
 )
 async def get_component_status(
     response: Response,
-    health_service: HealthService = Depends(get_health_service)
+    health_service = Depends(get_health_service)
 ):
     """
     Status detalhado dos componentes
@@ -314,8 +314,8 @@ async def get_component_status(
     Inclui: models (versão, hash), data (last_update), cache (size)
     """
     try:
-        # Método síncrono - SEM await
-        component_status = health_service.get_component_status()
+        # Chamada async
+        component_status = await health_service.get_component_status()
         
         # Headers de evidência
         if "models" in component_status and "active_version" in component_status["models"]:

@@ -29,16 +29,16 @@ class HealthService:
         self.data_service = DataService()
         self.start_perf = time.perf_counter()  # Mais preciso
     
-    def get_basic_health(self) -> HealthResponse:
-        """Health check básico (síncrono)"""
+    async def get_basic_health(self) -> HealthResponse:
+        """Health check básico"""
         try:
             uptime = time.perf_counter() - self.start_perf
             
-            # Métodos síncronos - SEM await
+            # ModelService é síncrono, DataService é async
             active_model = self.model_service.get_active_version()
             model_version = active_model if active_model else "none"
             
-            data_summary = self.data_service.get_data_summary()
+            data_summary = await self.data_service.get_data_summary()
             data_available = data_summary.get("combined_data", {}).get("observations", 0) > 0
             
             # Determinar status
@@ -72,11 +72,11 @@ class HealthService:
                 requests_per_minute=None
             )
     
-    def get_detailed_health(self) -> Dict[str, Any]:
-        """Health check detalhado (síncrono)"""
+    async def get_detailed_health(self) -> Dict[str, Any]:
+        """Health check detalhado"""
         try:
-            basic = self.get_basic_health()
-            dependencies = self._check_dependencies()
+            basic = await self.get_basic_health()
+            dependencies = await self._check_dependencies()
             system_metrics = self._get_system_metrics()
             
             return {
@@ -99,17 +99,17 @@ class HealthService:
                 "overall_health": "unhealthy"
             }
     
-    def get_readiness(self) -> Dict[str, Any]:
-        """Readiness check (síncrono, sem await)"""
+    async def get_readiness(self) -> Dict[str, Any]:
+        """Readiness check"""
         try:
             # Métodos síncronos
             active_version = self.model_service.get_active_version()
             model_ready = active_version is not None
             
-            data_summary = self.data_service.get_data_summary()
+            data_summary = await self.data_service.get_data_summary()
             data_ready = data_summary.get("combined_data", {}).get("observations", 0) > 0
             
-            data_quality = self.data_service.validate_data_quality()
+            data_quality = await self.data_service.validate_data_quality()
             data_valid = bool(data_quality.get("valid", False))
             
             ready = model_ready and data_ready and data_valid
@@ -153,7 +153,7 @@ class HealthService:
                 "issues": [f"Erro: {e}"]
             }
     
-    def get_liveness(self) -> Dict[str, Any]:
+    async def get_liveness(self) -> Dict[str, Any]:
         """
         Liveness check (minimalista, sem I/O bloqueante)
         
@@ -193,14 +193,14 @@ class HealthService:
                 "issues": [f"Erro crítico: {e}"]
             }
     
-    def get_metrics(self) -> Dict[str, Any]:
-        """Métricas da API (síncrono)"""
+    async def get_metrics(self) -> Dict[str, Any]:
+        """Métricas da API"""
         try:
             uptime = time.perf_counter() - self.start_perf
             system_metrics = self._get_system_metrics()
             
-            # Dados e modelo (síncronos)
-            data_summary = self.data_service.get_data_summary()
+            # Dados e modelo
+            data_summary = await self.data_service.get_data_summary()
             active_version = self.model_service.get_active_version()
             
             return {
@@ -209,7 +209,7 @@ class HealthService:
                 "system": system_metrics,
                 "data": {
                     "total_observations": data_summary.get("combined_data", {}).get("observations", 0),
-                    "data_quality": self.data_service.validate_data_quality()
+                    "data_quality": await self.data_service.validate_data_quality()
                 },
                 "model": {
                     "active_version": active_version,
@@ -231,8 +231,8 @@ class HealthService:
                 "error": str(e)
             }
     
-    def get_component_status(self) -> Dict[str, Any]:
-        """Status dos componentes (síncrono)"""
+    async def get_component_status(self) -> Dict[str, Any]:
+        """Status dos componentes"""
         try:
             components = {}
             
@@ -252,7 +252,7 @@ class HealthService:
             
             # Dados
             try:
-                data_quality = self.data_service.validate_data_quality()
+                data_quality = await self.data_service.validate_data_quality()
                 components["data"] = {
                     "status": "healthy" if data_quality.get("valid") else "degraded",
                     "observations": data_quality.get("data_points", 0),
@@ -287,13 +287,13 @@ class HealthService:
                 "overall_status": "error"
             }
     
-    def _check_dependencies(self) -> Dict[str, Any]:
-        """Verificar dependências (síncrono)"""
+    async def _check_dependencies(self) -> Dict[str, Any]:
+        """Verificar dependências"""
         dependencies = {}
         
         # Dados
         try:
-            data_summary = self.data_service.get_data_summary()
+            data_summary = await self.data_service.get_data_summary()
             dependencies["data"] = {
                 "status": "healthy" if data_summary.get("combined_data", {}).get("observations", 0) > 0 else "unhealthy",
                 "observations": data_summary.get("combined_data", {}).get("observations", 0)

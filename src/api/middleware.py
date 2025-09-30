@@ -191,8 +191,11 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         request_id = getattr(request.state, 'request_id', 'unknown')
         
         # Pular autenticação para endpoints públicos
-        public_paths = ["/", "/info", "/health", "/ready", "/live", "/docs", "/redoc", "/openapi.json"]
-        if request.url.path in public_paths:
+        public_paths = ["/", "/info", "/docs", "/redoc", "/openapi.json"]
+        public_prefixes = ["/health"]  # Todos endpoints de health são públicos
+        
+        # Verificar path exato ou prefixo
+        if request.url.path in public_paths or any(request.url.path.startswith(prefix) for prefix in public_prefixes):
             return await call_next(request)
         
         # Verificar chave API
