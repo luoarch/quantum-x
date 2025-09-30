@@ -24,6 +24,7 @@ from .middleware import (
 )
 from .endpoints import prediction, health, models
 from ..core.config import get_settings
+from ..services.model_service import get_model_service
 
 # Configurações
 settings = get_settings()
@@ -33,16 +34,53 @@ async def lifespan(app: FastAPI):
     """Gerenciar ciclo de vida da aplicação"""
     # Startup
     print("🚀 Iniciando API FED-Selic...")
+    print("="*70)
     app.state.start_time = time.time()
     app.state.request_count = 0
     
-    # Inicializar modelos
-    # TODO: Carregar modelos ML aqui
+    # Inicializar modelos REAIS
+    print("\n📦 Carregando modelos...")
+    try:
+        model_service = get_model_service()
+        
+        # Carregar versão mais recente
+        lp, bvar, metadata = model_service.load_model("latest")
+        
+        # Armazenar no app state
+        app.state.model_lp = lp
+        app.state.model_bvar = bvar
+        app.state.model_metadata = metadata
+        app.state.model_version = metadata.get('version', 'unknown')
+        
+        print(f"✅ Modelos carregados:")
+        print(f"   Versão: {app.state.model_version}")
+        print(f"   Data hash: {metadata.get('data_hash', 'N/A')[:60]}...")
+        print(f"   BVAR estável: {getattr(bvar, 'stable', 'N/A')}")
+        print(f"   LP horizontes: {len(lp.models) if hasattr(lp, 'models') else 'N/A'}")
+        
+    except Exception as e:
+        print(f"⚠️  Erro ao carregar modelos: {e}")
+        print(f"   API continuará mas sem modelos carregados")
+        app.state.model_lp = None
+        app.state.model_bvar = None
+        app.state.model_metadata = {}
+        app.state.model_version = "none"
+    
+    print("="*70)
+    print("✅ API pronta para receber requisições!\n")
     
     yield
     
     # Shutdown
-    print("🛑 Finalizando API FED-Selic...")
+    print("\n🛑 Finalizando API FED-Selic...")
+    
+    # Limpar cache de modelos
+    if hasattr(app.state, 'model_lp'):
+        app.state.model_lp = None
+    if hasattr(app.state, 'model_bvar'):
+        app.state.model_bvar = None
+    
+    print("✅ Recursos liberados")
 
 # Criar aplicação FastAPI
 app = FastAPI(
@@ -164,6 +202,10 @@ async def api_info():
     """Informações detalhadas da API"""
     uptime = time.time() - app.state.start_time
     
+    # Ajuste 7: Incluir versão do modelo carregado
+    model_version = getattr(app.state, 'model_version', 'none')
+    model_metadata = getattr(app.state, 'model_metadata', {})
+    
     return {
         "api": {
             "name": "FED-Selic Prediction API",
@@ -175,21 +217,32 @@ async def api_info():
             "uptime_seconds": uptime,
             "request_count": app.state.request_count
         },
+        "model": {
+            "version": model_version,
+            "loaded": model_version != 'none',
+            "data_hash": model_metadata.get('data_hash', 'N/A')[:64] + '...' if model_metadata.get('data_hash') else 'N/A',
+            "n_observations": model_metadata.get('n_observations', 0),
+            "methodology": model_metadata.get('methodology', 'N/A')
+        },
         "endpoints": {
             "prediction": "/predict/selic-from-fed",
             "batch_prediction": "/predict/selic-from-fed/batch",
             "health": "/health",
             "models": "/models/versions",
-            "docs": "/docs"
+            "docs": "/docs",
+            "info": "/info"
         },
         "features": [
             "Previsão probabilística da Selic",
             "Suporte a múltiplos cenários",
-            "Intervalos de confiança",
+            "Intervalos de confiança 80% e 95%",
+            "Discretização em 25 bps",
             "Mapeamento para reuniões do Copom",
             "Versionamento de modelos",
             "Rate limiting",
-            "Autenticação por chave API"
+            "Autenticação por chave API",
+            "Cache LRU de modelos",
+            "Self-check de integridade"
         ]
     }
 
