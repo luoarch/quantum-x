@@ -247,6 +247,11 @@ class BVARMinnesota:
         # Coeficientes
         self.beta = posterior_mean.reshape(self.n_vars, -1)
         
+        # Checagem de dimensões Beta
+        expected_cols = 1 + self.n_vars * self.n_lags
+        assert self.beta.shape[1] == expected_cols, \
+            f"Beta shape inconsistente: esperado (n_vars={self.n_vars}, {expected_cols}), obtido {self.beta.shape}"
+        
         # Sigma com regularização adaptativa
         Y_pred = X_kron @ posterior_mean
         residuals = (Y_vec - Y_pred).reshape(self.Y.shape)
@@ -298,7 +303,7 @@ class BVARMinnesota:
         """
         Verificar estabilidade (raízes do polinômio AR < 1)
         
-        v2.1: Retorna True se estável
+        v2.1: Retorna True se estável e armazena eigenvalues para auditoria
         """
         k = self.n_vars
         p = self.n_lags
@@ -312,8 +317,9 @@ class BVARMinnesota:
         if p > 1:
             F[k:, :k * (p - 1)] = np.eye(k * (p - 1))
         
-        # Eigenvalues
+        # Eigenvalues (armazenar para auditoria)
         eigvals = np.linalg.eigvals(F)
+        self.eigs_F = eigvals  # Guardar para metadados
         max_eig = np.max(np.abs(eigvals))
         
         print(f"   Estabilidade: max|eig|={max_eig:.3f} {'✓' if max_eig < 1 else '✗'}")
@@ -351,6 +357,14 @@ class BVARMinnesota:
         # Normalização: choque estrutural do Fed = 1 bps
         scale = L[0, 0] if abs(L[0, 0]) > 1e-8 else 1.0
         L = L / scale
+        
+        # Armazenar metadata de normalização
+        self.irf_normalization = {
+            'shock_var': 'fed',
+            'magnitude_bps': 1.0,
+            'original_scale': float(scale),
+            'chol_order': ['fed', 'selic']
+        }
         
         # IRFs
         irf = np.zeros((max_horizon + 1, k, k))
@@ -396,10 +410,10 @@ class BVARMinnesota:
         
         forecasts = {}
         
-        for h in range(1, min(horizon_months + 1, len(fed_path) + 1)):
+        for h in range(1, horizon_months + 1):
             selic_draws = np.zeros(n_simulations)
             
-            # Fed para este horizonte
+            # Fed para este horizonte com extend_policy
             if h - 1 < len(fed_path):
                 fed_imposed = fed_path[h - 1]
             else:
@@ -529,7 +543,9 @@ class BVARMinnesota:
             'n_vars': self.n_vars,
             'n_lags': self.n_lags,
             'stable': self.stable,
+            'eigs_max_abs': float(np.max(np.abs(self.eigs_F))) if hasattr(self, 'eigs_F') else None,
             'irf_summary': irf_summary,
+            'irf_normalization': getattr(self, 'irf_normalization', None),
             'prior_strength': float(np.trace(self.prior_var) / (np.trace(np.linalg.pinv(self.prior_var)) + 1e-8)),
             'model_quality': 'good' if np.mean(r_squared) > 0.3 else 'moderate' if np.mean(r_squared) > 0.1 else 'weak',
             'sigma_condition_number': float(np.linalg.cond(self.sigma)),
@@ -548,6 +564,7 @@ class BVARMinnesota:
         v2.1: Para auditoria e compatibilidade API
         """
         return {
+            'schema_version': '1.0.0',
             'model_type': 'BVAR_Minnesota_v2.1',
             'n_vars': self.n_vars,
             'n_lags': self.n_lags,
@@ -559,6 +576,8 @@ class BVARMinnesota:
             'train_dates': self.train_dates,
             'scale_info': self.scale_info,
             'stable': self.stable,
+            'eigs_max_abs': float(np.max(np.abs(self.eigs_F))) if hasattr(self, 'eigs_F') else None,
+            'irf_normalization': getattr(self, 'irf_normalization', None),
             'evaluation': self.evaluate_model() if self.beta is not None else None
         }
     
@@ -587,6 +606,35 @@ class BVARMinnesota:
         model.stable = data.get('stable')
         
         return model
+
+
+def discretize_to_25bps(samples: np.ndarray) -> Dict[int, float]:
+    """
+    Discretizar distribuição contínua em múltiplos de 25 bps
+    
+    Função utilitária para converter draws de simulação em probabilidades discretas
+    para uso na API (campo 'distribution' do response).
+    
+    Args:
+        samples: Array de valores contínuos (bps)
+        
+    Returns:
+        Dict mapeando delta_bps → probability
+        
+    Example:
+        >>> samples = np.array([23, 26, 24, 48, 25, 27])
+        >>> discretize_to_25bps(samples)
+        {25: 0.833, 50: 0.167}
+    """
+    # Arredondar para múltiplos de 25
+    rounded = (np.round(samples / 25.0) * 25).astype(int)
+    
+    # Contar frequências
+    vals, counts = np.unique(rounded, return_counts=True)
+    probs = counts / counts.sum()
+    
+    # Retornar dict ordenado
+    return {int(v): float(p) for v, p in sorted(zip(vals, probs))}
 
 
 if __name__ == "__main__":
