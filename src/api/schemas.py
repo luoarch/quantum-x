@@ -79,6 +79,25 @@ class PredictionRequest(BaseModel):
             raise ValueError('fed_move_bps deve ser múltiplo de 25')
         return v
     
+    @validator('fed_move_dir')
+    def validate_fed_move_dir_consistency(cls, v, values):
+        """Validar consistência entre fed_move_dir e fed_move_bps"""
+        if v is None or 'fed_move_bps' not in values:
+            return v
+        
+        bps = values['fed_move_bps']
+        dir_value = int(v.value) if hasattr(v, 'value') else int(v)
+        
+        # Verificar consistência: sinal deve ser compatível
+        if bps > 0 and dir_value < 0:
+            raise ValueError('fed_move_dir inconsistente: bps > 0 mas direção dovish')
+        if bps < 0 and dir_value > 0:
+            raise ValueError('fed_move_dir inconsistente: bps < 0 mas direção hawkish')
+        if bps == 0 and dir_value != 0:
+            raise ValueError('fed_move_dir inconsistente: bps = 0 mas direção não neutral')
+        
+        return v
+    
     @validator('fed_decision_date')
     def validate_fed_decision_date(cls, v):
         """Validar formato da data e se não é muito futuro"""
@@ -129,7 +148,7 @@ class DistributionPoint(BaseModel):
     
     delta_bps: int = Field(
         ...,
-        description="Mudança na Selic (bps)",
+        description="Mudança na Selic (bps), múltiplo de 25",
         example=25
     )
     
@@ -140,6 +159,13 @@ class DistributionPoint(BaseModel):
         ge=0.0,
         le=1.0
     )
+    
+    @validator('delta_bps')
+    def validate_delta_bps(cls, v):
+        """Validar que delta_bps é múltiplo de 25"""
+        if v % 25 != 0:
+            raise ValueError('delta_bps deve ser múltiplo de 25')
+        return v
 
 class ModelMetadata(BaseModel):
     """Metadados do modelo utilizado"""
@@ -184,6 +210,12 @@ class ModelMetadata(BaseModel):
 
 class PredictionResponse(BaseModel):
     """Response da previsão da Selic"""
+    
+    schema_version: str = Field(
+        "v1.0",
+        description="Versão do schema de resposta",
+        example="v1.0"
+    )
     
     expected_move_bps: int = Field(
         ...,
@@ -269,6 +301,27 @@ class PredictionResponse(BaseModel):
             raise ValueError('Valor baixo deve ser menor ou igual ao valor alto')
         return v
 
+class BatchError(BaseModel):
+    """Erro em processamento de lote"""
+    
+    index: int = Field(
+        ...,
+        description="Índice do cenário com erro (0-based)",
+        example=1
+    )
+    
+    error: str = Field(
+        ...,
+        description="Mensagem de erro",
+        example="fed_move_bps deve ser múltiplo de 25"
+    )
+    
+    details: Optional[Dict[str, Any]] = Field(
+        None,
+        description="Detalhes adicionais do erro",
+        example={"field": "fed_move_bps", "value": 30}
+    )
+
 class BatchPredictionRequest(BaseModel):
     """Request para previsões em lote"""
     
@@ -278,9 +331,21 @@ class BatchPredictionRequest(BaseModel):
         min_items=1,
         max_items=10
     )
+    
+    batch_id: Optional[str] = Field(
+        None,
+        description="ID do lote para rastreamento",
+        example="batch_20250930_001"
+    )
 
 class BatchPredictionResponse(BaseModel):
     """Response para previsões em lote"""
+    
+    schema_version: str = Field(
+        "v1.0",
+        description="Versão do schema de resposta",
+        example="v1.0"
+    )
     
     predictions: List[PredictionResponse] = Field(
         ...,
@@ -291,10 +356,18 @@ class BatchPredictionResponse(BaseModel):
         ...,
         description="Metadados do processamento em lote",
         example={
-            "n_scenarios": 3,
+            "batch_id": "batch_123",
+            "total_scenarios": 3,
+            "successful_predictions": 3,
+            "errors": 0,
             "processing_time_ms": 150,
-            "model_version": "v1.0.0"
+            "timestamp": "2025-09-30T12:00:00Z"
         }
+    )
+    
+    errors: Optional[List[BatchError]] = Field(
+        None,
+        description="Erros ocorridos durante processamento"
     )
 
 class ModelVersion(BaseModel):

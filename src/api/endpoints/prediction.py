@@ -1,8 +1,9 @@
 """
 Endpoints de previsão da Selic
+v2.0 - Integrado com modelos REAIS do app.state
 """
 
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, status, Request
 from fastapi.responses import JSONResponse
 from typing import List, Dict, Any
 import time
@@ -19,18 +20,49 @@ from ...services.prediction_service import PredictionService
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Dependência para obter serviço de previsão
-def get_prediction_service() -> PredictionService:
-    """Obter serviço de previsão"""
-    return PredictionService()
+# Dependência para obter serviço com modelos REAIS
+def get_prediction_service(request: Request) -> PredictionService:
+    """
+    Obter serviço de previsão com modelos REAIS do app.state
+    
+    v2.0: Injeta modelos carregados no startup
+    """
+    # Obter modelos do app.state
+    model_lp = getattr(request.app.state, 'model_lp', None)
+    model_bvar = getattr(request.app.state, 'model_bvar', None)
+    model_metadata = getattr(request.app.state, 'model_metadata', {})
+    
+    # Validar que modelos estão carregados
+    if not model_lp and not model_bvar:
+        logger.error("Modelos não carregados no app.state")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "error_code": ErrorCodes.MODEL_UNAVAILABLE,
+                "message": "Modelos não disponíveis. API iniciando ou erro no carregamento."
+            }
+        )
+    
+    return PredictionService(
+        model_lp=model_lp,
+        model_bvar=model_bvar,
+        model_metadata=model_metadata
+    )
 
 @router.post(
     "/selic-from-fed",
     response_model=PredictionResponse,
+    responses={
+        422: {"model": StandardErrorResponse, "description": "Erro de validação"},
+        503: {"model": StandardErrorResponse, "description": "Modelo indisponível"},
+        500: {"model": StandardErrorResponse, "description": "Erro interno"}
+    },
     summary="Prever movimento da Selic baseado no Fed",
-    description="Previsão probabilística da Selic condicionada a um movimento do Fed"
+    description="Previsão probabilística da Selic condicionada a um movimento do Fed",
+    response_description="Previsão com distribuição, intervalos de confiança e reuniões Copom"
 )
 async def predict_selic_from_fed(
+    request_obj: Request,
     request: PredictionRequest,
     prediction_service: PredictionService = Depends(get_prediction_service)
 ):
@@ -46,7 +78,12 @@ async def predict_selic_from_fed(
     - **regime_hint**: Dica de regime econômico (opcional)
     """
     try:
-        start_time = time.time()
+        start_time = time.perf_counter()  # Mais preciso que time.time()
+        request_id = getattr(request_obj.state, 'request_id', None)
+        
+        # Normalizar horizons (ordenar, remover duplicatas)
+        if request.horizons_months:
+            request.horizons_months = sorted(set(request.horizons_months))
         
         # Validar request
         validation_result = await prediction_service.validate_request(request)
@@ -64,16 +101,41 @@ async def predict_selic_from_fed(
         prediction = await prediction_service.predict_selic(request)
         
         # Calcular tempo de processamento
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
         
-        # Log da previsão
+        # Log estruturado completo
+        top_3_dist = sorted(
+            [(d.delta_bps, d.probability) for d in prediction.distribution],
+            key=lambda x: x[1],
+            reverse=True
+        )[:3]
+        
         logger.info(
-            f"Previsão realizada: Fed {request.fed_move_bps}bps em {request.fed_decision_date}, "
-            f"Selic esperada: {prediction.expected_move_bps}bps, "
-            f"tempo: {processing_time:.3f}s"
+            "Previsão realizada",
+            extra={
+                "request_id": request_id,
+                "model_version": prediction.model_metadata.version,
+                "fed_move_bps": request.fed_move_bps,
+                "regime_hint": request.regime_hint,
+                "horizons": request.horizons_months,
+                "expected_selic_bps": prediction.expected_move_bps,
+                "horizon_range": prediction.horizon_months,
+                "ci95_amplitude": prediction.ci95_bps[1] - prediction.ci95_bps[0],
+                "top_3_bins": top_3_dist,
+                "processing_time_ms": round(processing_time * 1000, 2)
+            }
         )
         
-        return prediction
+        # Criar resposta com header customizado
+        from fastapi.responses import JSONResponse
+        response = JSONResponse(
+            content=prediction.model_dump(mode='json'),
+            status_code=200
+        )
+        response.headers["X-Model-Version"] = prediction.model_metadata.version
+        response.headers["X-Processing-Time-Ms"] = str(round(processing_time * 1000, 2))
+        
+        return response
         
     except HTTPException:
         raise
@@ -89,16 +151,23 @@ async def predict_selic_from_fed(
         
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error_response.dict()
+            detail=error_response.model_dump(mode='json')
         )
 
 @router.post(
     "/selic-from-fed/batch",
     response_model=BatchPredictionResponse,
+    responses={
+        413: {"model": StandardErrorResponse, "description": "Payload muito grande"},
+        422: {"model": StandardErrorResponse, "description": "Erro de validação"},
+        503: {"model": StandardErrorResponse, "description": "Modelo indisponível"},
+        500: {"model": StandardErrorResponse, "description": "Erro interno"}
+    },
     summary="Previsões em lote",
     description="Múltiplas previsões da Selic para diferentes cenários do Fed"
 )
 async def predict_selic_batch(
+    request_obj: Request,
     request: BatchPredictionRequest,
     prediction_service: PredictionService = Depends(get_prediction_service)
 ):
@@ -109,17 +178,21 @@ async def predict_selic_batch(
     - **batch_id**: ID do lote para rastreamento (opcional)
     """
     try:
-        start_time = time.time()
+        start_time = time.perf_counter()
         settings = get_settings()
+        request_id = getattr(request_obj.state, 'request_id', None)
         
-        # Validar tamanho do lote
+        # Validar tamanho do lote (413 Payload Too Large)
         if len(request.scenarios) > settings.MAX_BATCH_SIZE:
             raise HTTPException(
-                status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
                 detail={
-                    "error_code": ErrorCodes.VALIDATION_ERROR,
+                    "error_code": "payload_too_large",
                     "message": f"Máximo {settings.MAX_BATCH_SIZE} cenários por lote",
-                    "details": {"max_batch_size": settings.MAX_BATCH_SIZE}
+                    "details": {
+                        "max_batch_size": settings.MAX_BATCH_SIZE,
+                        "received": len(request.scenarios)
+                    }
                 }
             )
         
@@ -151,11 +224,11 @@ async def predict_selic_batch(
                 })
         
         # Calcular tempo de processamento
-        processing_time = time.time() - start_time
+        processing_time = time.perf_counter() - start_time
         
         # Preparar metadados do lote
         batch_metadata = {
-            "batch_id": request.batch_id,
+            "batch_id": request.batch_id if hasattr(request, 'batch_id') else None,
             "total_scenarios": len(request.scenarios),
             "successful_predictions": len(predictions),
             "errors": len(errors),
@@ -163,15 +236,23 @@ async def predict_selic_batch(
             "timestamp": datetime.utcnow().isoformat()
         }
         
-        # Log do lote
+        # Log estruturado do lote
         logger.info(
-            f"Lote processado: {len(predictions)}/{len(request.scenarios)} sucessos, "
-            f"tempo: {processing_time:.3f}s"
+            "Lote processado",
+            extra={
+                "request_id": request_id,
+                "batch_id": batch_metadata["batch_id"],
+                "total": len(request.scenarios),
+                "successful": len(predictions),
+                "failed": len(errors),
+                "processing_time_ms": batch_metadata["processing_time_ms"]
+            }
         )
         
         return BatchPredictionResponse(
             predictions=predictions,
-            batch_metadata=batch_metadata
+            batch_metadata=batch_metadata,
+            errors=errors if errors else None
         )
         
     except HTTPException:
@@ -187,7 +268,7 @@ async def predict_selic_batch(
         
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=error_response.dict()
+            detail=error_response.model_dump(mode='json')
         )
 
 @router.get(
