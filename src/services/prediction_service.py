@@ -88,6 +88,17 @@ class PredictionService:
                     if not (1 <= h <= 12):
                         return {"valid": False, "message": "horizons_months deve estar em [1, 12]"}
             
+            # Validar coerência fed_move_bps vs fed_move_dir
+            if request.fed_move_dir is not None and request.fed_move_bps is not None:
+                if (request.fed_move_bps > 0 and request.fed_move_dir < 0) or \
+                   (request.fed_move_bps < 0 and request.fed_move_dir > 0) or \
+                   (request.fed_move_bps == 0 and request.fed_move_dir != 0):
+                    return {
+                        "valid": False,
+                        "message": "fed_move_dir inconsistente com fed_move_bps",
+                        "details": {"bps": request.fed_move_bps, "dir": request.fed_move_dir}
+                    }
+            
             return {"valid": True}
             
         except Exception as e:
