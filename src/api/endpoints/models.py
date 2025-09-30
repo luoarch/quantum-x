@@ -31,9 +31,9 @@ def get_service() -> ModelService:
     }
 )
 async def list_model_versions(
-    include_inactive: bool = Query(False, description="Incluir versões inativas"),
     response: Response,
-    model_service: ModelService = Depends(get_service)
+    include_inactive: bool = Query(False, description="Incluir versões inativas"),
+    model_service = Depends(get_service)
 ):
     """Listar todas as versões disponíveis"""
     try:
@@ -85,7 +85,7 @@ async def list_model_versions(
 async def get_model_version(
     version: str,
     response: Response,
-    model_service: ModelService = Depends(get_service)
+    model_service = Depends(get_service)
 ):
     """Obter detalhes de versão específica"""
     try:
@@ -155,7 +155,7 @@ async def get_model_version(
 )
 async def get_active_model(
     response: Response,
-    model_service: ModelService = Depends(get_service)
+    model_service = Depends(get_service)
 ):
     """Obter versão ativa do modelo"""
     try:
@@ -211,7 +211,7 @@ async def get_active_model(
 async def activate_model_version(
     version: str,
     response: Response,
-    model_service: ModelService = Depends(get_service)
+    model_service = Depends(get_service)
 ):
     """
     Ativar versão específica (idempotente)
@@ -300,9 +300,9 @@ async def activate_model_version(
     }
 )
 async def get_model_capabilities(
-    include_dynamic: bool = Query(True, description="Incluir informações dinâmicas do modelo carregado"),
     response: Response,
-    model_service: ModelService = Depends(get_service)
+    include_dynamic: bool = Query(True, description="Incluir informações dinâmicas do modelo carregado"),
+    model_service = Depends(get_service)
 ):
     """Obter capacidades"""
     try:
@@ -348,7 +348,7 @@ async def get_model_capabilities(
 )
 async def get_cache_info(
     response: Response,
-    model_service: ModelService = Depends(get_service)
+    model_service = Depends(get_service)
 ):
     """Obter informações do cache"""
     try:

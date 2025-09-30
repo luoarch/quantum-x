@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     API_TITLE: str = "FED-Selic Prediction API"
     API_VERSION: str = "1.0.0"
     API_DESCRIPTION: str = "API para previsão probabilística da Selic condicionada a movimentos do Fed"
+    ENVIRONMENT: str = Field(default="development", env="ENVIRONMENT")  # development, staging, production
     
     # Servidor
     HOST: str = Field(default="0.0.0.0", env="HOST")
