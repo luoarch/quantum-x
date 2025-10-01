@@ -28,8 +28,6 @@ share/python-wheels/
 MANIFEST
 
 # PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -50,6 +48,9 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+
+# Coverage JSON (gerado automaticamente)
+coverage.json
 
 # Translations
 *.mo
@@ -85,13 +86,9 @@ ipython_config.py
 .python-version
 
 # pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
 #Pipfile.lock
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+# PEP 582
 __pypackages__/
 
 # Celery stuff
@@ -128,16 +125,55 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Project specific
-*.csv
-*.xlsx
-*.json
-data/
-logs/
-models/
+# ============================================================================
+# PROJECT SPECIFIC - Quantum-X
+# ============================================================================
+
+# Models (binários grandes - NÃO versionar)
+data/models/**/*.pkl
+data/models/**/*.h5
+data/models/**/*.pth
+data/models/**/*.joblib
+data/models/**/*.onnx
+
+# MAS VERSIONAR metadata de modelos (CRÍTICO para auditoria)
+!data/models/**/metadata.json
+!data/models/**/model_card.md
+!data/models/**/irfs_*.json
+
+# Data (arquivos grandes - NÃO versionar)
+data/raw/**/*.parquet
+data/raw/**/*.feather
+data/processed/**/*.parquet
+data/processed/**/*.feather
+
+# MAS VERSIONAR dados históricos pequenos (<1MB, essenciais)
+!data/raw/fed_selic_combined.csv
+!data/raw/fed_selic_combined.json
+!data/raw/fed_interest_rates.csv
+!data/raw/fed_detailed_data.csv
+!data/raw/fed_detailed_data.json
+!data/processed/fed_clean_data.csv
+
+# Reports - Ignorar CSVs grandes
+reports/**/*.csv
+
+# MAS VERSIONAR resultados científicos JSON (essenciais para reprodução)
+!reports/**/lag_selection_results.json
+!reports/**/lag_distributions.json
+!reports/**/hetero_size_results.json
+!reports/**/breaks_results.json
+!reports/**/small_size_results.json
+!reports/**/small_power_results.json
+!reports/**/size_results.json
+!reports/**/power_results.json
+!reports/**/benchmarks_results.json
+
+# Checkpoints e temporários
 checkpoints/
 results/
 outputs/
+logs/
 
 # IDE
 .vscode/
@@ -155,7 +191,7 @@ outputs/
 ehthumbs.db
 Thumbs.db
 
-# API keys and secrets
+# API keys and secrets (NUNCA versionar)
 .env.local
 .env.production
 .env.staging
