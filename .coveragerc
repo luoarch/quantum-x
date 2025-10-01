@@ -1,0 +1,55 @@
+[run]
+source = src
+branch = True
+parallel = True
+relative_files = True
+dynamic_context = test_function
+data_file = .coverage
+omit =
+    */tests/*
+    */test_*.py
+    */__pycache__/*
+    */venv/*
+    */env/*
+    src/types/*
+    **/types/*
+    */__main__.py
+    */conftest.py
+
+[paths]
+source =
+    src
+    */workspace*/src
+    */project*/src
+    /Users/*/quantum-x/quantum-x/src
+
+[report]
+precision = 2
+show_missing = True
+skip_covered = False
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    @abstractmethod
+    @abc.abstractmethod
+    pass  # no cover
+    \.\.\.
+
+fail_under = 80
+
+[html]
+directory = htmlcov
+title = Quantum-X Coverage Report
+show_contexts = True
+
+[xml]
+output = coverage.xml
+
+[json]
+output = coverage.json
+pretty_print = True
+show_contexts = True
