@@ -1,0 +1,42 @@
+{
+  "config": {
+    "patterns": [
+      "increasing",
+      "decreasing",
+      "breaks",
+      "arch",
+      "garch"
+    ],
+    "T": 100,
+    "n_sims": 100,
+    "alpha": 0.05,
+    "seed": 42
+  },
+  "results": {
+    "increasing": {
+      "adf_size": 0.04,
+      "dfgls_size": 0.09,
+      "kpss_size": 0.14
+    },
+    "decreasing": {
+      "adf_size": 0.21,
+      "dfgls_size": 0.12,
+      "kpss_size": 0.17
+    },
+    "breaks": {
+      "adf_size": 0.03,
+      "dfgls_size": 0.13,
+      "kpss_size": 0.22
+    },
+    "arch": {
+      "adf_size": 0.05,
+      "dfgls_size": 0.11,
+      "kpss_size": 0.17
+    },
+    "garch": {
+      "adf_size": 0.02,
+      "dfgls_size": 0.06,
+      "kpss_size": 0.16
+    }
+  }
+}

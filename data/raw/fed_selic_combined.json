@@ -1,0 +1,1995 @@
+{
+  "metadata": {
+    "created_at": "2025-09-29T21:47:44.953353",
+    "observations": 247,
+    "start_date": "2005-01-01T00:00:00",
+    "end_date": "2025-07-01T00:00:00",
+    "columns": [
+      "fed_rate",
+      "selic",
+      "fed_change",
+      "selic_change",
+      "spillover",
+      "spillover_change"
+    ],
+    "source": "FRED API + BCB/Yahoo/Historical"
+  },
+  "data": [
+    {
+      "fed_rate": 2.28,
+      "selic": 19.667597527755188,
+      "fed_change": NaN,
+      "selic_change": NaN,
+      "spillover": -17.387597527755187,
+      "spillover_change": NaN
+    },
+    {
+      "fed_rate": 2.5,
+      "selic": 19.85493893852761,
+      "fed_change": 0.2200000000000002,
+      "selic_change": 0.18734141077242228,
+      "spillover": -17.35493893852761,
+      "spillover_change": 0.032658589227576584
+    },
+    {
+      "fed_rate": 2.63,
+      "selic": 19.09699986685867,
+      "fed_change": 0.1299999999999999,
+      "selic_change": -0.7579390716689396,
+      "spillover": -16.46699986685867,
+      "spillover_change": 0.8879390716689386
+    },
+    {
+      "fed_rate": 2.79,
+      "selic": 20.31457789265455,
+      "fed_change": 0.16000000000000014,
+      "selic_change": 1.2175780257958806,
+      "spillover": -17.524577892654552,
+      "spillover_change": -1.0575780257958804
+    },
+    {
+      "fed_rate": 3.0,
+      "selic": 18.42497778683582,
+      "fed_change": 0.20999999999999996,
+      "selic_change": -1.8896001058187295,
+      "spillover": -15.424977786835822,
+      "spillover_change": 2.0996001058187304
+    },
+    {
+      "fed_rate": 3.04,
+      "selic": 18.501663944980617,
+      "fed_change": 0.040000000000000036,
+      "selic_change": 0.07668615814479551,
+      "spillover": -15.461663944980618,
+      "spillover_change": -0.036686158144796366
+    },
+    {
+      "fed_rate": 3.26,
+      "selic": 17.663180468702727,
+      "fed_change": 0.21999999999999975,
+      "selic_change": -0.8384834762778901,
+      "spillover": -14.403180468702727,
+      "spillover_change": 1.0584834762778907
+    },
+    {
+      "fed_rate": 3.5,
+      "selic": 16.153770664627896,
+      "fed_change": 0.2400000000000002,
+      "selic_change": -1.5094098040748314,
+      "spillover": -12.653770664627896,
+      "spillover_change": 1.7494098040748316
+    },
+    {
+      "fed_rate": 3.62,
+      "selic": 16.36290662029482,
+      "fed_change": 0.1200000000000001,
+      "selic_change": 0.20913595566692322,
+      "spillover": -12.742906620294818,
+      "spillover_change": -0.08913595566692223
+    },
+    {
+      "fed_rate": 3.78,
+      "selic": 16.324049355527027,
+      "fed_change": 0.1599999999999997,
+      "selic_change": -0.03885726476779183,
+      "spillover": -12.544049355527028,
+      "spillover_change": 0.1988572647677902
+    },
+    {
+      "fed_rate": 4.0,
+      "selic": 17.72912094127748,
+      "fed_change": 0.2200000000000002,
+      "selic_change": 1.405071585750452,
+      "spillover": -13.729120941277479,
+      "spillover_change": -1.1850715857504515
+    },
+    {
+      "fed_rate": 4.16,
+      "selic": 17.754211271741728,
+      "fed_change": 0.16000000000000014,
+      "selic_change": 0.025090330464248467,
+      "spillover": -13.594211271741727,
+      "spillover_change": 0.13490966953575168
+    },
+    {
+      "fed_rate": 4.29,
+      "selic": 18.309966249623706,
+      "fed_change": 0.1299999999999999,
+      "selic_change": 0.5557549778819784,
+      "spillover": -14.019966249623707,
+      "spillover_change": -0.42575497788197936
+    },
+    {
+      "fed_rate": 4.49,
+      "selic": 19.93686823128512,
+      "fed_change": 0.20000000000000018,
+      "selic_change": 1.6269019816614154,
+      "spillover": -15.446868231285121,
+      "spillover_change": -1.4269019816614144
+    },
+    {
+      "fed_rate": 4.59,
+      "selic": 21.050419933292712,
+      "fed_change": 0.09999999999999964,
+      "selic_change": 1.113551702007591,
+      "spillover": -16.460419933292712,
+      "spillover_change": -1.0135517020075913
+    },
+    {
+      "fed_rate": 4.79,
+      "selic": 19.006138920131672,
+      "fed_change": 0.20000000000000018,
+      "selic_change": -2.04428101316104,
+      "spillover": -14.216138920131673,
+      "spillover_change": 2.2442810131610393
+    },
+    {
+      "fed_rate": 4.94,
+      "selic": 19.369185735259983,
+      "fed_change": 0.15000000000000036,
+      "selic_change": 0.3630468151283104,
+      "spillover": -14.429185735259981,
+      "spillover_change": -0.21304681512830825
+    },
+    {
+      "fed_rate": 4.99,
+      "selic": 18.671109964604202,
+      "fed_change": 0.04999999999999982,
+      "selic_change": -0.6980757706557803,
+      "spillover": -13.681109964604202,
+      "spillover_change": 0.7480757706557792
+    },
+    {
+      "fed_rate": 5.24,
+      "selic": 18.98168611874441,
+      "fed_change": 0.25,
+      "selic_change": 0.31057615414020745,
+      "spillover": -13.74168611874441,
+      "spillover_change": -0.06057615414020745
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 15.882055159411305,
+      "fed_change": 0.009999999999999787,
+      "selic_change": -3.099630959333105,
+      "spillover": -10.632055159411305,
+      "spillover_change": 3.1096309593331046
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 15.982562646146762,
+      "fed_change": 0.0,
+      "selic_change": 0.10050748673545762,
+      "spillover": -10.732562646146762,
+      "spillover_change": -0.10050748673545762
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 15.872088263384017,
+      "fed_change": 0.0,
+      "selic_change": -0.1104743827627459,
+      "spillover": -10.622088263384017,
+      "spillover_change": 0.1104743827627459
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 16.713148552946432,
+      "fed_change": 0.0,
+      "selic_change": 0.8410602895624155,
+      "spillover": -11.463148552946432,
+      "spillover_change": -0.8410602895624155
+    },
+    {
+      "fed_rate": 5.24,
+      "selic": 18.477907428632037,
+      "fed_change": -0.009999999999999787,
+      "selic_change": 1.7647588756856045,
+      "spillover": -13.237907428632036,
+      "spillover_change": -1.7747588756856043
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 18.908623930054766,
+      "fed_change": 0.009999999999999787,
+      "selic_change": 0.43071650142272944,
+      "spillover": -13.658623930054766,
+      "spillover_change": -0.42071650142272965
+    },
+    {
+      "fed_rate": 5.26,
+      "selic": 19.938566874371737,
+      "fed_change": 0.009999999999999787,
+      "selic_change": 1.0299429443169714,
+      "spillover": -14.678566874371738,
+      "spillover_change": -1.0199429443169716
+    },
+    {
+      "fed_rate": 5.26,
+      "selic": 18.985840023590907,
+      "fed_change": 0.0,
+      "selic_change": -0.9527268507808309,
+      "spillover": -13.725840023590907,
+      "spillover_change": 0.9527268507808309
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 20.32174754914401,
+      "fed_change": -0.009999999999999787,
+      "selic_change": 1.3359075255531039,
+      "spillover": -15.07174754914401,
+      "spillover_change": -1.3459075255531037
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 18.85382979203249,
+      "fed_change": 0.0,
+      "selic_change": -1.4679177571115218,
+      "spillover": -13.603829792032489,
+      "spillover_change": 1.4679177571115218
+    },
+    {
+      "fed_rate": 5.25,
+      "selic": 18.136270844965072,
+      "fed_change": 0.0,
+      "selic_change": -0.7175589470674169,
+      "spillover": -12.886270844965072,
+      "spillover_change": 0.7175589470674169
+    },
+    {
+      "fed_rate": 5.26,
+      "selic": 17.283188817548552,
+      "fed_change": 0.009999999999999787,
+      "selic_change": -0.8530820274165194,
+      "spillover": -12.023188817548553,
+      "spillover_change": 0.8630820274165192
+    },
+    {
+      "fed_rate": 5.02,
+      "selic": 17.06715897281202,
+      "fed_change": -0.2400000000000002,
+      "selic_change": -0.21602984473653208,
+      "spillover": -12.04715897281202,
+      "spillover_change": -0.02397015526346813
+    },
+    {
+      "fed_rate": 4.94,
+      "selic": 16.101373301552364,
+      "fed_change": -0.07999999999999918,
+      "selic_change": -0.9657856712596562,
+      "spillover": -11.161373301552363,
+      "spillover_change": 0.8857856712596579
+    },
+    {
+      "fed_rate": 4.76,
+      "selic": 16.532798690450605,
+      "fed_change": -0.1800000000000006,
+      "selic_change": 0.43142538889824067,
+      "spillover": -11.772798690450605,
+      "spillover_change": -0.6114253888982422
+    },
+    {
+      "fed_rate": 4.49,
+      "selic": 16.74494950863029,
+      "fed_change": -0.2699999999999996,
+      "selic_change": 0.21215081817968695,
+      "spillover": -12.254949508630292,
+      "spillover_change": -0.4821508181796865
+    },
+    {
+      "fed_rate": 4.24,
+      "selic": 17.100400707237025,
+      "fed_change": -0.25,
+      "selic_change": 0.35545119860673324,
+      "spillover": -12.860400707237025,
+      "spillover_change": -0.6054511986067332
+    },
+    {
+      "fed_rate": 3.94,
+      "selic": 19.0459493563832,
+      "fed_change": -0.30000000000000027,
+      "selic_change": 1.9455486491461755,
+      "spillover": -15.105949356383201,
+      "spillover_change": -2.2455486491461762
+    },
+    {
+      "fed_rate": 2.98,
+      "selic": 20.089232808351333,
+      "fed_change": -0.96,
+      "selic_change": 1.0432834519681329,
+      "spillover": -17.109232808351333,
+      "spillover_change": -2.003283451968132
+    },
+    {
+      "fed_rate": 2.61,
+      "selic": 19.67701930185058,
+      "fed_change": -0.3700000000000001,
+      "selic_change": -0.41221350650075195,
+      "spillover": -17.067019301850582,
+      "spillover_change": 0.04221350650075095
+    },
+    {
+      "fed_rate": 2.28,
+      "selic": 19.996765837801277,
+      "fed_change": -0.33000000000000007,
+      "selic_change": 0.3197465359506957,
+      "spillover": -17.716765837801276,
+      "spillover_change": -0.649746535950694
+    },
+    {
+      "fed_rate": 1.98,
+      "selic": 18.871025034453712,
+      "fed_change": -0.2999999999999998,
+      "selic_change": -1.1257408033475649,
+      "spillover": -16.891025034453712,
+      "spillover_change": 0.8257408033475642
+    },
+    {
+      "fed_rate": 2.0,
+      "selic": 17.853748772232656,
+      "fed_change": 0.020000000000000018,
+      "selic_change": -1.0172762622210563,
+      "spillover": -15.853748772232656,
+      "spillover_change": 1.0372762622210558
+    },
+    {
+      "fed_rate": 2.01,
+      "selic": 17.18660023266281,
+      "fed_change": 0.009999999999999787,
+      "selic_change": -0.6671485395698475,
+      "spillover": -15.176600232662809,
+      "spillover_change": 0.6771485395698473
+    },
+    {
+      "fed_rate": 2.0,
+      "selic": 15.127631445509909,
+      "fed_change": -0.009999999999999787,
+      "selic_change": -2.0589687871528994,
+      "spillover": -13.127631445509909,
+      "spillover_change": 2.0489687871528997
+    },
+    {
+      "fed_rate": 1.81,
+      "selic": 15.31465127830487,
+      "fed_change": -0.18999999999999995,
+      "selic_change": 0.18701983279496126,
+      "spillover": -13.50465127830487,
+      "spillover_change": -0.37701983279496076
+    },
+    {
+      "fed_rate": 0.97,
+      "selic": 16.49136797253775,
+      "fed_change": -0.8400000000000001,
+      "selic_change": 1.1767166942328782,
+      "spillover": -15.521367972537748,
+      "spillover_change": -2.016716694232878
+    },
+    {
+      "fed_rate": 0.39,
+      "selic": 16.66005182678741,
+      "fed_change": -0.58,
+      "selic_change": 0.16868385424966093,
+      "spillover": -16.27005182678741,
+      "spillover_change": -0.748683854249661
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 17.77950846665499,
+      "fed_change": -0.23,
+      "selic_change": 1.119456639867579,
+      "spillover": -17.619508466654988,
+      "spillover_change": -1.3494566398675794
+    },
+    {
+      "fed_rate": 0.15,
+      "selic": 11.020450297225276,
+      "fed_change": -0.010000000000000009,
+      "selic_change": -6.7590581694297125,
+      "spillover": -10.870450297225275,
+      "spillover_change": 6.749058169429713
+    },
+    {
+      "fed_rate": 0.22,
+      "selic": 11.940202125293176,
+      "fed_change": 0.07,
+      "selic_change": 0.9197518280679002,
+      "spillover": -11.720202125293175,
+      "spillover_change": -0.8497518280679
+    },
+    {
+      "fed_rate": 0.18,
+      "selic": 12.022098285484839,
+      "fed_change": -0.04000000000000001,
+      "selic_change": 0.08189616019166301,
+      "spillover": -11.84209828548484,
+      "spillover_change": -0.12189616019166394
+    },
+    {
+      "fed_rate": 0.15,
+      "selic": 12.183255287781979,
+      "fed_change": -0.03,
+      "selic_change": 0.16115700229713958,
+      "spillover": -12.033255287781978,
+      "spillover_change": -0.19115700229713894
+    },
+    {
+      "fed_rate": 0.18,
+      "selic": 12.258926238204543,
+      "fed_change": 0.03,
+      "selic_change": 0.07567095042256433,
+      "spillover": -12.078926238204543,
+      "spillover_change": -0.04567095042256497
+    },
+    {
+      "fed_rate": 0.21,
+      "selic": 11.359611648516298,
+      "fed_change": 0.03,
+      "selic_change": -0.8993145896882453,
+      "spillover": -11.149611648516297,
+      "spillover_change": 0.9293145896882464
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 11.577343196440056,
+      "fed_change": -0.04999999999999999,
+      "selic_change": 0.21773154792375848,
+      "spillover": -11.417343196440056,
+      "spillover_change": -0.2677315479237592
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 10.007087907140772,
+      "fed_change": 0.0,
+      "selic_change": -1.5702552892992845,
+      "spillover": -9.847087907140772,
+      "spillover_change": 1.5702552892992845
+    },
+    {
+      "fed_rate": 0.15,
+      "selic": 9.767864018913277,
+      "fed_change": -0.010000000000000009,
+      "selic_change": -0.23922388822749419,
+      "spillover": -9.617864018913277,
+      "spillover_change": 0.2292238882274944
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 9.74031649655592,
+      "fed_change": -0.03,
+      "selic_change": -0.02754752235735758,
+      "spillover": -9.62031649655592,
+      "spillover_change": -0.002452477642643558
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 10.27811665318793,
+      "fed_change": 0.0,
+      "selic_change": 0.5378001566320094,
+      "spillover": -10.15811665318793,
+      "spillover_change": -0.5378001566320094
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 10.650465393108883,
+      "fed_change": 0.0,
+      "selic_change": 0.3723487399209535,
+      "spillover": -10.530465393108884,
+      "spillover_change": -0.3723487399209535
+    },
+    {
+      "fed_rate": 0.11,
+      "selic": 10.92747953597048,
+      "fed_change": -0.009999999999999995,
+      "selic_change": 0.27701414286159753,
+      "spillover": -10.817479535970481,
+      "spillover_change": -0.2870141428615973
+    },
+    {
+      "fed_rate": 0.13,
+      "selic": 10.852983748463423,
+      "fed_change": 0.020000000000000004,
+      "selic_change": -0.07449578750705754,
+      "spillover": -10.722983748463422,
+      "spillover_change": 0.09449578750705889
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 11.97535640237405,
+      "fed_change": 0.03,
+      "selic_change": 1.1223726539106273,
+      "spillover": -11.81535640237405,
+      "spillover_change": -1.092372653910628
+    },
+    {
+      "fed_rate": 0.2,
+      "selic": 10.726077472872891,
+      "fed_change": 0.04000000000000001,
+      "selic_change": -1.249278929501159,
+      "spillover": -10.526077472872892,
+      "spillover_change": 1.2892789295011582
+    },
+    {
+      "fed_rate": 0.2,
+      "selic": 10.697755604982152,
+      "fed_change": 0.0,
+      "selic_change": -0.028321867890738872,
+      "spillover": -10.497755604982153,
+      "spillover_change": 0.028321867890738872
+    },
+    {
+      "fed_rate": 0.18,
+      "selic": 10.310590167712215,
+      "fed_change": -0.020000000000000018,
+      "selic_change": -0.38716543726993713,
+      "spillover": -10.130590167712215,
+      "spillover_change": 0.36716543726993756
+    },
+    {
+      "fed_rate": 0.18,
+      "selic": 9.724980685611476,
+      "fed_change": 0.0,
+      "selic_change": -0.5856094821007396,
+      "spillover": -9.544980685611476,
+      "spillover_change": 0.5856094821007396
+    },
+    {
+      "fed_rate": 0.19,
+      "selic": 8.118226496167456,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -1.60675418944402,
+      "spillover": -7.928226496167455,
+      "spillover_change": 1.6167541894440207
+    },
+    {
+      "fed_rate": 0.19,
+      "selic": 8.618124278317067,
+      "fed_change": 0.0,
+      "selic_change": 0.49989778214961156,
+      "spillover": -8.428124278317068,
+      "spillover_change": -0.49989778214961245
+    },
+    {
+      "fed_rate": 0.19,
+      "selic": 9.272495011139986,
+      "fed_change": 0.0,
+      "selic_change": 0.6543707328229189,
+      "spillover": -9.082495011139986,
+      "spillover_change": -0.6543707328229189
+    },
+    {
+      "fed_rate": 0.19,
+      "selic": 9.600030910891928,
+      "fed_change": 0.0,
+      "selic_change": 0.32753589975194153,
+      "spillover": -9.410030910891928,
+      "spillover_change": -0.32753589975194153
+    },
+    {
+      "fed_rate": 0.18,
+      "selic": 10.278036984758888,
+      "fed_change": -0.010000000000000009,
+      "selic_change": 0.6780060738669604,
+      "spillover": -10.098036984758888,
+      "spillover_change": -0.6880060738669602
+    },
+    {
+      "fed_rate": 0.17,
+      "selic": 9.473077340629892,
+      "fed_change": -0.009999999999999981,
+      "selic_change": -0.8049596441289957,
+      "spillover": -9.303077340629892,
+      "spillover_change": 0.7949596441289959
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 10.55766586520428,
+      "fed_change": -0.010000000000000009,
+      "selic_change": 1.0845885245743876,
+      "spillover": -10.39766586520428,
+      "spillover_change": -1.0945885245743874
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 9.97646495147792,
+      "fed_change": -0.01999999999999999,
+      "selic_change": -0.5812009137263594,
+      "spillover": -9.83646495147792,
+      "spillover_change": 0.5612009137263598
+    },
+    {
+      "fed_rate": 0.1,
+      "selic": 9.896634140518453,
+      "fed_change": -0.04000000000000001,
+      "selic_change": -0.07983081095946787,
+      "spillover": -9.796634140518453,
+      "spillover_change": 0.039830810959466945
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 9.841818422452109,
+      "fed_change": -0.010000000000000009,
+      "selic_change": -0.05481571806634378,
+      "spillover": -9.751818422452109,
+      "spillover_change": 0.04481571806634399
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 9.219741420993001,
+      "fed_change": 0.0,
+      "selic_change": -0.6220770014591075,
+      "spillover": -9.129741420993001,
+      "spillover_change": 0.6220770014591075
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 8.858618921304677,
+      "fed_change": -0.01999999999999999,
+      "selic_change": -0.36112249968832444,
+      "spillover": -8.788618921304677,
+      "spillover_change": 0.34112249968832487
+    },
+    {
+      "fed_rate": 0.1,
+      "selic": 7.608364575133273,
+      "fed_change": 0.03,
+      "selic_change": -1.2502543461714035,
+      "spillover": -7.508364575133274,
+      "spillover_change": 1.2802543461714029
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 6.733768569067044,
+      "fed_change": -0.020000000000000004,
+      "selic_change": -0.8745960060662297,
+      "spillover": -6.653768569067044,
+      "spillover_change": 0.8545960060662301
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 8.071108619249552,
+      "fed_change": -0.009999999999999995,
+      "selic_change": 1.3373400501825081,
+      "spillover": -8.001108619249552,
+      "spillover_change": -1.347340050182508
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 8.414002310932187,
+      "fed_change": 0.009999999999999995,
+      "selic_change": 0.34289369168263484,
+      "spillover": -8.334002310932187,
+      "spillover_change": -0.33289369168263505
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 7.872926874296916,
+      "fed_change": -0.009999999999999995,
+      "selic_change": -0.5410754366352704,
+      "spillover": -7.802926874296916,
+      "spillover_change": 0.5310754366352706
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 8.646100768402624,
+      "fed_change": 0.009999999999999995,
+      "selic_change": 0.7731738941057076,
+      "spillover": -8.566100768402624,
+      "spillover_change": -0.7631738941057078
+    },
+    {
+      "fed_rate": 0.1,
+      "selic": 9.247766172244457,
+      "fed_change": 0.020000000000000004,
+      "selic_change": 0.6016654038418334,
+      "spillover": -9.147766172244458,
+      "spillover_change": -0.5816654038418339
+    },
+    {
+      "fed_rate": 0.13,
+      "selic": 8.842592848339272,
+      "fed_change": 0.03,
+      "selic_change": -0.4051733239051849,
+      "spillover": -8.712592848339272,
+      "spillover_change": 0.43517332390518604
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 9.47570065012512,
+      "fed_change": 0.010000000000000009,
+      "selic_change": 0.6331078017858474,
+      "spillover": -9.33570065012512,
+      "spillover_change": -0.6231078017858476
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 9.0905187782364,
+      "fed_change": 0.01999999999999999,
+      "selic_change": -0.38518187188872055,
+      "spillover": -8.930518778236399,
+      "spillover_change": 0.4051818718887201
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 7.224406508038941,
+      "fed_change": 0.0,
+      "selic_change": -1.8661122701974584,
+      "spillover": -7.064406508038941,
+      "spillover_change": 1.8661122701974584
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 7.398929648594961,
+      "fed_change": 0.0,
+      "selic_change": 0.17452314055601992,
+      "spillover": -7.238929648594961,
+      "spillover_change": -0.17452314055601992
+    },
+    {
+      "fed_rate": 0.13,
+      "selic": 7.185176230937982,
+      "fed_change": -0.03,
+      "selic_change": -0.21375341765697886,
+      "spillover": -7.055176230937982,
+      "spillover_change": 0.1837534176569786
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 6.2260575624265195,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.9591186685114623,
+      "spillover": -6.08605756242652,
+      "spillover_change": 0.9691186685114621
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 6.976491776041634,
+      "fed_change": 0.01999999999999999,
+      "selic_change": 0.7504342136151143,
+      "spillover": -6.816491776041634,
+      "spillover_change": -0.7304342136151138
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 7.401632607924416,
+      "fed_change": 0.0,
+      "selic_change": 0.42514083188278207,
+      "spillover": -7.241632607924416,
+      "spillover_change": -0.42514083188278207
+    },
+    {
+      "fed_rate": 0.16,
+      "selic": 8.066706550933892,
+      "fed_change": 0.0,
+      "selic_change": 0.6650739430094763,
+      "spillover": -7.906706550933892,
+      "spillover_change": -0.6650739430094763
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 15.113485400243773,
+      "fed_change": -0.01999999999999999,
+      "selic_change": 7.046778849309881,
+      "spillover": -14.973485400243773,
+      "spillover_change": -7.06677884930988
+    },
+    {
+      "fed_rate": 0.15,
+      "selic": 15.685995991758517,
+      "fed_change": 0.009999999999999981,
+      "selic_change": 0.5725105915147441,
+      "spillover": -15.535995991758517,
+      "spillover_change": -0.5625105915147444
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 16.218032442736735,
+      "fed_change": -0.009999999999999981,
+      "selic_change": 0.5320364509782181,
+      "spillover": -16.078032442736735,
+      "spillover_change": -0.5420364509782178
+    },
+    {
+      "fed_rate": 0.15,
+      "selic": 14.938991137603807,
+      "fed_change": 0.009999999999999981,
+      "selic_change": -1.2790413051329281,
+      "spillover": -14.788991137603807,
+      "spillover_change": 1.289041305132928
+    },
+    {
+      "fed_rate": 0.11,
+      "selic": 14.781513733883763,
+      "fed_change": -0.039999999999999994,
+      "selic_change": -0.15747740372004415,
+      "spillover": -14.671513733883764,
+      "spillover_change": 0.11747740372004323
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 14.214393647057717,
+      "fed_change": -0.020000000000000004,
+      "selic_change": -0.567120086826046,
+      "spillover": -14.124393647057717,
+      "spillover_change": 0.5471200868260464
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 12.581518003265016,
+      "fed_change": 0.0,
+      "selic_change": -1.6328756437927012,
+      "spillover": -12.491518003265016,
+      "spillover_change": 1.6328756437927012
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 12.469941922976146,
+      "fed_change": -0.009999999999999995,
+      "selic_change": -0.11157608028887012,
+      "spillover": -12.389941922976146,
+      "spillover_change": 0.10157608028887033
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 11.879687309957756,
+      "fed_change": 0.0,
+      "selic_change": -0.5902546130183897,
+      "spillover": -11.799687309957756,
+      "spillover_change": 0.5902546130183897
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 12.352758449351983,
+      "fed_change": 0.009999999999999995,
+      "selic_change": 0.47307113939422685,
+      "spillover": -12.262758449351983,
+      "spillover_change": -0.46307113939422706
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 13.566898667379133,
+      "fed_change": -0.009999999999999995,
+      "selic_change": 1.2141402180271506,
+      "spillover": -13.486898667379133,
+      "spillover_change": -1.2241402180271503
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 14.204692507769803,
+      "fed_change": 0.009999999999999995,
+      "selic_change": 0.6377938403906693,
+      "spillover": -14.114692507769803,
+      "spillover_change": -0.6277938403906695
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 14.551198580207954,
+      "fed_change": -0.01999999999999999,
+      "selic_change": 0.34650607243815124,
+      "spillover": -14.481198580207954,
+      "spillover_change": -0.3665060724381508
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 15.711425282607475,
+      "fed_change": 0.0,
+      "selic_change": 1.1602267023995214,
+      "spillover": -15.641425282607475,
+      "spillover_change": -1.1602267023995214
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 15.353459327505625,
+      "fed_change": 0.009999999999999995,
+      "selic_change": -0.35796595510185014,
+      "spillover": -15.273459327505625,
+      "spillover_change": 0.36796595510184993
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 16.18457032495327,
+      "fed_change": 0.009999999999999995,
+      "selic_change": 0.8311109974476452,
+      "spillover": -16.09457032495327,
+      "spillover_change": -0.8211109974476454
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 15.014958109872433,
+      "fed_change": 0.0,
+      "selic_change": -1.1696122150808375,
+      "spillover": -14.924958109872433,
+      "spillover_change": 1.1696122150808375
+    },
+    {
+      "fed_rate": 0.1,
+      "selic": 14.14155416432764,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.8734039455447924,
+      "spillover": -14.041554164327641,
+      "spillover_change": 0.8834039455447922
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 13.0204569525882,
+      "fed_change": -0.010000000000000009,
+      "selic_change": -1.1210972117394409,
+      "spillover": -12.9304569525882,
+      "spillover_change": 1.111097211739441
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 12.549000449715523,
+      "fed_change": 0.0,
+      "selic_change": -0.4714565028726767,
+      "spillover": -12.459000449715523,
+      "spillover_change": 0.4714565028726767
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 11.735683066992575,
+      "fed_change": 0.0,
+      "selic_change": -0.8133173827229481,
+      "spillover": -11.645683066992575,
+      "spillover_change": 0.8133173827229481
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 12.21014608023055,
+      "fed_change": 0.0,
+      "selic_change": 0.47446301323797435,
+      "spillover": -12.12014608023055,
+      "spillover_change": -0.47446301323797435
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 13.08713025713441,
+      "fed_change": 0.0,
+      "selic_change": 0.8769841769038607,
+      "spillover": -12.99713025713441,
+      "spillover_change": -0.8769841769038607
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 13.625488244343622,
+      "fed_change": 0.03,
+      "selic_change": 0.5383579872092117,
+      "spillover": -13.505488244343622,
+      "spillover_change": -0.5083579872092123
+    },
+    {
+      "fed_rate": 0.11,
+      "selic": 14.73507258010048,
+      "fed_change": -0.009999999999999995,
+      "selic_change": 1.1095843357568587,
+      "spillover": -14.62507258010048,
+      "spillover_change": -1.1195843357568585
+    },
+    {
+      "fed_rate": 0.11,
+      "selic": 15.665301847873746,
+      "fed_change": 0.0,
+      "selic_change": 0.9302292677732655,
+      "spillover": -15.555301847873746,
+      "spillover_change": -0.9302292677732655
+    },
+    {
+      "fed_rate": 0.11,
+      "selic": 15.646127395574732,
+      "fed_change": 0.0,
+      "selic_change": -0.019174452299013822,
+      "spillover": -15.536127395574733,
+      "spillover_change": 0.019174452299013822
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 15.795294330570595,
+      "fed_change": 0.009999999999999995,
+      "selic_change": 0.1491669349958631,
+      "spillover": -15.675294330570596,
+      "spillover_change": -0.1391669349958633
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 15.173920632476474,
+      "fed_change": 0.0,
+      "selic_change": -0.6213736980941214,
+      "spillover": -15.053920632476474,
+      "spillover_change": 0.6213736980941214
+    },
+    {
+      "fed_rate": 0.13,
+      "selic": 14.257517398073324,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.9164032344031501,
+      "spillover": -14.127517398073323,
+      "spillover_change": 0.9264032344031516
+    },
+    {
+      "fed_rate": 0.13,
+      "selic": 12.925547810300362,
+      "fed_change": 0.0,
+      "selic_change": -1.3319695877729618,
+      "spillover": -12.795547810300361,
+      "spillover_change": 1.3319695877729618
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 12.076454369335867,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.849093440964495,
+      "spillover": -11.936454369335866,
+      "spillover_change": 0.8590934409644948
+    },
+    {
+      "fed_rate": 0.14,
+      "selic": 11.796470372994891,
+      "fed_change": 0.0,
+      "selic_change": -0.2799839963409756,
+      "spillover": -11.65647037299489,
+      "spillover_change": 0.2799839963409756
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 12.074650182106495,
+      "fed_change": -0.020000000000000018,
+      "selic_change": 0.2781798091116041,
+      "spillover": -11.954650182106496,
+      "spillover_change": -0.29817980911160546
+    },
+    {
+      "fed_rate": 0.12,
+      "selic": 13.049341122209405,
+      "fed_change": 0.0,
+      "selic_change": 0.97469094010291,
+      "spillover": -12.929341122209406,
+      "spillover_change": -0.97469094010291
+    },
+    {
+      "fed_rate": 0.24,
+      "selic": 13.887549412233108,
+      "fed_change": 0.12,
+      "selic_change": 0.8382082900237027,
+      "spillover": -13.647549412233108,
+      "spillover_change": -0.7182082900237017
+    },
+    {
+      "fed_rate": 0.34,
+      "selic": 15.247330588673341,
+      "fed_change": 0.10000000000000003,
+      "selic_change": 1.359781176440233,
+      "spillover": -14.907330588673341,
+      "spillover_change": -1.2597811764402334
+    },
+    {
+      "fed_rate": 0.38,
+      "selic": 16.16189043136401,
+      "fed_change": 0.03999999999999998,
+      "selic_change": 0.9145598426906698,
+      "spillover": -15.78189043136401,
+      "spillover_change": -0.8745598426906689
+    },
+    {
+      "fed_rate": 0.36,
+      "selic": 15.71318822656632,
+      "fed_change": -0.020000000000000018,
+      "selic_change": -0.44870220479769074,
+      "spillover": -15.35318822656632,
+      "spillover_change": 0.4287022047976894
+    },
+    {
+      "fed_rate": 0.37,
+      "selic": 15.325516081512314,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.3876721450540064,
+      "spillover": -14.955516081512314,
+      "spillover_change": 0.39767214505400617
+    },
+    {
+      "fed_rate": 0.37,
+      "selic": 14.948234094891461,
+      "fed_change": 0.0,
+      "selic_change": -0.37728198662085255,
+      "spillover": -14.578234094891462,
+      "spillover_change": 0.37728198662085255
+    },
+    {
+      "fed_rate": 0.38,
+      "selic": 13.7829063734767,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -1.1653277214147604,
+      "spillover": -13.4029063734767,
+      "spillover_change": 1.175327721414762
+    },
+    {
+      "fed_rate": 0.39,
+      "selic": 13.1980841269113,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.5848222465654,
+      "spillover": -12.8080841269113,
+      "spillover_change": 0.5948222465653998
+    },
+    {
+      "fed_rate": 0.4,
+      "selic": 12.569743657878986,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.6283404690323149,
+      "spillover": -12.169743657878985,
+      "spillover_change": 0.6383404690323147
+    },
+    {
+      "fed_rate": 0.4,
+      "selic": 12.046674689143279,
+      "fed_change": 0.0,
+      "selic_change": -0.5230689687357071,
+      "spillover": -11.646674689143278,
+      "spillover_change": 0.5230689687357071
+    },
+    {
+      "fed_rate": 0.4,
+      "selic": 12.129680101393456,
+      "fed_change": 0.0,
+      "selic_change": 0.0830054122501771,
+      "spillover": -11.729680101393456,
+      "spillover_change": -0.0830054122501771
+    },
+    {
+      "fed_rate": 0.41,
+      "selic": 12.5605522276074,
+      "fed_change": 0.009999999999999953,
+      "selic_change": 0.430872126213945,
+      "spillover": -12.1505522276074,
+      "spillover_change": -0.4208721262139452
+    },
+    {
+      "fed_rate": 0.54,
+      "selic": 14.16559583603986,
+      "fed_change": 0.13000000000000006,
+      "selic_change": 1.6050436084324584,
+      "spillover": -13.62559583603986,
+      "spillover_change": -1.4750436084324594
+    },
+    {
+      "fed_rate": 0.65,
+      "selic": 5.7201867843367395,
+      "fed_change": 0.10999999999999999,
+      "selic_change": -8.44540905170312,
+      "spillover": -5.070186784336739,
+      "spillover_change": 8.555409051703121
+    },
+    {
+      "fed_rate": 0.66,
+      "selic": 5.683127903535427,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.03705888080131281,
+      "spillover": -5.023127903535427,
+      "spillover_change": 0.0470588808013126
+    },
+    {
+      "fed_rate": 0.79,
+      "selic": 5.979998633209494,
+      "fed_change": 0.13,
+      "selic_change": 0.29687072967406714,
+      "spillover": -5.189998633209494,
+      "spillover_change": -0.16687072967406724
+    },
+    {
+      "fed_rate": 0.9,
+      "selic": 5.768344272914974,
+      "fed_change": 0.10999999999999999,
+      "selic_change": -0.21165436029451978,
+      "spillover": -4.868344272914974,
+      "spillover_change": 0.3216543602945201
+    },
+    {
+      "fed_rate": 0.91,
+      "selic": 5.474494580275685,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.29384969263928884,
+      "spillover": -4.564494580275685,
+      "spillover_change": 0.3038496926392886
+    },
+    {
+      "fed_rate": 1.04,
+      "selic": 4.940661156939534,
+      "fed_change": 0.13,
+      "selic_change": -0.5338334233361515,
+      "spillover": -3.9006611569395337,
+      "spillover_change": 0.6638334233361514
+    },
+    {
+      "fed_rate": 1.15,
+      "selic": 4.301489672914126,
+      "fed_change": 0.10999999999999988,
+      "selic_change": -0.6391714840254075,
+      "spillover": -3.1514896729141264,
+      "spillover_change": 0.7491714840254073
+    },
+    {
+      "fed_rate": 1.16,
+      "selic": 4.00862733320436,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.2928623397097665,
+      "spillover": -2.8486273332043597,
+      "spillover_change": 0.3028623397097667
+    },
+    {
+      "fed_rate": 1.15,
+      "selic": 4.413382621599067,
+      "fed_change": -0.010000000000000009,
+      "selic_change": 0.404755288394707,
+      "spillover": -3.263382621599067,
+      "spillover_change": -0.4147552883947072
+    },
+    {
+      "fed_rate": 1.15,
+      "selic": 4.24246928321144,
+      "fed_change": 0.0,
+      "selic_change": -0.1709133383876269,
+      "spillover": -3.09246928321144,
+      "spillover_change": 0.1709133383876269
+    },
+    {
+      "fed_rate": 1.16,
+      "selic": 4.4779499547220345,
+      "fed_change": 0.010000000000000009,
+      "selic_change": 0.2354806715105946,
+      "spillover": -3.3179499547220344,
+      "spillover_change": -0.22548067151059437
+    },
+    {
+      "fed_rate": 1.3,
+      "selic": 4.938310611097477,
+      "fed_change": 0.14000000000000012,
+      "selic_change": 0.46036065637544255,
+      "spillover": -3.638310611097477,
+      "spillover_change": -0.32036065637544286
+    },
+    {
+      "fed_rate": 1.41,
+      "selic": 4.67954148594738,
+      "fed_change": 0.10999999999999988,
+      "selic_change": -0.2587691251500974,
+      "spillover": -3.2695414859473795,
+      "spillover_change": 0.36876912515009774
+    },
+    {
+      "fed_rate": 1.42,
+      "selic": 4.8082517485355565,
+      "fed_change": 0.010000000000000009,
+      "selic_change": 0.12871026258817686,
+      "spillover": -3.3882517485355566,
+      "spillover_change": -0.11871026258817707
+    },
+    {
+      "fed_rate": 1.51,
+      "selic": 4.862078118416684,
+      "fed_change": 0.09000000000000008,
+      "selic_change": 0.053826369881127434,
+      "spillover": -3.352078118416684,
+      "spillover_change": 0.036173630118872424
+    },
+    {
+      "fed_rate": 1.69,
+      "selic": 5.325226398958828,
+      "fed_change": 0.17999999999999994,
+      "selic_change": 0.4631482805421445,
+      "spillover": -3.6352263989588285,
+      "spillover_change": -0.28314828054214436
+    },
+    {
+      "fed_rate": 1.7,
+      "selic": 4.344636693882942,
+      "fed_change": 0.010000000000000009,
+      "selic_change": -0.9805897050758867,
+      "spillover": -2.6446366938829415,
+      "spillover_change": 0.990589705075887
+    },
+    {
+      "fed_rate": 1.82,
+      "selic": 4.052908143810561,
+      "fed_change": 0.1200000000000001,
+      "selic_change": -0.2917285500723805,
+      "spillover": -2.232908143810561,
+      "spillover_change": 0.41172855007238063
+    },
+    {
+      "fed_rate": 1.91,
+      "selic": 3.5202617098903595,
+      "fed_change": 0.08999999999999986,
+      "selic_change": -0.5326464339202017,
+      "spillover": -1.6102617098903595,
+      "spillover_change": 0.6226464339202014
+    },
+    {
+      "fed_rate": 1.91,
+      "selic": 2.9117923026509733,
+      "fed_change": 0.0,
+      "selic_change": -0.6084694072393861,
+      "spillover": -1.0017923026509734,
+      "spillover_change": 0.6084694072393861
+    },
+    {
+      "fed_rate": 1.95,
+      "selic": 3.0587561756038895,
+      "fed_change": 0.040000000000000036,
+      "selic_change": 0.14696387295291613,
+      "spillover": -1.1087561756038895,
+      "spillover_change": -0.1069638729529161
+    },
+    {
+      "fed_rate": 2.19,
+      "selic": 3.1786057669245786,
+      "fed_change": 0.24,
+      "selic_change": 0.11984959132068917,
+      "spillover": -0.9886057669245787,
+      "spillover_change": 0.12015040867931082
+    },
+    {
+      "fed_rate": 2.2,
+      "selic": 3.318083714579889,
+      "fed_change": 0.010000000000000231,
+      "selic_change": 0.13947794765531052,
+      "spillover": -1.118083714579889,
+      "spillover_change": -0.1294779476553103
+    },
+    {
+      "fed_rate": 2.27,
+      "selic": 4.125195088038499,
+      "fed_change": 0.06999999999999984,
+      "selic_change": 0.8071113734586097,
+      "spillover": -1.8551950880384989,
+      "spillover_change": -0.7371113734586099
+    },
+    {
+      "fed_rate": 2.4,
+      "selic": 3.6786705176368595,
+      "fed_change": 0.1299999999999999,
+      "selic_change": -0.4465245704016394,
+      "spillover": -1.2786705176368596,
+      "spillover_change": 0.5765245704016393
+    },
+    {
+      "fed_rate": 2.4,
+      "selic": 3.7456956548384115,
+      "fed_change": 0.0,
+      "selic_change": 0.06702513720155201,
+      "spillover": -1.3456956548384116,
+      "spillover_change": -0.06702513720155201
+    },
+    {
+      "fed_rate": 2.41,
+      "selic": 3.877168512488368,
+      "fed_change": 0.010000000000000231,
+      "selic_change": 0.13147285764995642,
+      "spillover": -1.4671685124883678,
+      "spillover_change": -0.12147285764995619
+    },
+    {
+      "fed_rate": 2.42,
+      "selic": 3.6089077668775573,
+      "fed_change": 0.009999999999999787,
+      "selic_change": -0.2682607456108106,
+      "spillover": -1.1889077668775574,
+      "spillover_change": 0.2782607456108104
+    },
+    {
+      "fed_rate": 2.39,
+      "selic": 3.2818221094911513,
+      "fed_change": -0.029999999999999805,
+      "selic_change": -0.32708565738640605,
+      "spillover": -0.8918221094911511,
+      "spillover_change": 0.29708565738640624
+    },
+    {
+      "fed_rate": 2.38,
+      "selic": 3.054638089045612,
+      "fed_change": -0.010000000000000231,
+      "selic_change": -0.22718402044553931,
+      "spillover": -0.6746380890456121,
+      "spillover_change": 0.21718402044553908
+    },
+    {
+      "fed_rate": 2.4,
+      "selic": 2.457802701765977,
+      "fed_change": 0.020000000000000018,
+      "selic_change": -0.596835387279635,
+      "spillover": -0.057802701765977016,
+      "spillover_change": 0.616835387279635
+    },
+    {
+      "fed_rate": 2.13,
+      "selic": 2.3424698840920857,
+      "fed_change": -0.27,
+      "selic_change": -0.11533281767389125,
+      "spillover": -0.21246988409208578,
+      "spillover_change": -0.15466718232610877
+    },
+    {
+      "fed_rate": 2.04,
+      "selic": 2.059503970875689,
+      "fed_change": -0.08999999999999986,
+      "selic_change": -0.28296591321639664,
+      "spillover": -0.019503970875689003,
+      "spillover_change": 0.19296591321639678
+    },
+    {
+      "fed_rate": 1.83,
+      "selic": 2.0,
+      "fed_change": -0.20999999999999996,
+      "selic_change": -0.05950397087568904,
+      "spillover": -0.16999999999999993,
+      "spillover_change": -0.15049602912431093
+    },
+    {
+      "fed_rate": 1.55,
+      "selic": 2.230033926026871,
+      "fed_change": -0.28,
+      "selic_change": 0.2300339260268709,
+      "spillover": -0.6800339260268708,
+      "spillover_change": -0.5100339260268709
+    },
+    {
+      "fed_rate": 1.55,
+      "selic": 3.1273545803136793,
+      "fed_change": 0.0,
+      "selic_change": 0.8973206542868084,
+      "spillover": -1.5773545803136793,
+      "spillover_change": -0.8973206542868084
+    },
+    {
+      "fed_rate": 1.55,
+      "selic": 2.424162314580716,
+      "fed_change": 0.0,
+      "selic_change": -0.7031922657329632,
+      "spillover": -0.874162314580716,
+      "spillover_change": 0.7031922657329632
+    },
+    {
+      "fed_rate": 1.58,
+      "selic": 2.90522265199349,
+      "fed_change": 0.030000000000000027,
+      "selic_change": 0.481060337412774,
+      "spillover": -1.32522265199349,
+      "spillover_change": -0.45106033741277396
+    },
+    {
+      "fed_rate": 0.65,
+      "selic": 3.115410989015907,
+      "fed_change": -0.93,
+      "selic_change": 0.21018833702241713,
+      "spillover": -2.4654109890159073,
+      "spillover_change": -1.1401883370224173
+    },
+    {
+      "fed_rate": 0.05,
+      "selic": 3.106674261479112,
+      "fed_change": -0.6,
+      "selic_change": -0.008736727536795108,
+      "spillover": -3.0566742614791123,
+      "spillover_change": -0.591263272463205
+    },
+    {
+      "fed_rate": 0.05,
+      "selic": 2.4517308495558345,
+      "fed_change": 0.0,
+      "selic_change": -0.6549434119232775,
+      "spillover": -2.4017308495558347,
+      "spillover_change": 0.6549434119232775
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 2.0004658949878547,
+      "fed_change": 0.03,
+      "selic_change": -0.4512649545679799,
+      "spillover": -1.9204658949878546,
+      "spillover_change": 0.48126495456798013
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 2.0,
+      "fed_change": 0.009999999999999995,
+      "selic_change": -0.00046589498785465366,
+      "spillover": -1.91,
+      "spillover_change": 0.010465894987854663
+    },
+    {
+      "fed_rate": 0.1,
+      "selic": 2.0,
+      "fed_change": 0.010000000000000009,
+      "selic_change": 0.0,
+      "spillover": -1.9,
+      "spillover_change": 0.010000000000000009
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 2.0,
+      "fed_change": -0.010000000000000009,
+      "selic_change": 0.0,
+      "spillover": -1.91,
+      "spillover_change": -0.010000000000000009
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 2.0,
+      "fed_change": 0.0,
+      "selic_change": 0.0,
+      "spillover": -1.91,
+      "spillover_change": 0.0
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 2.0,
+      "fed_change": 0.0,
+      "selic_change": 0.0,
+      "spillover": -1.91,
+      "spillover_change": 0.0
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 2.212855003063024,
+      "fed_change": 0.0,
+      "selic_change": 0.21285500306302385,
+      "spillover": -2.122855003063024,
+      "spillover_change": -0.21285500306302407
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 10.185442516422304,
+      "fed_change": 0.0,
+      "selic_change": 7.97258751335928,
+      "spillover": -10.095442516422304,
+      "spillover_change": -7.97258751335928
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 10.596879788025458,
+      "fed_change": -0.009999999999999995,
+      "selic_change": 0.4114372716031536,
+      "spillover": -10.516879788025458,
+      "spillover_change": -0.42143727160315336
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 11.268335033673864,
+      "fed_change": -0.009999999999999995,
+      "selic_change": 0.6714552456484064,
+      "spillover": -11.198335033673864,
+      "spillover_change": -0.6814552456484062
+    },
+    {
+      "fed_rate": 0.07,
+      "selic": 11.50324075223002,
+      "fed_change": 0.0,
+      "selic_change": 0.23490571855615627,
+      "spillover": -11.43324075223002,
+      "spillover_change": -0.23490571855615627
+    },
+    {
+      "fed_rate": 0.06,
+      "selic": 10.319986392579361,
+      "fed_change": -0.010000000000000009,
+      "selic_change": -1.1832543596506593,
+      "spillover": -10.25998639257936,
+      "spillover_change": 1.1732543596506595
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 9.181474863706441,
+      "fed_change": 0.020000000000000004,
+      "selic_change": -1.13851152887292,
+      "spillover": -9.101474863706441,
+      "spillover_change": 1.1585115288729195
+    },
+    {
+      "fed_rate": 0.1,
+      "selic": 8.747204101006833,
+      "fed_change": 0.020000000000000004,
+      "selic_change": -0.43427076269960807,
+      "spillover": -8.647204101006833,
+      "spillover_change": 0.45427076269960764
+    },
+    {
+      "fed_rate": 0.09,
+      "selic": 8.03605507951369,
+      "fed_change": -0.010000000000000009,
+      "selic_change": -0.711149021493144,
+      "spillover": -7.946055079513689,
+      "spillover_change": 0.7011490214931442
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 7.577177391826361,
+      "fed_change": -0.009999999999999995,
+      "selic_change": -0.45887768768732773,
+      "spillover": -7.497177391826361,
+      "spillover_change": 0.44887768768732794
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 7.310571580932354,
+      "fed_change": 0.0,
+      "selic_change": -0.26660581089400726,
+      "spillover": -7.230571580932354,
+      "spillover_change": 0.26660581089400726
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 8.091900603577649,
+      "fed_change": 0.0,
+      "selic_change": 0.7813290226452949,
+      "spillover": -8.011900603577649,
+      "spillover_change": -0.7813290226452949
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 10.193322692684056,
+      "fed_change": 0.0,
+      "selic_change": 2.101422089106407,
+      "spillover": -10.113322692684056,
+      "spillover_change": -2.101422089106407
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 11.916624921570271,
+      "fed_change": 0.0,
+      "selic_change": 1.7233022288862152,
+      "spillover": -11.836624921570271,
+      "spillover_change": -1.7233022288862152
+    },
+    {
+      "fed_rate": 0.08,
+      "selic": 12.922017465942245,
+      "fed_change": 0.0,
+      "selic_change": 1.0053925443719738,
+      "spillover": -12.842017465942245,
+      "spillover_change": -1.0053925443719738
+    },
+    {
+      "fed_rate": 0.2,
+      "selic": 13.246560376435218,
+      "fed_change": 0.12000000000000001,
+      "selic_change": 0.3245429104929727,
+      "spillover": -13.046560376435218,
+      "spillover_change": -0.20454291049297346
+    },
+    {
+      "fed_rate": 0.33,
+      "selic": 12.739304546692617,
+      "fed_change": 0.13,
+      "selic_change": -0.5072558297426006,
+      "spillover": -12.409304546692617,
+      "spillover_change": 0.6372558297426014
+    },
+    {
+      "fed_rate": 0.77,
+      "selic": 12.12441185987935,
+      "fed_change": 0.44,
+      "selic_change": -0.6148926868132669,
+      "spillover": -11.35441185987935,
+      "spillover_change": 1.0548926868132664
+    },
+    {
+      "fed_rate": 1.21,
+      "selic": 11.580563363382149,
+      "fed_change": 0.43999999999999995,
+      "selic_change": -0.5438484964972012,
+      "spillover": -10.37056336338215,
+      "spillover_change": 0.9838484964972007
+    },
+    {
+      "fed_rate": 1.68,
+      "selic": 10.054349194834664,
+      "fed_change": 0.47,
+      "selic_change": -1.5262141685474848,
+      "spillover": -8.374349194834664,
+      "spillover_change": 1.9962141685474855
+    },
+    {
+      "fed_rate": 2.33,
+      "selic": 8.998370090840107,
+      "fed_change": 0.6500000000000001,
+      "selic_change": -1.0559791039945576,
+      "spillover": -6.6683700908401065,
+      "spillover_change": 1.705979103994558
+    },
+    {
+      "fed_rate": 2.56,
+      "selic": 8.61493981101233,
+      "fed_change": 0.22999999999999998,
+      "selic_change": -0.3834302798277758,
+      "spillover": -6.05493981101233,
+      "spillover_change": 0.6134302798277762
+    },
+    {
+      "fed_rate": 3.08,
+      "selic": 9.33747499411093,
+      "fed_change": 0.52,
+      "selic_change": 0.7225351830986,
+      "spillover": -6.257474994110931,
+      "spillover_change": -0.2025351830986004
+    },
+    {
+      "fed_rate": 3.78,
+      "selic": 9.758032843392115,
+      "fed_change": 0.6999999999999997,
+      "selic_change": 0.42055784928118456,
+      "spillover": -5.978032843392116,
+      "spillover_change": 0.27944215071881473
+    },
+    {
+      "fed_rate": 4.1,
+      "selic": 11.223799063310238,
+      "fed_change": 0.31999999999999984,
+      "selic_change": 1.4657662199181232,
+      "spillover": -7.123799063310239,
+      "spillover_change": -1.1457662199181229
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 13.140232622706813,
+      "fed_change": 0.23000000000000043,
+      "selic_change": 1.916433559396575,
+      "spillover": -8.810232622706813,
+      "spillover_change": -1.6864335593965745
+    },
+    {
+      "fed_rate": 4.57,
+      "selic": 13.690144134556482,
+      "fed_change": 0.2400000000000002,
+      "selic_change": 0.5499115118496682,
+      "spillover": -9.120144134556481,
+      "spillover_change": -0.30991151184966803
+    },
+    {
+      "fed_rate": 4.65,
+      "selic": 14.37365706735603,
+      "fed_change": 0.08000000000000007,
+      "selic_change": 0.6835129327995482,
+      "spillover": -9.72365706735603,
+      "spillover_change": -0.6035129327995481
+    },
+    {
+      "fed_rate": 4.83,
+      "selic": 13.820761351367722,
+      "fed_change": 0.17999999999999972,
+      "selic_change": -0.5528957159883081,
+      "spillover": -8.990761351367722,
+      "spillover_change": 0.7328957159883078
+    },
+    {
+      "fed_rate": 5.06,
+      "selic": 13.677300091683266,
+      "fed_change": 0.22999999999999954,
+      "selic_change": -0.14346125968445556,
+      "spillover": -8.617300091683266,
+      "spillover_change": 0.373461259684456
+    },
+    {
+      "fed_rate": 5.08,
+      "selic": 11.931209924175489,
+      "fed_change": 0.020000000000000462,
+      "selic_change": -1.7460901675077771,
+      "spillover": -6.851209924175489,
+      "spillover_change": 1.7660901675077767
+    },
+    {
+      "fed_rate": 5.12,
+      "selic": 11.431088422714428,
+      "fed_change": 0.040000000000000036,
+      "selic_change": -0.5001215014610612,
+      "spillover": -6.311088422714428,
+      "spillover_change": 0.5401215014610612
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 10.52723521060364,
+      "fed_change": 0.20999999999999996,
+      "selic_change": -0.9038532121107874,
+      "spillover": -5.19723521060364,
+      "spillover_change": 1.1138532121107874
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 10.106334909189362,
+      "fed_change": 0.0,
+      "selic_change": -0.42090030141427803,
+      "spillover": -4.776334909189362,
+      "spillover_change": 0.42090030141427803
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 10.988282916035235,
+      "fed_change": 0.0,
+      "selic_change": 0.8819480068458727,
+      "spillover": -5.658282916035235,
+      "spillover_change": -0.8819480068458727
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 10.978946678317312,
+      "fed_change": 0.0,
+      "selic_change": -0.009336237717922913,
+      "spillover": -5.648946678317312,
+      "spillover_change": 0.009336237717922913
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 12.260921055724031,
+      "fed_change": 0.0,
+      "selic_change": 1.2819743774067192,
+      "spillover": -6.930921055724031,
+      "spillover_change": -1.2819743774067192
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 15.237717347994968,
+      "fed_change": 0.0,
+      "selic_change": 2.9767962922709366,
+      "spillover": -9.907717347994968,
+      "spillover_change": -2.9767962922709366
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 15.735302843743236,
+      "fed_change": 0.0,
+      "selic_change": 0.49758549574826816,
+      "spillover": -10.405302843743236,
+      "spillover_change": -0.49758549574826816
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 16.021063385208617,
+      "fed_change": 0.0,
+      "selic_change": 0.28576054146538077,
+      "spillover": -10.691063385208617,
+      "spillover_change": -0.28576054146538077
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 16.267331489739604,
+      "fed_change": 0.0,
+      "selic_change": 0.24626810453098713,
+      "spillover": -10.937331489739604,
+      "spillover_change": -0.24626810453098713
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 15.033265818270582,
+      "fed_change": 0.0,
+      "selic_change": -1.234065671469022,
+      "spillover": -9.703265818270582,
+      "spillover_change": 1.234065671469022
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 13.774517700712128,
+      "fed_change": 0.0,
+      "selic_change": -1.2587481175584543,
+      "spillover": -8.444517700712128,
+      "spillover_change": 1.2587481175584543
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 13.149680533211223,
+      "fed_change": 0.0,
+      "selic_change": -0.624837167500905,
+      "spillover": -7.819680533211223,
+      "spillover_change": 0.624837167500905
+    },
+    {
+      "fed_rate": 5.33,
+      "selic": 11.438719904139008,
+      "fed_change": 0.0,
+      "selic_change": -1.7109606290722148,
+      "spillover": -6.108719904139008,
+      "spillover_change": 1.7109606290722148
+    },
+    {
+      "fed_rate": 5.13,
+      "selic": 11.47220676252756,
+      "fed_change": -0.20000000000000018,
+      "selic_change": 0.033486858388551255,
+      "spillover": -6.342206762527559,
+      "spillover_change": -0.23348685838855143
+    },
+    {
+      "fed_rate": 4.83,
+      "selic": 11.497266686716516,
+      "fed_change": -0.2999999999999998,
+      "selic_change": 0.025059924188957083,
+      "spillover": -6.667266686716516,
+      "spillover_change": -0.3250599241889569
+    },
+    {
+      "fed_rate": 4.64,
+      "selic": 13.633041579611287,
+      "fed_change": -0.1900000000000004,
+      "selic_change": 2.135774892894771,
+      "spillover": -8.993041579611287,
+      "spillover_change": -2.3257748928947706
+    },
+    {
+      "fed_rate": 4.48,
+      "selic": 14.049019184493726,
+      "fed_change": -0.15999999999999925,
+      "selic_change": 0.41597760488243907,
+      "spillover": -9.569019184493726,
+      "spillover_change": -0.5759776048824392
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 16.454160695447342,
+      "fed_change": -0.15000000000000036,
+      "selic_change": 2.405141510953616,
+      "spillover": -12.124160695447342,
+      "spillover_change": -2.555141510953616
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 17.161592062773643,
+      "fed_change": 0.0,
+      "selic_change": 0.7074313673263006,
+      "spillover": -12.831592062773643,
+      "spillover_change": -0.7074313673263006
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 17.611108446669565,
+      "fed_change": 0.0,
+      "selic_change": 0.4495163838959222,
+      "spillover": -13.281108446669565,
+      "spillover_change": -0.4495163838959222
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 17.33612869383897,
+      "fed_change": 0.0,
+      "selic_change": -0.27497975283059617,
+      "spillover": -13.006128693838969,
+      "spillover_change": 0.27497975283059617
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 16.853863087282612,
+      "fed_change": 0.0,
+      "selic_change": -0.4822656065563571,
+      "spillover": -12.523863087282612,
+      "spillover_change": 0.4822656065563571
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 15.217994319813158,
+      "fed_change": 0.0,
+      "selic_change": -1.6358687674694536,
+      "spillover": -10.887994319813158,
+      "spillover_change": 1.6358687674694536
+    },
+    {
+      "fed_rate": 4.33,
+      "selic": 15.068188243966244,
+      "fed_change": 0.0,
+      "selic_change": -0.1498060758469144,
+      "spillover": -10.738188243966244,
+      "spillover_change": 0.1498060758469144
+    }
+  ]
+}

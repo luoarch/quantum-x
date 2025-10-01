@@ -1,0 +1,37 @@
+{
+  "config": {
+    "cases": [
+      "single_level",
+      "trend_break",
+      "double_level",
+      "mixed_breaks"
+    ],
+    "T": 100,
+    "n_sims": 50,
+    "tol": 10,
+    "mag": 2.0,
+    "seed": 42
+  },
+  "results": {
+    "single_level": {
+      "detection_rate_within_tol": 0.0,
+      "mean_abs_error_periods": 49.02,
+      "tol_periods": 10
+    },
+    "trend_break": {
+      "detection_rate_within_tol": 0.0,
+      "mean_abs_error_periods": 47.76,
+      "tol_periods": 10
+    },
+    "double_level": {
+      "detection_rate_within_tol": 0.0,
+      "mean_abs_error_periods": 31.46,
+      "tol_periods": 10
+    },
+    "mixed_breaks": {
+      "detection_rate_within_tol": 0.0,
+      "mean_abs_error_periods": 31.58,
+      "tol_periods": 10
+    }
+  }
+}

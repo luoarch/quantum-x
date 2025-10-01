@@ -1,0 +1,28 @@
+{
+  "version": "v1.0.0",
+  "created_at": "2025-09-30T19:35:35.015824Z",
+  "data_hash": "sha256:60b22b647ec37a53432a0c5b0534f85a574d47ac117db56d14be15b28bfaf1d3",
+  "methodology": "LP primary, BVAR fallback",
+  "n_observations": 246,
+  "models": {
+    "local_projections": {
+      "n_horizons": 12,
+      "avg_r_squared": 0.13109630647131418,
+      "avg_irf": 0.7112364012001159,
+      "max_irf": 2.3920307505226717,
+      "horizon_max_response": "h_10"
+    },
+    "bvar_minnesota": {
+      "n_vars": 2,
+      "n_lags": 2,
+      "n_obs": 243,
+      "r_squared": -0.00945421107425548,
+      "model_quality": "weak",
+      "irf_summary": {
+        "max_response": 9.194709013764284,
+        "horizon_max_response": 0,
+        "persistence": 17.57431746455885
+      }
+    }
+  }
+}

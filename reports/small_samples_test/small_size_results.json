@@ -1,0 +1,35 @@
+{
+  "config": {
+    "Ts": [
+      25,
+      50,
+      75,
+      100
+    ],
+    "n_sims": 100,
+    "alpha": 0.05,
+    "seed": 42
+  },
+  "results": {
+    "T_25": {
+      "adf_size": 0.18,
+      "dfgls_size": 0.27,
+      "kpss_size": 0.09
+    },
+    "T_50": {
+      "adf_size": 0.1,
+      "dfgls_size": 0.14,
+      "kpss_size": 0.13
+    },
+    "T_75": {
+      "adf_size": 0.06,
+      "dfgls_size": 0.05,
+      "kpss_size": 0.15
+    },
+    "T_100": {
+      "adf_size": 0.02,
+      "dfgls_size": 0.06,
+      "kpss_size": 0.09
+    }
+  }
+}
